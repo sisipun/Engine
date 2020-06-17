@@ -2,6 +2,7 @@
 #define UDP_SOCKET_H
 
 #include "socket_address.h"
+#include "socket_utils.h"
 #include <sys/socket.h>
 #include <memory>
 
@@ -14,6 +15,7 @@ public:
     int ReceiveFrom(void *inBuffer, int inLen, SocketAddress &outFrom);
 
 private:
+    friend class SocketUtils;
     UDPSocket(int inSocket) : mSocket(inSocket) {}
     int mSocket;
 };
