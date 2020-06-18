@@ -12,7 +12,8 @@ enum SocketAddressFamily
 class SocketUtils
 {
 public:
-    static UDPSocketPtr SocketUtils::CreateUDPSocket(SocketAddressFamily inFamily)
+    static UDPSocketPtr CreateUDPSocket(SocketAddressFamily inFamily);
+    static TCPSocketPtr CreateTCPSocket(SocketAddressFamily inFamily);
 }
 
 #endif
