@@ -1,6 +1,6 @@
 #include "udp_socket.h"
 #include <unistd.h>
-#include <sys/socket.h>
+#include <fcntl.h>
 
 UDPSocket::~UDPSocket()
 {
@@ -36,5 +36,20 @@ int UDPSocket::ReceiveFrom(void *inBuffer, int inLen, SocketAddress &outFrom)
     else
     {
         return -1;
+    }
+}
+
+int UDPSocket::SetNonBlockingMode(bool inShouldBeNonBlocking)
+{
+    int flags = fcntl(mSocket, F_GETFL, 0);
+    flags = inShouldBeNonBlocking ? (flags | O_NONBLOCK) : (flags & ~O_NONBLOCK);
+    int result = fcntl(mSocket, F_SETFL, flags);
+    if (result < 0)
+    {
+        return -1;
+    }
+    else
+    {
+        return 0;
     }
 }

@@ -1,6 +1,5 @@
 #include "tcp_socket.h"
 #include <unistd.h>
-#include <sys/socket.h>
 
 TCPSocket::~TCPSocket()
 {
@@ -24,7 +23,7 @@ int TCPSocket::Listen(int inBackLog)
 
 TCPSocketPtr TCPSocket::Accept(SocketAddress &inFromAddress)
 {
-    int length = inFromAddress.GetSize();
+    socklen_t length = inFromAddress.GetSize();
     int newSocket = accept(mSocket, &inFromAddress.mSockAddr, &length);
     if (newSocket > 0)
     {

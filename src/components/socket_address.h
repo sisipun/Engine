@@ -1,10 +1,13 @@
 #ifndef SOCKET_ADDRESS_H
 #define SOCKET_ADDRESS_H
 
-#include "stdint.h"
 #include "udp_socket.h"
+#include "tcp_socket.h"
+
 #include <sys/socket.h>
+#include <netdb.h>
 #include <memory>
+#include <string>
 
 struct in_addr
 {
@@ -19,14 +22,6 @@ struct in_addr
         } S_un_w;
         uint32_t S_addr;
     } S_un;
-};
-
-struct sockaddr_in
-{
-    short sin_family;
-    uint16_t sin_port;
-    struct in_addr sin_addr;
-    char sin_zero[8];
 };
 
 class SocketAddress

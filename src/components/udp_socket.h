@@ -13,6 +13,7 @@ public:
     int Bind(const SocketAddress &inBindAddress);
     int SentTo(const void *inData, int inLen, const SocketAddress &inTo);
     int ReceiveFrom(void *inBuffer, int inLen, SocketAddress &outFrom);
+    int SetNonBlockingMode(bool inShouldBeNonBlocking);
 
 private:
     friend class SocketUtils;

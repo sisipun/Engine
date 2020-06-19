@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "memory": "cpp",
-        "locale": "cpp"
+        "locale": "cpp",
+        "string": "cpp",
+        "iosfwd": "cpp"
     }
 }
