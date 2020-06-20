@@ -10,25 +10,12 @@ enum SocketAddressFamily
 {
     INET = AF_INET,
     INET6 = AF_INET6
-}
+};
 
 class SocketUtils
 {
 public:
     static UDPSocketPtr CreateUDPSocket(SocketAddressFamily inFamily)
-    {
-        int s = socket(inFamily, SOCK_DGRAM, 0);
-        if (s >= 0)
-        {
-            return TCPSocketPtr(new TCPSocket(s));
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    
-    static TCPSocketPtr CreateTCPSocket(SocketAddressFamily inFamily)
     {
         int s = socket(inFamily, SOCK_DGRAM, 0);
         if (s >= 0)
@@ -40,6 +27,19 @@ public:
             return nullptr;
         }
     }
-}
+
+    static TCPSocketPtr CreateTCPSocket(SocketAddressFamily inFamily)
+    {
+        int s = socket(inFamily, SOCK_DGRAM, 0);
+        if (s >= 0)
+        {
+            return TCPSocketPtr(new TCPSocket(s));
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+};
 
 #endif

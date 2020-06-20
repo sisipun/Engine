@@ -2,7 +2,7 @@
 #define TCP_SOCKET_H
 
 #include "socket_address.h"
-#include "socket_utils.h"
+
 #include <sys/socket.h>
 #include <memory>
 
@@ -10,6 +10,7 @@ class TCPSocket
 {
 public:
     ~TCPSocket();
+    TCPSocket(int inSocket) : mSocket(inSocket) {}
     int Connect(const SocketAddress &inAddress);
     int Bind(const SocketAddress &inBindAddress);
     int Listen(int inBackLog = 32);
@@ -18,8 +19,6 @@ public:
     int Receive(void *inBuffer, int inLen);
 
 private:
-    friend class SocketUtils;
-    TCPSocket(int inSocket) : mSocket(inSocket) {}
     int mSocket;
 };
 
