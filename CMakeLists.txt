@@ -22,6 +22,11 @@ set(SOURCE_LIB
     src/components/udp_socket.cpp
     
     src/components/socket_utils.h
+
+    src/components/stream/input_memory_stream.h
+    src/components/stream/input_memory_stream.cpp
+    src/components/stream/output_memory_stream.h
+    src/components/stream/output_memory_stream.cpp
 )
 
 add_library(Components STATIC ${SOURCE_LIB})
