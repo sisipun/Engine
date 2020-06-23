@@ -7,7 +7,7 @@ void InputMemoryStream::Read(void *outData, uint32_t inByteCount) {
         readBytesCount = mCapacity - mHead;
     }
 
-    std::memcpy(outData, mBuffer + mHead, inByteCount);
+    std::memcpy(outData, mBuffer + mHead, readBytesCount);
 
-    mHead = resultHead;
+    mHead += readBytesCount;
 }

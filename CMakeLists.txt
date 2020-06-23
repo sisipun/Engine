@@ -10,18 +10,18 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 set(SOURCE_EXE src/main.cpp)
 set(SOURCE_LIB 
-    src/components/socket_address.h
-    src/components/socket_address.cpp
+    src/components/socket/socket_address.h
+    src/components/socket/socket_address.cpp
 
-    src/components/socket_address_factory.h 
+    src/components/socket/socket_address_factory.h 
 
-    src/components/tcp_socket.h
-    src/components/tcp_socket.cpp
+    src/components/socket/tcp_socket.h
+    src/components/socket/tcp_socket.cpp
 
-    src/components/udp_socket.h
-    src/components/udp_socket.cpp
+    src/components/socket/udp_socket.h
+    src/components/socket/udp_socket.cpp
     
-    src/components/socket_utils.h
+    src/components/socket/socket_utils.h
 
     src/components/stream/input_memory_stream.h
     src/components/stream/input_memory_stream.cpp
