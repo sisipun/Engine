@@ -11,4 +11,3 @@ CTestTestfile.cmake
 _deps
 .DS_Store
 .vscode/*
-.build/*
