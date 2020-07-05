@@ -12,8 +12,25 @@ set(SOURCE_EXE src/main.cpp)
 set(SOURCE_LIB
     src/utils/constants.h
 
+    src/engine/time/timer.h
+    src/engine/time/timer.cpp
+
+    src/engine/physics/body.h
+
+
     src/engine/engine.h
     src/engine/engine.cpp
+
+    src/engine/actor/actor_info.h
+
+    src/engine/actor/actor.h
+    src/engine/actor/actor.cpp
+
+    src/engine/controller/controller.h
+    src/engine/controller/controller.cpp
+
+    src/controller/user_controller.h
+    src/controller/user_controller.cpp
 
     src/network/socket/socket_address.h
     src/network/socket/socket_address.cpp
