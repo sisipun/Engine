@@ -1,9 +1,8 @@
 #include "engine.h"
-#include "../utils/constants.h"
 
 Engine::Engine() : window(nullptr), renderer(nullptr), timer(nullptr), delta(0) {}
 
-bool Engine::init()
+bool Engine::init(float screenWidth, float screenHeigh)
 {
     SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
 
@@ -13,7 +12,7 @@ bool Engine::init()
         return false;
     }
 
-    window = SDL_CreateWindow("Roguelike", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
+    window = SDL_CreateWindow("Roguelike", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeigh,
                               SDL_WINDOW_SHOWN);
     if (window == nullptr)
     {
@@ -28,34 +27,30 @@ bool Engine::init()
         return false;
     }
 
+    storage = new Storage();
+
     event = new SDL_Event();
     timer = new Timer();
 
     return true;
 }
 
-bool Engine::loadMedia(std::vector<ActorInfo *> infos, std::vector<Controller *> controllers)
+bool Engine::loadMedia(std::vector<Actor *> actors, std::vector<Controller *> controllers)
 {
-    for (ActorInfo *info : infos)
+    for (Actor *actor : actors)
     {
-        if (actors.find(info->getName()) != actors.end())
+        if (!storage->addActor(actor))
         {
-            SDL_Log("Duplicatie actor name: %s\n", info->getName().c_str());
             return false;
         }
-        Actor *actor = new Actor(info);
-        actors.insert(std::pair<std::string, Actor *>(info->getName(), actor));
     }
 
     for (Controller *controller : controllers)
     {
-        if (!controller->init(this))
+        if (!storage->addController(controller))
         {
-            SDL_Log("Can't initialize controller for actor name: %s\n", controller->getActorName().c_str());
             return false;
         }
-
-        this->controllers.insert(std::pair<std::string, Controller *>(controller->getActorName(), controller));
     }
 
     return true;
@@ -68,19 +63,19 @@ void Engine::update()
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(renderer);
 
-    for (const auto &actorDef : actors)
+    for (const auto &actorDef : storage->getActors())
     {
         actorDef.second->render(renderer);
     }
 
     SDL_RenderPresent(renderer);
 
-    for (const auto &controllerDef : controllers)
+    for (const auto &controllerDef : storage->getControllers())
     {
         controllerDef.second->handleInput(event);
     }
 
-    for (const auto &actorDef : actors)
+    for (const auto &actorDef : storage->getActors())
     {
         actorDef.second->update(delta);
     }
@@ -108,13 +103,7 @@ void Engine::close()
 {
     delete event;
     delete timer;
-
-    for (const auto &actorDef : actors)
-    {
-        delete actorDef.second;
-    }
-
-    actors.clear();
+    delete storage;
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -123,14 +112,4 @@ void Engine::close()
     event = nullptr;
 
     SDL_Quit();
-}
-
-Actor *Engine::getActor(std::string name)
-{
-    std::map<std::string, Actor *>::iterator actorPair = actors.find(name);
-    if (actorPair == actors.end())
-    {
-        return nullptr;
-    }
-    return actorPair->second;
 }

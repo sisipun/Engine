@@ -3,15 +3,16 @@
 
 #include "SDL.h"
 #include "../actor/actor.h"
-
-class Engine;
+#include "../storage/storage.h"
 
 class Controller
 {
 public:
     virtual void handleInput(SDL_Event *event) = 0;
 
-    bool init(Engine *engine);
+    virtual ~Controller() {}
+
+    bool init(Storage *storage);
 
     std::string getActorName()
     {
@@ -19,13 +20,13 @@ public:
     }
 
 protected:
-    Controller(std::string actorName) : actorName(actorName), initialized(false), engine(nullptr), actor(nullptr)
+    Controller(std::string actorName) : actorName(actorName), initialized(false), storage(nullptr), actor(nullptr)
     {
     }
 
     std::string actorName;
     bool initialized;
-    Engine *engine;
+    Storage *storage;
     Actor *actor;
 };
 

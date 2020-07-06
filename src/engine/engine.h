@@ -3,11 +3,9 @@
 
 #include "SDL.h"
 #include <vector>
-#include <map>
-#include <string>
 #include "actor/actor.h"
-#include "actor/actor_info.h"
 #include "controller/controller.h"
+#include "storage/storage.h"
 #include "time/timer.h"
 
 class Engine
@@ -15,9 +13,9 @@ class Engine
 public:
     Engine();
 
-    bool init();
+    bool init(float screenWidth, float screenHeigh);
 
-    bool loadMedia(std::vector<ActorInfo *> infos, std::vector<Controller *> controllers);
+    bool loadMedia(std::vector<Actor *> actors, std::vector<Controller *> controllers);
 
     void update();
 
@@ -27,19 +25,15 @@ public:
 
     void close();
 
-    Actor *getActor(std::string name);
-
 private:
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Event *event;
-    bool quit;
-
+    Storage *storage;
     Timer *timer;
     float delta;
 
-    std::map<std::string, Actor *> actors;
-    std::map<std::string, Controller *> controllers;
+    bool quit;
 };
 
 #endif

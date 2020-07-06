@@ -2,6 +2,7 @@
 #define TIMER_H
 
 #include "SDL_types.h"
+#include "SDL.h"
 
 class Timer
 {

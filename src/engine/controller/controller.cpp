@@ -1,10 +1,9 @@
 #include "controller.h"
-#include "../engine.h"
 
-bool Controller::init(Engine *engine)
+bool Controller::init(Storage *storage)
 {
-    this->engine = engine;
-    Actor *actor = this->engine->getActor(actorName);
+    this->storage = storage;
+    Actor *actor = this->storage->getActor(actorName);
     if (actor == nullptr)
     {
         return false;

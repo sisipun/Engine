@@ -10,18 +10,13 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 set(SOURCE_EXE src/main.cpp)
 set(SOURCE_LIB
-    src/utils/constants.h
-
     src/engine/time/timer.h
     src/engine/time/timer.cpp
 
     src/engine/physics/body.h
 
-
     src/engine/engine.h
     src/engine/engine.cpp
-
-    src/engine/actor/actor_info.h
 
     src/engine/actor/actor.h
     src/engine/actor/actor.cpp
@@ -29,26 +24,31 @@ set(SOURCE_LIB
     src/engine/controller/controller.h
     src/engine/controller/controller.cpp
 
+    src/engine/storage/storage.h
+    src/engine/storage/storage.cpp
+
+    src/engine/network/socket/socket_address.h
+    src/engine/network/socket/socket_address.cpp
+
+    src/engine/network/socket/socket_address_factory.h 
+
+    src/engine/network/socket/tcp_socket.h
+    src/engine/network/socket/tcp_socket.cpp
+
+    src/engine/network/socket/udp_socket.h
+    src/engine/network/socket/udp_socket.cpp
+    
+    src/engine/network/socket/socket_utils.h
+
+    src/engine/network/stream/input_memory_stream.h
+    src/engine/network/stream/input_memory_stream.cpp
+    src/engine/network/stream/output_memory_stream.h
+    src/engine/network/stream/output_memory_stream.cpp
+
+    src/utils/constants.h
+
     src/controller/user_controller.h
     src/controller/user_controller.cpp
-
-    src/network/socket/socket_address.h
-    src/network/socket/socket_address.cpp
-
-    src/network/socket/socket_address_factory.h 
-
-    src/network/socket/tcp_socket.h
-    src/network/socket/tcp_socket.cpp
-
-    src/network/socket/udp_socket.h
-    src/network/socket/udp_socket.cpp
-    
-    src/network/socket/socket_utils.h
-
-    src/network/stream/input_memory_stream.h
-    src/network/stream/input_memory_stream.cpp
-    src/network/stream/output_memory_stream.h
-    src/network/stream/output_memory_stream.cpp
 )
 
 add_library(Components STATIC ${SOURCE_LIB})
