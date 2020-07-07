@@ -1,6 +1,7 @@
 #include "storage.h"
 #include "../actor/actor.h"
 #include "../controller/controller.h"
+#include "../logger/logger.h"
 
 Storage::~Storage()
 {
@@ -23,7 +24,7 @@ bool Storage::addController(Controller *controller)
 {
     if (!controller->init(this))
     {
-        printf("Can't initialize controller for actor name: %s\n", controller->getActorName().c_str());
+        Logger::log("Can't initialize controller for actor name: %s\n", controller->getActorName().c_str());
         return false;
     }
 
@@ -35,7 +36,7 @@ bool Storage::addActor(Actor *actor)
 {
     if (actors.find(actor->getName()) != actors.end())
     {
-        printf("Duplicate actor name: %s\n", actor->getName().c_str());
+        Logger::log("Duplicate actor name: %s\n", actor->getName().c_str());
         return false;
     }
     actors.insert(std::pair<std::string, Actor *>(actor->getName(), actor));

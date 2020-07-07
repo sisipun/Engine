@@ -1,15 +1,15 @@
-#include <iostream>
 #include "controller/user_controller.h"
 #include "engine/engine.h"
 #include "engine/actor/actor.h"
 #include "utils/constants.h"
+#include "engine/logger/logger.h"
 
 int main(int argc, char *argv[])
 {
     Engine engine;
     if (!engine.init(SCREEN_WIDTH, SCREEN_HEIGHT))
     {
-        printf("Failed to initialize!\n");
+        Logger::log("Failed to initialize!\n");
         return -1;
     }
 
@@ -20,12 +20,12 @@ int main(int argc, char *argv[])
     actors.push_back(info2);
 
     std::vector<Controller *> controllers;
-    Controller *userController = new UserController("actor1");
+    Controller *userController = new UserController("actor3");
     controllers.push_back(userController);
 
     if (!engine.loadMedia(actors, controllers))
     {
-        printf("Failed to load media!\n");
+        Logger::log("Failed to load media!\n");
         return -1;
     }
 

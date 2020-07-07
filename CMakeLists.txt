@@ -10,6 +10,9 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 set(SOURCE_EXE src/main.cpp)
 set(SOURCE_LIB
+    src/engine/logger/logger.h
+    src/engine/logger/logger.cpp
+    
     src/engine/time/timer.h
     src/engine/time/timer.cpp
 

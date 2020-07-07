@@ -1,14 +1,13 @@
 #include "engine.h"
+#include "logger/logger.h"
 
 Engine::Engine() : window(nullptr), renderer(nullptr), timer(nullptr), delta(0) {}
 
 bool Engine::init(float screenWidth, float screenHeigh)
 {
-    SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
-
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        SDL_Log("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        Logger::log("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return false;
     }
 
@@ -16,14 +15,14 @@ bool Engine::init(float screenWidth, float screenHeigh)
                               SDL_WINDOW_SHOWN);
     if (window == nullptr)
     {
-        SDL_Log("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        Logger::log("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return false;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr)
     {
-        SDL_Log("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+        Logger::log("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
         return false;
     }
 
