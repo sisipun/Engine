@@ -6,6 +6,7 @@
 #include "actor/actor.h"
 #include "controller/controller.h"
 #include "storage/storage.h"
+#include "scene/scene.h"
 #include "time/timer.h"
 
 class Engine
@@ -15,7 +16,9 @@ public:
 
     bool init(float screenWidth, float screenHeigh);
 
-    bool loadMedia(std::vector<Actor *> actors, std::vector<Controller *> controllers);
+    bool loadMedia(Scene *startScene, std::vector<Actor *> actors, std::vector<Controller *> controllers);
+
+    bool changeScene(Scene *scene);
 
     void update();
 
@@ -31,6 +34,7 @@ private:
     SDL_Event *event;
     Storage *storage;
     Timer *timer;
+    Scene *currentScene;
     float delta;
 
     bool quit;

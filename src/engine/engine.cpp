@@ -1,7 +1,7 @@
 #include "engine.h"
 #include "logger/logger.h"
 
-Engine::Engine() : window(nullptr), renderer(nullptr), timer(nullptr), delta(0) {}
+Engine::Engine() : window(nullptr), renderer(nullptr), storage(nullptr), timer(nullptr), currentScene(nullptr), delta(0) {}
 
 bool Engine::init(float screenWidth, float screenHeigh)
 {
@@ -34,7 +34,7 @@ bool Engine::init(float screenWidth, float screenHeigh)
     return true;
 }
 
-bool Engine::loadMedia(std::vector<Actor *> actors, std::vector<Controller *> controllers)
+bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors, std::vector<Controller *> controllers)
 {
     for (Actor *actor : actors)
     {
@@ -52,6 +52,22 @@ bool Engine::loadMedia(std::vector<Actor *> actors, std::vector<Controller *> co
         }
     }
 
+    if (!changeScene(startScene))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Engine::changeScene(Scene *scene)
+{
+    if (!scene->init(storage))
+    {
+        return false;
+    }
+
+    this->currentScene = scene;
     return true;
 }
 
@@ -62,22 +78,11 @@ void Engine::update()
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(renderer);
 
-    for (const auto &actorDef : storage->getActors())
-    {
-        actorDef.second->render(renderer);
-    }
+    currentScene->renderScene(renderer);
 
     SDL_RenderPresent(renderer);
 
-    for (const auto &controllerDef : storage->getControllers())
-    {
-        controllerDef.second->handleInput(event);
-    }
-
-    for (const auto &actorDef : storage->getActors())
-    {
-        actorDef.second->update(delta);
-    }
+    currentScene->updateScene(delta);
 
     delta = timer->getTicks() * 0.001;
 }
@@ -90,6 +95,8 @@ void Engine::handleInput()
         {
             quit = true;
         }
+
+        currentScene->handleInputScene(event);
     }
 }
 

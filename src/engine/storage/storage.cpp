@@ -52,3 +52,13 @@ Actor *Storage::getActor(std::string name)
     }
     return actorPair->second;
 }
+
+Controller *Storage::getController(std::string actorName)
+{
+    std::map<std::string, Controller *>::iterator controllerPair = controllers.find(actorName);
+    if (controllerPair == controllers.end())
+    {
+        return nullptr;
+    }
+    return controllerPair->second;
+}

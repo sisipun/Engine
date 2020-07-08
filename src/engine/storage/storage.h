@@ -18,11 +18,15 @@ public:
 
     Actor *getActor(std::string name);
 
-    std::map<std::string, Actor *> getActors() {
+    Controller *getController(std::string actorName);
+
+    std::map<std::string, Actor *> getActors()
+    {
         return actors;
     }
 
-    std::map<std::string, Controller *> getControllers() {
+    std::map<std::string, Controller *> getControllers()
+    {
         return controllers;
     }
 
