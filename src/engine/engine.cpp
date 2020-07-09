@@ -5,7 +5,7 @@ Engine::Engine() : window(nullptr), renderer(nullptr), storage(nullptr), timer(n
 
 bool Engine::init(float screenWidth, float screenHeigh)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
     {
         Logger::log("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return false;
@@ -23,6 +23,12 @@ bool Engine::init(float screenWidth, float screenHeigh)
     if (renderer == nullptr)
     {
         Logger::log("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+        return false;
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+    {
+        Logger::log("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
         return false;
     }
 

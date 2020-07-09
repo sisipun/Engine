@@ -5,8 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 find_package(SDL2 REQUIRED)
-
-include_directories(${SDL2_INCLUDE_DIRS})
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_mixer REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS})
 
 set(SOURCE_EXE src/main.cpp)
 set(SOURCE_LIB
@@ -30,6 +31,8 @@ set(SOURCE_LIB
     src/engine/storage/storage.h
     src/engine/storage/storage.cpp
 
+    src/engine/scene/scene.h
+
     src/engine/network/socket/socket_address.h
     src/engine/network/socket/socket_address.cpp
 
@@ -52,10 +55,13 @@ set(SOURCE_LIB
 
     src/controller/user_controller.h
     src/controller/user_controller.cpp
+
+    src/scene/main_scene.h
+    src/scene/main_scene.cpp
 )
 
 add_library(Components STATIC ${SOURCE_LIB})
 add_executable(Roguelike ${SOURCE_EXE})
 
-target_link_libraries(Components ${SDL2_LIBRARIES})
+target_link_libraries(Components ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
 target_link_libraries(Roguelike Components)

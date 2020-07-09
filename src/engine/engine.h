@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include "SDL.h"
+#include "SDL_mixer.h"
 #include <vector>
 #include "actor/actor.h"
 #include "controller/controller.h"
