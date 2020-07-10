@@ -32,6 +32,16 @@ bool Engine::init(float screenWidth, float screenHeigh)
         return false;
     }
 
+    Mix_Chunk *gMusic = Mix_LoadWAV(R"(./bonus.wav)");
+    if (gMusic == NULL)
+    {
+        return false;
+    }
+    else
+    {
+        Mix_PlayChannel(-1, gMusic, 0);
+    }
+
     storage = new Storage();
 
     event = new SDL_Event();
@@ -40,19 +50,11 @@ bool Engine::init(float screenWidth, float screenHeigh)
     return true;
 }
 
-bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors, std::vector<Controller *> controllers)
+bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors)
 {
     for (Actor *actor : actors)
     {
         if (!storage->addActor(actor))
-        {
-            return false;
-        }
-    }
-
-    for (Controller *controller : controllers)
-    {
-        if (!storage->addController(controller))
         {
             return false;
         }

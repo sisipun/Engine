@@ -4,7 +4,6 @@
 #include "SDL.h"
 #include "../storage/storage.h"
 #include "../actor/actor.h"
-#include "../controller/controller.h"
 
 class Scene
 {

@@ -12,5 +12,5 @@ void MainScene::update(float delta)
 
 void MainScene::handleInput(SDL_Event *event)
 {
-    storage->getController("hero")->handleInput(event);
+    storage->getActor("hero")->handleInput(event);
 }

@@ -1,6 +1,5 @@
 #include "storage.h"
 #include "../actor/actor.h"
-#include "../controller/controller.h"
 #include "../logger/logger.h"
 
 Storage::~Storage()
@@ -11,25 +10,6 @@ Storage::~Storage()
     }
 
     actors.clear();
-
-    for (const auto &controllerDef : controllers)
-    {
-        delete controllerDef.second;
-    }
-
-    controllers.clear();
-}
-
-bool Storage::addController(Controller *controller)
-{
-    if (!controller->init(this))
-    {
-        Logger::log("Can't initialize controller for actor name: %s\n", controller->getActorName().c_str());
-        return false;
-    }
-
-    controllers.insert(std::pair<std::string, Controller *>(controller->getActorName(), controller));
-    return true;
 }
 
 bool Storage::addActor(Actor *actor)
@@ -51,14 +31,4 @@ Actor *Storage::getActor(std::string name)
         return nullptr;
     }
     return actorPair->second;
-}
-
-Controller *Storage::getController(std::string actorName)
-{
-    std::map<std::string, Controller *>::iterator controllerPair = controllers.find(actorName);
-    if (controllerPair == controllers.end())
-    {
-        return nullptr;
-    }
-    return controllerPair->second;
 }

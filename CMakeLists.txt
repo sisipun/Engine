@@ -25,9 +25,6 @@ set(SOURCE_LIB
     src/engine/actor/actor.h
     src/engine/actor/actor.cpp
 
-    src/engine/controller/controller.h
-    src/engine/controller/controller.cpp
-
     src/engine/storage/storage.h
     src/engine/storage/storage.cpp
 
@@ -53,8 +50,8 @@ set(SOURCE_LIB
 
     src/utils/constants.h
 
-    src/controller/user_controller.h
-    src/controller/user_controller.cpp
+    src/actor/hero.h
+    src/actor/hero.cpp
 
     src/scene/main_scene.h
     src/scene/main_scene.cpp

@@ -5,7 +5,6 @@
 #include "SDL_mixer.h"
 #include <vector>
 #include "actor/actor.h"
-#include "controller/controller.h"
 #include "storage/storage.h"
 #include "scene/scene.h"
 #include "time/timer.h"
@@ -17,7 +16,7 @@ public:
 
     bool init(float screenWidth, float screenHeigh);
 
-    bool loadMedia(Scene *startScene, std::vector<Actor *> actors, std::vector<Controller *> controllers);
+    bool loadMedia(Scene *startScene, std::vector<Actor *> actors);
 
     bool changeScene(Scene *scene);
 

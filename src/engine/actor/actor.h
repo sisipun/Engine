@@ -8,14 +8,13 @@
 class Actor
 {
 public:
-    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity) : name(name),
-                                                                                           body(body),
-                                                                                           horizontalVelocity(horizontalVelocity),
-                                                                                           verticalVelocity(verticalVelocity) {}
+    virtual ~Actor() {}
 
     void render(SDL_Renderer *renderer);
 
     void update(float delta);
+
+    virtual void handleInput(SDL_Event *event) {}
 
     void setVerticalVelocity(float verticalVelocity)
     {
@@ -27,9 +26,21 @@ public:
         this->horizontalVelocity = horizontalVelocity;
     }
 
-    std::string getName() {
+    void setBody(Body body)
+    {
+        this->body = body;
+    }
+
+    std::string getName()
+    {
         return name;
     }
+
+protected:
+    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity) : name(name),
+                                                                                           body(body),
+                                                                                           horizontalVelocity(horizontalVelocity),
+                                                                                           verticalVelocity(verticalVelocity) {}
 
 private:
     std::string name;
