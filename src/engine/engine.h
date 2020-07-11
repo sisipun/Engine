@@ -1,13 +1,14 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "SDL.h"
-#include "SDL_mixer.h"
-#include <vector>
 #include "actor/actor.h"
 #include "storage/storage.h"
 #include "scene/scene.h"
 #include "time/timer.h"
+
+#include "SDL.h"
+#include "SDL_mixer.h"
+#include <vector>
 
 class Engine
 {

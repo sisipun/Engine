@@ -1,6 +1,7 @@
 #include "collision.h"
 
-bool checkCollision(Body first, Body second) {
+bool checkCollision(Body first, Body second)
+{
     int leftFirst, leftSecond;
     int rightFirst, rightSecond;
     int topFirst, topSecond;
@@ -16,10 +17,22 @@ bool checkCollision(Body first, Body second) {
     topSecond = second.y;
     bottomSecond = second.y + second.height;
 
-    if (bottomFirst <= topSecond) { return false; }
-    if (topFirst >= bottomSecond) { return false; }
-    if (rightFirst <= leftSecond) { return false; }
-    if (leftFirst >= rightSecond) { return false; }
+    if (bottomFirst <= topSecond)
+    {
+        return false;
+    }
+    if (topFirst >= bottomSecond)
+    {
+        return false;
+    }
+    if (rightFirst <= leftSecond)
+    {
+        return false;
+    }
+    if (leftFirst >= rightSecond)
+    {
+        return false;
+    }
 
     return true;
 }

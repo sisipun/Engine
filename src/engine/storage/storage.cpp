@@ -1,5 +1,4 @@
 #include "storage.h"
-#include "../actor/actor.h"
 #include "../logger/logger.h"
 
 Storage::~Storage()
@@ -28,6 +27,7 @@ Actor *Storage::getActor(std::string name)
     std::map<std::string, Actor *>::iterator actorPair = actors.find(name);
     if (actorPair == actors.end())
     {
+        Logger::log("Cant find actor with name: %s\n", name.c_str());
         return nullptr;
     }
     return actorPair->second;

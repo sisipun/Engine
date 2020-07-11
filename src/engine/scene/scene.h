@@ -1,13 +1,15 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "SDL.h"
 #include "../storage/storage.h"
-#include "../actor/actor.h"
+
+#include "SDL.h"
 
 class Scene
 {
 public:
+    virtual ~Scene() {}
+
     bool init(Storage *storage)
     {
         this->storage = storage;
@@ -15,7 +17,7 @@ public:
         return initialized;
     }
 
-    void renderScene(SDL_Renderer* renderer)
+    void renderScene(SDL_Renderer *renderer)
     {
         if (!initialized)
         {
@@ -45,15 +47,14 @@ public:
 protected:
     Scene() : storage(nullptr), initialized(false) {}
 
-    virtual ~Scene() {}
-
-    virtual void render(SDL_Renderer* renderer) = 0;
+    virtual void render(SDL_Renderer *renderer) = 0;
 
     virtual void update(float delta) = 0;
 
     virtual void handleInput(SDL_Event *event) = 0;
 
     Storage *storage;
+
 private:
     bool initialized;
 };

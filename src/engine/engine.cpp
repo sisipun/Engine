@@ -32,16 +32,6 @@ bool Engine::init(float screenWidth, float screenHeigh)
         return false;
     }
 
-    Mix_Chunk *gMusic = Mix_LoadWAV(R"(./bonus.wav)");
-    if (gMusic == NULL)
-    {
-        return false;
-    }
-    else
-    {
-        Mix_PlayChannel(-1, gMusic, 0);
-    }
-
     storage = new Storage();
 
     event = new SDL_Event();
@@ -115,12 +105,17 @@ bool Engine::isQuit()
 
 void Engine::close()
 {
-    delete event;
     delete timer;
     delete storage;
+    delete currentScene;
+
+    timer = nullptr;
+    storage = nullptr;
+    currentScene = nullptr;
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    delete event;
     renderer = nullptr;
     window = nullptr;
     event = nullptr;
