@@ -1,16 +1,24 @@
 #include "main_scene.h"
 
+bool MainScene::init(Storage* storage) {
+    this->hero = storage->getActor("hero");
+    if (hero == nullptr) {
+        return false;
+    }
+    return true;
+}
+
 void MainScene::render(SDL_Renderer* renderer)
 {
-    storage->getActor("hero")->render(renderer);
+    hero->render(renderer);
 }
 
 void MainScene::update(float delta)
 {
-    storage->getActor("hero")->update(delta);
+    hero->update(delta);
 }
 
 void MainScene::handleInput(SDL_Event *event)
 {
-    storage->getActor("hero")->handleInput(event);
+    hero->handleInput(event);
 }

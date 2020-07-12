@@ -76,11 +76,11 @@ void Engine::update()
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(renderer);
 
-    currentScene->renderScene(renderer);
+    currentScene->render(renderer);
 
     SDL_RenderPresent(renderer);
 
-    currentScene->updateScene(delta);
+    currentScene->update(delta);
 
     delta = timer->getTicks() * 0.001;
 }
@@ -94,7 +94,7 @@ void Engine::handleInput()
             quit = true;
         }
 
-        currentScene->handleInputScene(event);
+        currentScene->handleInput(event);
     }
 }
 
