@@ -2,21 +2,58 @@
 #define SCENE_H
 
 #include "../storage/storage.h"
+#include "../actor/actor.h"
 
 #include "SDL.h"
+#include <string>
+#include <vector>
 
 class Scene
 {
 public:
-    virtual ~Scene() {}
+    Scene(std::vector<std::string> actorNames) : actorNames(actorNames) {}
 
-    virtual bool init(Storage *storage) = 0;
+    bool init(Storage *storage)
+    {
+        for (auto actorName : actorNames)
+        {
+            Actor* actor = storage->getActor(actorName);
+            if (actor == nullptr) {
+                actors.clear();
+                return false;
+            }
+            actors.push_back(actor);
+        }
+        return true;
+    }
 
-    virtual void render(SDL_Renderer *renderer) = 0;
+    void render(SDL_Renderer *renderer)
+    {
+        for (auto actor : actors)
+        {
+            actor->render(renderer);
+        }
+    }
 
-    virtual void update(float delta) = 0;
+    void update(float delta)
+    {
+        for (auto actor : actors)
+        {
+            actor->update(delta);
+        }
+    }
 
-    virtual void handleInput(SDL_Event *event) = 0;
+    void handleInput(SDL_Event *event)
+    {
+        for (auto actor : actors)
+        {
+            actor->handleInput(event);
+        }
+    }
+
+private:
+    std::vector<std::string> actorNames;
+    std::vector<Actor *> actors;
 };
 
 #endif

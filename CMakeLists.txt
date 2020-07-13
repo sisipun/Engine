@@ -52,9 +52,8 @@ set(SOURCE_LIB
 
     src/actor/hero.h
     src/actor/hero.cpp
-
-    src/scene/main_scene.h
-    src/scene/main_scene.cpp
+    
+    src/actor/wall.h
 )
 
 add_library(Components STATIC ${SOURCE_LIB})
