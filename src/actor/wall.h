@@ -13,7 +13,8 @@ public:
                                                                                               name,
                                                                                               body,
                                                                                               horizontalVelocity,
-                                                                                              verticalVelocity) {}
+                                                                                              verticalVelocity,
+                                                                                              false) {}
 };
 
 #endif

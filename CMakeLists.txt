@@ -19,6 +19,12 @@ set(SOURCE_LIB
 
     src/engine/physics/body.h
 
+    src/engine/physics/collision.h
+    src/engine/physics/collision.cpp
+
+    src/engine/physics/collision_manager.h
+    src/engine/physics/collision_manager.cpp
+
     src/engine/engine.h
     src/engine/engine.cpp
 

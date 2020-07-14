@@ -13,9 +13,12 @@ public:
                                                                             "hero",
                                                                             body,
                                                                             horizontalVelocity,
-                                                                            verticalVelocity) {}
+                                                                            verticalVelocity,
+                                                                            true) {}
 
     void handleInput(SDL_Event *event) override;
+
+    void handleCollision(Actor *actor) override;
 };
 
 #endif

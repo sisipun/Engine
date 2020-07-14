@@ -17,10 +17,10 @@ int main(int argc, char *argv[])
 
     std::vector<Actor *> actors;
 
-    Hero *hero = new Hero({20, 20, 10, 10}, 0, 0);
+    Hero *hero = new Hero({30, 30, 10, 10}, 0, 0);
     actors.push_back(hero);
 
-    std::vector<Actor* > walls;
+    std::vector<Actor *> walls;
     Actor *northWall = new Wall("northWall", {0, 0, SCREEN_WIDTH, 20}, 0, 0);
     Actor *westWall = new Wall("westWall", {0, 0, 20, SCREEN_HEIGHT}, 0, 0);
     Actor *southWall = new Wall("southWall", {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20}, 0, 0);

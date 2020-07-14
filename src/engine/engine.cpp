@@ -33,6 +33,7 @@ bool Engine::init(float screenWidth, float screenHeigh)
     }
 
     storage = new Storage();
+    collisionManager = new CollisionManager();
 
     event = new SDL_Event();
     timer = new Timer();
@@ -44,7 +45,7 @@ bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors)
 {
     for (Actor *actor : actors)
     {
-        if (!storage->addActor(actor))
+        if (!storage->addActor(actor) || (actor->isManageCollisions() && !collisionManager->addActor(actor)))
         {
             return false;
         }
@@ -54,6 +55,8 @@ bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors)
     {
         return false;
     }
+
+    collisionManager->manageCollision(storage->getActors());
 
     return true;
 }
@@ -82,6 +85,8 @@ void Engine::update()
 
     currentScene->update(delta);
 
+    collisionManager->manageCollision(storage->getActors());
+
     delta = timer->getTicks() * 0.001;
 }
 
@@ -107,10 +112,12 @@ void Engine::close()
 {
     delete timer;
     delete storage;
+    delete collisionManager;
     delete currentScene;
 
     timer = nullptr;
     storage = nullptr;
+    collisionManager = nullptr;
     currentScene = nullptr;
 
     SDL_DestroyRenderer(renderer);

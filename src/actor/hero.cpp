@@ -40,3 +40,9 @@ void Hero::handleInput(SDL_Event *event)
         }
     }
 }
+
+void Hero::handleCollision(Actor *actor)
+{
+    setHorizontalVelocity(0);
+    setVerticalVelocity(0);
+}

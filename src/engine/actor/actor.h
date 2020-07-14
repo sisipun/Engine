@@ -2,6 +2,7 @@
 #define ACTOR_H
 
 #include "../physics/body.h"
+#include "../physics/collision.h"
 
 #include "SDL.h"
 #include <string>
@@ -17,6 +18,13 @@ public:
 
     virtual void handleInput(SDL_Event *event) {}
 
+    virtual void handleCollision(Actor *actor) {}
+
+    virtual bool isCollides(Actor *actor)
+    {
+        return checkCollision(body, actor->body);
+    }
+
     Body getBody()
     {
         return body;
@@ -27,11 +35,17 @@ public:
         return name;
     }
 
+    bool isManageCollisions()
+    {
+        return manageCollisions;
+    }
+
 protected:
-    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity) : name(name),
-                                                                                           body(body),
-                                                                                           horizontalVelocity(horizontalVelocity),
-                                                                                           verticalVelocity(verticalVelocity) {}
+    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity, bool manageCollisions) : name(name),
+                                                                                                                  body(body),
+                                                                                                                  horizontalVelocity(horizontalVelocity),
+                                                                                                                  verticalVelocity(verticalVelocity),
+                                                                                                                  manageCollisions(manageCollisions) {}
 
     void setVerticalVelocity(float verticalVelocity)
     {
@@ -53,6 +67,7 @@ private:
     Body body;
     float horizontalVelocity;
     float verticalVelocity;
+    bool manageCollisions;
 };
 
 #endif

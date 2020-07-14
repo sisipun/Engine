@@ -11,7 +11,7 @@ class ActorGroup : public Actor
 {
 public:
     ActorGroup(std::string name, std::vector<Actor *> children)
-        : Actor(name, {0, 0, 0, 0}, 0, 0), children(children) {}
+        : Actor(name, {0, 0, 0, 0}, 0, 0, false), children(children) {}
 
     void render(SDL_Renderer *renderer) override
     {
@@ -35,6 +35,18 @@ public:
         {
             child->handleInput(event);
         }
+    }
+
+    virtual bool isCollides(Actor *actor) override
+    {
+        for (auto child : children)
+        {
+            if (child->isCollides(actor))
+            {
+                return true;
+            };
+        }
+        return false;
     }
 
 private:

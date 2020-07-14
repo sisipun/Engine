@@ -15,6 +15,11 @@ public:
 
     Actor *getActor(std::string name);
 
+    std::map<std::string, Actor *> getActors()
+    {
+        return actors;
+    }
+
 private:
     std::map<std::string, Actor *> actors;
 };
