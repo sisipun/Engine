@@ -17,14 +17,14 @@ int main(int argc, char *argv[])
 
     std::vector<Actor *> actors;
 
-    Hero *hero = new Hero({30, 30, 10, 10}, 0, 0);
+    Hero *hero = new Hero({SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, HERO_WIDTH, HERO_HEIGHT}, 0, 0);
     actors.push_back(hero);
 
     std::vector<Actor *> walls;
-    Actor *northWall = new Wall("northWall", {0, 0, SCREEN_WIDTH, 20}, 0, 0);
-    Actor *westWall = new Wall("westWall", {0, 0, 20, SCREEN_HEIGHT}, 0, 0);
-    Actor *southWall = new Wall("southWall", {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20}, 0, 0);
-    Actor *eastWall = new Wall("eastWall", {SCREEN_WIDTH - 20, 0, 20, SCREEN_HEIGHT}, 0, 0);
+    Actor *northWall = new Wall("northWall", {0, 0, SCREEN_WIDTH, WALL_WIDTH}, 0, 0);
+    Actor *westWall = new Wall("westWall", {0, 0, WALL_WIDTH, SCREEN_HEIGHT}, 0, 0);
+    Actor *southWall = new Wall("southWall", {0, SCREEN_HEIGHT - WALL_WIDTH, SCREEN_WIDTH, WALL_WIDTH}, 0, 0);
+    Actor *eastWall = new Wall("eastWall", {SCREEN_WIDTH - WALL_WIDTH, 0, WALL_WIDTH, SCREEN_HEIGHT}, 0, 0);
 
     walls.push_back(northWall);
     walls.push_back(westWall);
