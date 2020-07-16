@@ -16,9 +16,15 @@ public:
                                                                             verticalVelocity,
                                                                             true) {}
 
+    void update(float delta) override;
+
     void handleInput(SDL_Event *event) override;
 
     void handleCollision(Actor *actor) override;
+
+private:
+    float lastHorizontalMove;
+    float lastVerticalMove;
 };
 
 #endif

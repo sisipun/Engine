@@ -1,6 +1,13 @@
 #include "hero.h"
 #include "../utils/constants.h"
 
+void Hero::update(float delta) {
+    this->lastHorizontalMove = this->horizontalVelocity * delta;
+    this->lastVerticalMove = this->verticalVelocity * delta;
+    this->body.x += this->lastHorizontalMove;
+    this->body.y += this->lastVerticalMove;
+}
+
 void Hero::handleInput(SDL_Event *event)
 {
     if (event->type == SDL_KEYDOWN)
@@ -8,16 +15,16 @@ void Hero::handleInput(SDL_Event *event)
         switch (event->key.keysym.sym)
         {
         case SDLK_RIGHT:
-            setHorizontalVelocity(HERO_VELOCITY);
+            this->horizontalVelocity = HERO_VELOCITY;
             break;
         case SDLK_LEFT:
-            setHorizontalVelocity(-HERO_VELOCITY);
+            this->horizontalVelocity = -HERO_VELOCITY;
             break;
         case SDLK_UP:
-            setVerticalVelocity(-HERO_VELOCITY);
+            this->verticalVelocity = -HERO_VELOCITY;
             break;
         case SDLK_DOWN:
-            setVerticalVelocity(HERO_VELOCITY);
+            this->verticalVelocity = HERO_VELOCITY;
             break;
         }
     }
@@ -26,16 +33,16 @@ void Hero::handleInput(SDL_Event *event)
         switch (event->key.keysym.sym)
         {
         case SDLK_RIGHT:
-            setHorizontalVelocity(0);
+            this->horizontalVelocity = 0;
             break;
         case SDLK_LEFT:
-            setHorizontalVelocity(0);
+            this->horizontalVelocity = 0;
             break;
         case SDLK_UP:
-            setVerticalVelocity(0);
+            this->verticalVelocity = 0;
             break;
         case SDLK_DOWN:
-            setVerticalVelocity(0);
+            this->verticalVelocity = 0;
             break;
         }
     }
@@ -43,6 +50,6 @@ void Hero::handleInput(SDL_Event *event)
 
 void Hero::handleCollision(Actor *actor)
 {
-    setHorizontalVelocity(0);
-    setVerticalVelocity(0);
+    this->body.x -= this->lastHorizontalMove;
+    this->body.y -= this->lastVerticalMove;
 }

@@ -47,26 +47,12 @@ protected:
                                                                                                                   verticalVelocity(verticalVelocity),
                                                                                                                   manageCollisions(manageCollisions) {}
 
-    void setVerticalVelocity(float verticalVelocity)
-    {
-        this->verticalVelocity = verticalVelocity;
-    }
-
-    void setHorizontalVelocity(float horizontalVelocity)
-    {
-        this->horizontalVelocity = horizontalVelocity;
-    }
-
-    void setBody(Body body)
-    {
-        this->body = body;
-    }
-
-private:
-    std::string name;
     Body body;
     float horizontalVelocity;
     float verticalVelocity;
+
+private:
+    std::string name;
     bool manageCollisions;
 };
 
