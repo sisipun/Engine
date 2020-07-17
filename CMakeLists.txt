@@ -25,6 +25,9 @@ set(SOURCE_LIB
     src/engine/physics/collision_manager.h
     src/engine/physics/collision_manager.cpp
 
+    src/engine/maze/maze_generator.h
+    src/engine/maze/maze_generator.cpp
+
     src/engine/engine.h
     src/engine/engine.cpp
 
