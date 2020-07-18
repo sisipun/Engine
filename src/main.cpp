@@ -1,7 +1,7 @@
 #include "engine/engine.h"
 #include "engine/actor/actor.h"
 #include "engine/actor/actor_group.h"
-#include "engine/maze/maze_generator.h"
+#include "engine/maze/simple_maze_generator.h"
 #include "engine/logger/logger.h"
 #include "utils/constants.h"
 #include "actor/hero.h"
@@ -22,9 +22,11 @@ int main(int argc, char *argv[])
     actors.push_back(hero);
 
     std::vector<Actor *> walls;
+    MazeGenerator *mazeGenerator = new SimpleMazeGenerator();
     int mazeWidth = SCREEN_WIDTH / 10;
     int mazeHeight = SCREEN_HEIGHT / 10;
-    int *maze = MazeGenerator::generate(mazeWidth, mazeHeight);
+    int *maze = mazeGenerator->generate(mazeWidth, mazeHeight);
+
     for (int i = 0; i < mazeWidth; i++)
     {
         for (int j = 0; j < mazeHeight; j++)
@@ -64,6 +66,8 @@ int main(int argc, char *argv[])
         engine.update();
         engine.handleInput();
     }
+
+    delete mazeGenerator;
     engine.close();
     return 0;
 }

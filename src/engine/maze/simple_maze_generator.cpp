@@ -1,7 +1,7 @@
-#include "maze_generator.h"
+#include "simple_maze_generator.h"
 #include <stdlib.h>
 
-int *MazeGenerator::generate(int width, int height)
+int *SimpleMazeGenerator::generate(int width, int height)
 {
     int size = width * height;
     int *maze = new int[size];

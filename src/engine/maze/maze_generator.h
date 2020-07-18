@@ -4,7 +4,9 @@
 class MazeGenerator
 {
 public:
-    static int *generate(int width, int height);
+    virtual ~MazeGenerator() {}
+
+    virtual int *generate(int width, int height) = 0;
 };
 
 #endif
