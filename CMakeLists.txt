@@ -28,6 +28,10 @@ set(SOURCE_LIB
     src/engine/maze/maze_generator.h
     src/engine/maze/simple_maze_generator.h
     src/engine/maze/simple_maze_generator.cpp
+    src/engine/maze/chess_maze_generator.h
+    src/engine/maze/chess_maze_generator.cpp
+    src/engine/maze/drunkard_walk_maze_generator.h
+    src/engine/maze/drunkard_walk_maze_generator.cpp
 
     src/engine/engine.h
     src/engine/engine.cpp
