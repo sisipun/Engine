@@ -6,7 +6,26 @@
 class DrunkardWalkMazeGenerator : public MazeGenerator
 {
 public:
+    DrunkardWalkMazeGenerator(int coverage)
+    {
+        if (coverage > 100)
+        {
+            this->coverage = 100;
+        }
+        else if (coverage < 0)
+        {
+            this->coverage = 0;
+        }
+        else
+        {
+            this->coverage = coverage;
+        }
+    }
+
     int *generate(int width, int height) override;
+
+private:
+    int coverage;
 };
 
 #endif

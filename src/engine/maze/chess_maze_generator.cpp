@@ -1,10 +1,12 @@
 #include "chess_maze_generator.h"
-#include <stdlib.h>
+#include <random>
+#include <ctime>
 
 int *ChessMazeGenerator::generate(int width, int height)
 {
     int size = width * height;
     int *maze = new int[size];
+
     for (int i = 0; i < width; i++) {
         *(maze + (i * height)) = 1;
         *(maze + (i * height) + height - 1) = 1;
@@ -13,6 +15,9 @@ int *ChessMazeGenerator::generate(int width, int height)
         *(maze + j) = 1;
         *(maze + ((width - 1) * height) +j) = 1;
     }
+    
+    srand(time(0));
+
     for (int i = 2; i < width - 2; i += 2)
     {
         for (int j = 2; j < height - 2; j += 2)

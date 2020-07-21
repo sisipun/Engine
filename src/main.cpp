@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     actors.push_back(hero);
 
     std::vector<Actor *> walls;
-    MazeGenerator *mazeGenerator = new DrunkardWalkMazeGenerator();
+    MazeGenerator *mazeGenerator = new DrunkardWalkMazeGenerator(50);
     int mazeWidth = SCREEN_WIDTH / 20;
     int mazeHeight = SCREEN_HEIGHT / 20;
     int *maze = mazeGenerator->generate(mazeWidth, mazeHeight);
