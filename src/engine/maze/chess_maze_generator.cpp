@@ -1,9 +1,10 @@
 #include "chess_maze_generator.h"
-#include <random>
+#include "../random/random_generator.h"
 #include <ctime>
 
 int *ChessMazeGenerator::generate(int width, int height)
 {
+    RandomGenerator generator = RandomGenerator();
     int size = width * height;
     int *maze = new int[size];
 
@@ -16,14 +17,13 @@ int *ChessMazeGenerator::generate(int width, int height)
         *(maze + ((width - 1) * height) +j) = 1;
     }
     
-    srand(time(0));
 
     for (int i = 2; i < width - 2; i += 2)
     {
         for (int j = 2; j < height - 2; j += 2)
         {
             *(maze + (i * height) + j) = 1;
-            int addition = rand() % 4 + 1;
+            int addition = generator.generateFromRange(0, 3);
             if (addition == 1)
             {
                 *(maze + ((i + 1) * height) + j) = 1;

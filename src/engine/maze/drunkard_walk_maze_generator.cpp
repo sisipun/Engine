@@ -1,9 +1,9 @@
 #include "drunkard_walk_maze_generator.h"
-#include <random>
-#include <ctime>
+#include "../random/random_generator.h"
 
 int *DrunkardWalkMazeGenerator::generate(int width, int height)
 {
+    RandomGenerator generator = RandomGenerator();
     int step_count = width * height * (coverage / 100.0);
     int *maze = new int[width * height];
     for (int i = 0; i < width; i++)
@@ -14,14 +14,12 @@ int *DrunkardWalkMazeGenerator::generate(int width, int height)
         }
     }
 
-    srand(time(0));
-
-    int current_position_x = (rand() % (width / 3)) + (width / 3);
-    int current_position_y = (rand() % (height / 3)) + (height / 3);
+    int current_position_x = generator.generateFromRange(width / 3, 2 * width / 3);
+    int current_position_y = generator.generateFromRange(height / 3, 2 * height / 3);
 
     for (int i = 0; i < step_count;)
     {
-        int direction = rand() % 4;
+        int direction = generator.generateFromRange(0, 3);
         if (direction == 0 && current_position_x + 1 < width)
         {
             current_position_x += 1;

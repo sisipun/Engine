@@ -1,17 +1,16 @@
 #include "simple_maze_generator.h"
-#include <random>
-#include <ctime>
+#include "../random/random_generator.h"
+
 
 int *SimpleMazeGenerator::generate(int width, int height)
 {
+    RandomGenerator generator = RandomGenerator();
     int size = width * height;
     int *maze = new int[size];
 
-    srand(time(0));
-
     for (int i = 0; i < size; i++)
     {
-        *(maze + i) = rand() % 5;
+        *(maze + i) = generator.generateFromRange(0, 1);
     }
 
     return maze;
