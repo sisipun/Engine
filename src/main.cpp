@@ -23,8 +23,8 @@ int main(int argc, char *argv[])
 
     std::vector<Actor *> walls;
     MazeGenerator *mazeGenerator = new DrunkardWalkMazeGenerator(50);
-    int mazeWidth = SCREEN_WIDTH / 20;
-    int mazeHeight = SCREEN_HEIGHT / 20;
+    int mazeWidth = SCREEN_WIDTH / 20 - 2;
+    int mazeHeight = SCREEN_HEIGHT / 20 - 2;
     int *maze = mazeGenerator->generate(mazeWidth, mazeHeight);
 
     for (int i = 0; i < mazeWidth; i++)
@@ -33,10 +33,20 @@ int main(int argc, char *argv[])
         {
             if (*(maze + (i * mazeHeight) + j) == 1)
             {
-                walls.push_back(new Wall(std::to_string(i), {static_cast<float>(i * WALL_WIDTH), static_cast<float>(j * WALL_WIDTH),  WALL_WIDTH, WALL_WIDTH}, 0, 0));
+                walls.push_back(new Wall(std::to_string(i), {static_cast<float>((i + 1) * WALL_WIDTH), static_cast<float>((1 + j) * WALL_WIDTH),  WALL_WIDTH, WALL_WIDTH}, 0, 0));
             }
         }
     }
+
+    Actor *northWall = new Wall("northWall", {0, 0, SCREEN_WIDTH, 20}, 0, 0);
+    Actor *westWall = new Wall("westWall", {0, 0, 20, SCREEN_HEIGHT}, 0, 0);
+    Actor *southWall = new Wall("southWall", {0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 20}, 0, 0);
+    Actor *eastWall = new Wall("eastWall", {SCREEN_WIDTH - 20, 0, 20, SCREEN_HEIGHT}, 0, 0);
+
+    walls.push_back(northWall);
+    walls.push_back(westWall);
+    walls.push_back(southWall);
+    walls.push_back(eastWall);
 
     ActorGroup *wallGroup = new ActorGroup("wallGroup", walls);
     actors.push_back(wallGroup);
