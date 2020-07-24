@@ -6,7 +6,7 @@
 class DrunkardWalkMazeGenerator : public MazeGenerator
 {
 public:
-    DrunkardWalkMazeGenerator(int coverage)
+    DrunkardWalkMazeGenerator(int coverage = 50)
     {
         if (coverage > 100)
         {

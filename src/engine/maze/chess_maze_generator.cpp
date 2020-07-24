@@ -1,6 +1,5 @@
 #include "chess_maze_generator.h"
 #include "../random/random_generator.h"
-#include <ctime>
 
 int *ChessMazeGenerator::generate(int width, int height)
 {

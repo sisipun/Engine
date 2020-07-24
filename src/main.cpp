@@ -2,6 +2,9 @@
 #include "engine/actor/actor.h"
 #include "engine/actor/actor_group.h"
 #include "engine/maze/drunkard_walk_maze_generator.h"
+#include "engine/maze/cellular_automata_maze_generator..h"
+#include "engine/maze/chess_maze_generator.h"
+#include "engine/maze/simple_maze_generator.h"
 #include "engine/logger/logger.h"
 #include "utils/constants.h"
 #include "actor/hero.h"
@@ -22,7 +25,7 @@ int main(int argc, char *argv[])
     actors.push_back(hero);
 
     std::vector<Actor *> walls;
-    MazeGenerator *mazeGenerator = new DrunkardWalkMazeGenerator(50);
+    MazeGenerator *mazeGenerator = new CellularAutomataMazeGenerator();
     int mazeWidth = SCREEN_WIDTH / 20 - 2;
     int mazeHeight = SCREEN_HEIGHT / 20 - 2;
     int *maze = mazeGenerator->generate(mazeWidth, mazeHeight);
