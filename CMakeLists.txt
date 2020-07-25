@@ -27,15 +27,14 @@ set(SOURCE_LIB
 
     src/engine/random/random_generator.h
 
-    src/engine/maze/maze_generator.h
-    src/engine/maze/simple_maze_generator.h
-    src/engine/maze/simple_maze_generator.cpp
-    src/engine/maze/chess_maze_generator.h
-    src/engine/maze/chess_maze_generator.cpp
-    src/engine/maze/drunkard_walk_maze_generator.h
-    src/engine/maze/drunkard_walk_maze_generator.cpp
-    src/engine/maze/cellular_automata_maze_generator..h
-    src/engine/maze/cellular_automata_maze_generator..cpp
+    src/engine/maze/map.h
+    src/engine/maze/map_generator.h
+    src/engine/maze/chess_generator.h
+    src/engine/maze/chess_generator.cpp
+    src/engine/maze/drunkard_walk_generator.h
+    src/engine/maze/drunkard_walk_generator.cpp
+    src/engine/maze/cellular_automata_generator..h
+    src/engine/maze/cellular_automata_generator..cpp
 
     src/engine/engine.h
     src/engine/engine.cpp

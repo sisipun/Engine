@@ -1,9 +1,9 @@
 #ifndef CELLULAR_AUTOMATA_MAZE_GENERATOR_H
 #define CELLULAR_AUTOMATA_MAZE_GENERATOR_H
 
-#include "maze_generator.h"
+#include "map_generator.h"
 
-class CellularAutomataMazeGenerator : public MazeGenerator
+class CellularAutomataMazeGenerator : public MapGenerator
 {
 public:
     CellularAutomataMazeGenerator(int birthLimit = 4, int deathLimit = 3, int initialChance = 50, int stepCount = 4)
@@ -61,7 +61,7 @@ public:
         }
     }
 
-    int *generate(int width, int height) override;
+    Map *generate(int width, int height) override;
 
 private:
     int deathLimit;

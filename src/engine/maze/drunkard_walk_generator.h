@@ -1,9 +1,9 @@
 #ifndef DRUNKARD_WALK_MAZE_GENERATOR_H
 #define DRUNKARD_WALK_MAZE_GENERATOR_H
 
-#include "maze_generator.h"
+#include "map_generator.h"
 
-class DrunkardWalkMazeGenerator : public MazeGenerator
+class DrunkardWalkMazeGenerator : public MapGenerator
 {
 public:
     DrunkardWalkMazeGenerator(int coverage = 50)
@@ -22,7 +22,7 @@ public:
         }
     }
 
-    int *generate(int width, int height) override;
+    Map *generate(int width, int height) override;
 
 private:
     int coverage;

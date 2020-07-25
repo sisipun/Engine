@@ -1,4 +1,4 @@
-#include "cellular_automata_maze_generator..h"
+#include "cellular_automata_generator..h"
 #include "../random/random_generator.h"
 
 int countAliveNeighbours(int *maze, int width, int height, int x, int y)
@@ -31,7 +31,7 @@ int countAliveNeighbours(int *maze, int width, int height, int x, int y)
 int *doSimulationStep(int *maze, int width, int height, int birthLimit, int deathLimit)
 {
     int size = width * height;
-    int *newMaze = new int[size];
+    int *newMap = new int[size];
 
     for (int x = 0; x < width; x++)
     {
@@ -42,49 +42,53 @@ int *doSimulationStep(int *maze, int width, int height, int birthLimit, int deat
             {
                 if (nbs < deathLimit)
                 {
-                    *(newMaze + (x * height) + y) = 0;
+                    *(newMap + (x * height) + y) = 0;
                 }
                 else
                 {
-                    *(newMaze + (x * height) + y) = 1;
+                    *(newMap + (x * height) + y) = 1;
                 }
             }
             else
             {
                 if (nbs > birthLimit)
                 {
-                    *(newMaze + (x * height) + y) = 1;
+                    *(newMap + (x * height) + y) = 1;
                 }
                 else
                 {
-                    *(newMaze + (x * height) + y) = 0;
+                    *(newMap + (x * height) + y) = 0;
                 }
             }
         }
     }
     delete[] maze;
-    return newMaze;
+    return newMap;
 }
 
-int *CellularAutomataMazeGenerator::generate(int width, int height)
+Map *CellularAutomataMazeGenerator::generate(int width, int height)
 {
     RandomGenerator generator = RandomGenerator();
     int size = width * height;
-    int *maze = new int[size];
+    int *map = new int[size];
 
     for (int i = 0; i < size; i++)
     {
         int chance = generator.generateFromRange(1, 100);
-        if (initialChance > chance) {
-            *(maze + i) = 1;
-        } else {
-            *(maze + i) = 0;
+        if (initialChance > chance)
+        {
+            *(map + i) = 1;
+        }
+        else
+        {
+            *(map + i) = 0;
         }
     }
 
-    for (int i = 0; i < stepCount; i++) {
-        maze = doSimulationStep(maze, width, height, birthLimit, deathLimit);
+    for (int i = 0; i < stepCount; i++)
+    {
+        map = doSimulationStep(map, width, height, birthLimit, deathLimit);
     }
 
-    return maze;
+    return new Map(map, width, height, width / 2, height / 2);
 }
