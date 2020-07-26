@@ -2,10 +2,10 @@
 #define ENGINE_H
 
 #include "actor/actor.h"
+#include "actor/scene/scene.h"
 #include "storage/storage.h"
 #include "physics/collision_manager.h"
-#include "scene/scene.h"
-#include "time/timer.h"
+#include "utils/time/timer.h"
 
 #include "SDL.h"
 #include "SDL_mixer.h"

@@ -1,40 +1,42 @@
 #include "chess_generator.h"
 #include "../random/random_generator.h"
 
-Map *ChessMazeGenerator::generate(int width, int height)
+Map *ChessGenerator::generate(int width, int height)
 {
     RandomGenerator generator = RandomGenerator();
     int size = width * height;
     int *map = new int[size];
 
-    for (int i = 0; i < width; i++) {
+    for (int i = 0; i < width; i++)
+    {
         *(map + (i * height)) = 1;
         *(map + (i * height) + height - 1) = 1;
     }
-    for (int j = 0; j < height; j++) {
+    for (int j = 0; j < height; j++)
+    {
         *(map + j) = 1;
-        *(map + ((width - 1) * height) +j) = 1;
+        *(map + ((width - 1) * height) + j) = 1;
     }
-    
+
     for (int i = 2; i < width - 2; i += 2)
     {
         for (int j = 2; j < height - 2; j += 2)
         {
             *(map + (i * height) + j) = 1;
             int addition = generator.generateFromRange(0, 3);
-            if (addition == 1)
+            if (addition == 0)
             {
                 *(map + ((i + 1) * height) + j) = 1;
             }
-            else if (addition == 2)
+            else if (addition == 1)
             {
                 *(map + ((i - 1) * height) + j) = 1;
             }
-            else if (addition == 3)
+            else if (addition == 2)
             {
                 *(map + (i * height) + (j + 1)) = 1;
             }
-            else if (addition == 4)
+            else if (addition == 3)
             {
                 *(map + (i * height) + (j - 1)) = 1;
             }

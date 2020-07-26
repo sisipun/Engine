@@ -1,8 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "../storage/storage.h"
-#include "../actor/actor.h"
+#include "../../storage/storage.h"
+#include "../actor.h"
 
 #include "SDL.h"
 #include <string>

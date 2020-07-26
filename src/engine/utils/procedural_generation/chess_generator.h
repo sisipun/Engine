@@ -3,7 +3,7 @@
 
 #include "map_generator.h"
 
-class ChessMazeGenerator : public MapGenerator
+class ChessGenerator : public MapGenerator
 {
 public:
     Map *generate(int width, int height) override;

@@ -66,7 +66,7 @@ int *doSimulationStep(int *maze, int width, int height, int birthLimit, int deat
     return newMap;
 }
 
-Map *CellularAutomataMazeGenerator::generate(int width, int height)
+Map *CellularAutomataGenerator::generate(int width, int height)
 {
     RandomGenerator generator = RandomGenerator();
     int size = width * height;

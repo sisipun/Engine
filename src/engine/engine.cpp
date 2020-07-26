@@ -1,5 +1,5 @@
 #include "engine.h"
-#include "logger/logger.h"
+#include "utils/logger/logger.h"
 
 Engine::Engine() : window(nullptr), renderer(nullptr), storage(nullptr), timer(nullptr), currentScene(nullptr), delta(0) {}
 

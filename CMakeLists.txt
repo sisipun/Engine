@@ -11,11 +11,21 @@ include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER
 
 set(SOURCE_EXE src/main.cpp)
 set(SOURCE_LIB
-    src/engine/logger/logger.h
-    src/engine/logger/logger.cpp
+    src/engine/utils/logger/logger.h
+    src/engine/utils/logger/logger.cpp
     
-    src/engine/time/timer.h
-    src/engine/time/timer.cpp
+    src/engine/utils/time/timer.h
+    src/engine/utils/time/timer.cpp
+
+    src/engine/utils/random/random_generator.h
+
+    src/engine/utils/procedural_generation/map_generator.h
+    src/engine/utils/procedural_generation/chess_generator.h
+    src/engine/utils/procedural_generation/chess_generator.cpp
+    src/engine/utils/procedural_generation/drunkard_walk_generator.h
+    src/engine/utils/procedural_generation/drunkard_walk_generator.cpp
+    src/engine/utils/procedural_generation/cellular_automata_generator..h
+    src/engine/utils/procedural_generation/cellular_automata_generator..cpp
 
     src/engine/physics/body.h
 
@@ -25,27 +35,13 @@ set(SOURCE_LIB
     src/engine/physics/collision_manager.h
     src/engine/physics/collision_manager.cpp
 
-    src/engine/random/random_generator.h
-
-    src/engine/maze/map.h
-    src/engine/maze/map_generator.h
-    src/engine/maze/chess_generator.h
-    src/engine/maze/chess_generator.cpp
-    src/engine/maze/drunkard_walk_generator.h
-    src/engine/maze/drunkard_walk_generator.cpp
-    src/engine/maze/cellular_automata_generator..h
-    src/engine/maze/cellular_automata_generator..cpp
-
-    src/engine/engine.h
-    src/engine/engine.cpp
-
     src/engine/actor/actor.h
     src/engine/actor/actor.cpp
 
+    src/engine/actor/scene/scene.h
+
     src/engine/storage/storage.h
     src/engine/storage/storage.cpp
-
-    src/engine/scene/scene.h
 
     src/engine/network/socket/socket_address.h
     src/engine/network/socket/socket_address.cpp
@@ -64,6 +60,9 @@ set(SOURCE_LIB
     src/engine/network/stream/input_memory_stream.cpp
     src/engine/network/stream/output_memory_stream.h
     src/engine/network/stream/output_memory_stream.cpp
+
+    src/engine/engine.h
+    src/engine/engine.cpp
 
     src/utils/constants.h
 

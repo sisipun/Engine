@@ -3,10 +3,10 @@
 
 #include "map_generator.h"
 
-class CellularAutomataMazeGenerator : public MapGenerator
+class CellularAutomataGenerator : public MapGenerator
 {
 public:
-    CellularAutomataMazeGenerator(int birthLimit = 4, int deathLimit = 3, int initialChance = 50, int stepCount = 4)
+    CellularAutomataGenerator(int birthLimit = 4, int deathLimit = 3, int initialChance = 50, int stepCount = 4)
     {
         if (birthLimit > 6)
         {

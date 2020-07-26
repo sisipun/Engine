@@ -1,5 +1,5 @@
 #include "collision_manager.h"
-#include "../logger/logger.h"
+#include "../utils/logger/logger.h"
 
 void CollisionManager::manageCollision(std::map<std::string, Actor *> actors)
 {

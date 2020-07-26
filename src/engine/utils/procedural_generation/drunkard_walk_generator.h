@@ -3,10 +3,10 @@
 
 #include "map_generator.h"
 
-class DrunkardWalkMazeGenerator : public MapGenerator
+class DrunkardWalkGenerator : public MapGenerator
 {
 public:
-    DrunkardWalkMazeGenerator(int coverage = 50)
+    DrunkardWalkGenerator(int coverage = 50)
     {
         if (coverage > 100)
         {
