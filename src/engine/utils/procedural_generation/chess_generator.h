@@ -1,5 +1,5 @@
-#ifndef CHESS_MAZE_GENERATOR_H
-#define CHESS_MAZE_GENERATOR_H
+#ifndef CHESS_GENERATOR_H
+#define CHESS_GENERATOR_H
 
 #include "map_generator.h"
 

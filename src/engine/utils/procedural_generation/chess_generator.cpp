@@ -9,6 +9,14 @@ Map *ChessGenerator::generate(int width, int height)
 
     for (int i = 0; i < width; i++)
     {
+        for (int j = 0; j < height; j++)
+        {
+            *(map + (i * height) + j) = 0;
+        }
+    }
+
+    for (int i = 0; i < width; i++)
+    {
         *(map + (i * height)) = 1;
         *(map + (i * height) + height - 1) = 1;
     }

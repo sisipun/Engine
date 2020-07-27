@@ -1,4 +1,4 @@
-#include "cellular_automata_generator..h"
+#include "cellular_automata_generator.h"
 #include "../random/random_generator.h"
 
 int countAliveNeighbours(int *maze, int width, int height, int x, int y)

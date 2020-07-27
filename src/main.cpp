@@ -4,7 +4,8 @@
 #include "engine/actor/scene/scene.h"
 #include "engine/utils/procedural_generation/chess_generator.h"
 #include "engine/utils/procedural_generation/drunkard_walk_generator.h"
-#include "engine/utils/procedural_generation/cellular_automata_generator..h"
+#include "engine/utils/procedural_generation/cellular_automata_generator.h"
+#include "engine/utils/procedural_generation/bsp_generator.h"
 #include "engine/utils/logger/logger.h"
 
 #include "utils/constants.h"
@@ -23,7 +24,7 @@ int main(int argc, char *argv[])
     std::vector<Actor *> actors;
     std::vector<Actor *> walls;
 
-    MapGenerator *mapGenerator = new CellularAutomataGenerator();
+    MapGenerator *mapGenerator = new DrunkardWalkGenerator();
     int mapWidth = SCREEN_WIDTH / WALL_WIDTH - 2;
     int mapHeight = SCREEN_HEIGHT / WALL_WIDTH - 2;
     Map *map = mapGenerator->generate(mapWidth, mapHeight);
