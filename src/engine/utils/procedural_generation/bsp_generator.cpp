@@ -2,15 +2,11 @@
 #include "../random/random_generator.h"
 #include "../logger/logger.h"
 
+const int RESPLIT_ATTEMPT_COUNT = 100;
+const float RATIO = 0.45;
+
 Leaf *split(int startX, int endX, int startY, int endY, int splitCount, RandomGenerator generator)
 {
-    //Logger::log("%d - X: (%d - %d), Y(%d - %d)\n",
-    //           splitCount,
-    //            startX,
-    //            endX,
-    //            startY,
-    //            endY);
-
     if (splitCount <= 0)
     {
         return nullptr;
@@ -18,20 +14,37 @@ Leaf *split(int startX, int endX, int startY, int endY, int splitCount, RandomGe
 
     int width = endX - startX;
     int height = endY - startY;
-    int splitDirection = generator.generateFromRange(0, 1);
-    Leaf *lLeaf, *rLeaf;
+    Leaf *lLeaf, *rLeaf = nullptr;
 
-    if (splitDirection == 0)
+    int attemtCount = 0;
+    while (true)
     {
-        int splitX = generator.generateFromRange(width / 3, 2 * width / 3);
-        lLeaf = split(startX, startX + splitX, startY, endY, splitCount - 1, generator);
-        rLeaf = split(startX + splitX, endX, startY, endY, splitCount - 1, generator);
-    }
-    else
-    {
-        int splitY = generator.generateFromRange(height / 3, 2 * height / 3);
-        lLeaf = split(startX, endX, startY, startY + splitY, splitCount - 1, generator);
-        rLeaf = split(startX, endX, startY + splitY, endY, splitCount - 1, generator);
+        int splitDirection = generator.generateFromRange(0, 1);
+        if (splitDirection == 0)
+        {
+            int splitX = generator.generateFromRange(width / 3, 2 * width / 3);
+            float lLeafRatio = static_cast<float>(splitX) / height;
+            float rLeafRatio = static_cast<float>(width - splitX) / height;
+            if ((lLeafRatio > RATIO && rLeafRatio > RATIO) || attemtCount >= RESPLIT_ATTEMPT_COUNT)
+            {
+                lLeaf = split(startX, startX + splitX, startY, endY, splitCount - 1, generator);
+                rLeaf = split(startX + splitX, endX, startY, endY, splitCount - 1, generator);
+                break;
+            }
+        }
+        else
+        {
+            int splitY = generator.generateFromRange(height / 3, 2 * height / 3);
+            float lLeafRatio = static_cast<float>(splitY) / width;
+            float rLeafRatio = static_cast<float>(height - splitY) / width;
+            if ((lLeafRatio > RATIO && rLeafRatio > RATIO) || attemtCount >= RESPLIT_ATTEMPT_COUNT)
+            {
+                lLeaf = split(startX, endX, startY, startY + splitY, splitCount - 1, generator);
+                rLeaf = split(startX, endX, startY + splitY, endY, splitCount - 1, generator);
+                break;
+            }
+        }
+        attemtCount++;
     }
 
     return new Leaf(
@@ -43,67 +56,46 @@ Leaf *split(int startX, int endX, int startY, int endY, int splitCount, RandomGe
         endY);
 }
 
-void showMap(int *map, int mapWidth, int mapHeight)
-{
-    for (int i = 0; i < mapWidth; i++)
-    {
-        for (int j = 0; j < mapHeight; j++)
-        {
-            Logger::log("%d ", *(map + (i * mapHeight) + j));
-        }
-        Logger::log("\n");
-    }
-}
-
-void leafToMap(Leaf *leaf, int *map, int mapWidth, int mapHeight)
+void leafToMap(Leaf *leaf, int *map, int mapWidth, int mapHeight, RandomGenerator generator)
 {
     if (leaf->getLLeaf() != nullptr && leaf->getRLeaf() != nullptr)
     {
-        leafToMap(leaf->getLLeaf(), map, mapWidth, mapHeight);
-        leafToMap(leaf->getRLeaf(), map, mapWidth, mapHeight);
+        int leftCenterX = leaf->getLLeaf()->getStartX() + (leaf->getLLeaf()->getEndX() - leaf->getLLeaf()->getStartX()) / 2;
+        int leftCenterY = leaf->getLLeaf()->getStartY() + (leaf->getLLeaf()->getEndY() - leaf->getLLeaf()->getStartY()) / 2;
+        int rightCenterX = leaf->getRLeaf()->getStartX() + (leaf->getRLeaf()->getEndX() - leaf->getRLeaf()->getStartX()) / 2;
+        int rightCenterY = leaf->getRLeaf()->getStartY() + (leaf->getRLeaf()->getEndY() - leaf->getRLeaf()->getStartY()) / 2;
+        for (int i = leftCenterX; i <= rightCenterX; i++)
+        {
+            *(map + (i * mapHeight) + leftCenterY) = 0;
+            *(map + (i * mapHeight) + rightCenterY) = 0;
+        }
+        for (int j = leftCenterY; j <= rightCenterY; j++)
+        {
+            *(map + (leftCenterX * mapHeight) + j) = 0;
+            *(map + (rightCenterX * mapHeight) + j) = 0;
+        }
+        leafToMap(leaf->getLLeaf(), map, mapWidth, mapHeight, generator);
+        leafToMap(leaf->getRLeaf(), map, mapWidth, mapHeight, generator);
     }
     else
     {
-        Logger::log("X: (%d - %d), Y(%d - %d)\n",
-                    leaf->getStartX(),
-                    leaf->getEndX(),
-                    leaf->getStartY(),
-                    leaf->getEndY());
-        for (int i = leaf->getStartX(); i < leaf->getEndX(); i++)
+        int leafWidth = leaf->getEndX() - leaf->getStartX();
+        int leafHeight = leaf->getEndY() - leaf->getStartY();
+        int leftCrop = generator.generateFromRange(0, leafWidth / 3);
+        int rightCrop = generator.generateFromRange(0, leafWidth / 3);
+        int bottomCrop = generator.generateFromRange(0, leafHeight / 3);
+        int topCrop = generator.generateFromRange(0, leafHeight / 3);
+        int startX = leaf->getStartX() + leftCrop;
+        int endX = leaf->getEndX() - rightCrop;
+        int startY = leaf->getStartY() + bottomCrop;
+        int endY = leaf->getEndY() - topCrop;
+        for (int i = startX; i < endX; i++)
         {
-            *(map + (i * mapHeight) + leaf->getStartY()) = 1;
-            *(map + (i * mapHeight) + (leaf->getEndY() - 1)) = 1;
+            for (int j = startY; j < endY; j++)
+            {
+                *(map + (i * mapHeight) + j) = 0;
+            }
         }
-        for (int j = leaf->getStartY(); j < leaf->getEndY(); j++)
-        {
-            *(map + (leaf->getStartX() * mapHeight) + j) = 1;
-            *(map + ((leaf->getEndX() - 1) * mapHeight) + j) = 1;
-        }
-        showMap(map, mapWidth, mapHeight);
-    }
-}
-
-void showLeaf(Leaf *leaf, int level)
-{
-    for (int i = 0; i < level; i++)
-    {
-        Logger::log(" ");
-    }
-
-    Logger::log("X: (%d - %d), Y(%d - %d)\n",
-                leaf->getStartX(),
-                leaf->getEndX(),
-                leaf->getStartY(),
-                leaf->getEndY());
-
-    if (leaf->getLLeaf() != nullptr)
-    {
-        showLeaf(leaf->getLLeaf(), level + 1);
-    }
-
-    if (leaf->getRLeaf() != nullptr)
-    {
-        showLeaf(leaf->getRLeaf(), level + 1);
     }
 }
 
@@ -120,13 +112,11 @@ Map *BSPGenerator::generate(int width, int height)
     {
         for (int j = 0; j < height; j++)
         {
-            *(map + (i * height) + j) = 0;
+            *(map + (i * height) + j) = 1;
         }
     }
 
-    showLeaf(rootLeaf, 0);
-
-    leafToMap(rootLeaf, map, width, height);
+    leafToMap(rootLeaf, map, width, height, generator);
 
     return new Map(map, width, height, width / 2, height / 2);
 }

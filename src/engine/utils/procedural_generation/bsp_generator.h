@@ -6,7 +6,7 @@
 class BSPGenerator : public MapGenerator
 {
 public:
-    BSPGenerator(int splitCount = 4) : splitCount(splitCount)
+    BSPGenerator(int splitCount = 6) : splitCount(splitCount)
     {
     }
 
