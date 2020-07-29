@@ -1,5 +1,4 @@
 #include "cellular_automata_generator.h"
-#include "../random/random_generator.h"
 
 int countAliveNeighbours(int *maze, int width, int height, int x, int y)
 {
@@ -66,9 +65,9 @@ int *doSimulationStep(int *maze, int width, int height, int birthLimit, int deat
     return newMap;
 }
 
-Map *CellularAutomataGenerator::generate(int width, int height)
+Map *CellularAutomataGenerator::generate(int width, int height, RandomGenerator generator, int birthLimit,
+                                         int deathLimit, int initialChance, int stepCount)
 {
-    RandomGenerator generator = RandomGenerator();
     int size = width * height;
     int *map = new int[size];
 

@@ -24,9 +24,9 @@ int main(int argc, char *argv[])
     std::vector<Actor *> actors;
     std::vector<Actor *> walls;
 
-    MapGenerator *mapGenerator = new BSPGenerator();
     int mapWidth = SCREEN_WIDTH / WALL_WIDTH - 2;
     int mapHeight = SCREEN_HEIGHT / WALL_WIDTH - 2;
+    BSPGenerator *mapGenerator = new BSPGenerator();
     Map *map = mapGenerator->generate(mapWidth, mapHeight);
 
     for (int i = 0; i < map->getWidth(); i++)

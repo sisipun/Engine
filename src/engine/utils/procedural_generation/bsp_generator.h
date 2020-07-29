@@ -1,19 +1,13 @@
 #ifndef BSP_GENERATOR_H
 #define BSP_GENERATOR_H
 
-#include "map_generator.h"
+#include "map.h"
+#include "../random/random_generator.h"
 
-class BSPGenerator : public MapGenerator
+class BSPGenerator
 {
 public:
-    BSPGenerator(int splitCount = 6) : splitCount(splitCount)
-    {
-    }
-
-    Map *generate(int width, int height) override;
-
-private:
-    int splitCount;
+    Map *generate(int width, int height, RandomGenerator generator = RandomGenerator(), int splitCount = 6);
 };
 
 class Leaf
@@ -38,27 +32,33 @@ public:
         }
     }
 
-    Leaf *getLLeaf() {
+    Leaf *getLLeaf()
+    {
         return lLeaf;
     }
 
-    Leaf *getRLeaf() {
+    Leaf *getRLeaf()
+    {
         return rLeaf;
     }
 
-    int getStartX() {
+    int getStartX()
+    {
         return startX;
     }
 
-    int getEndX() {
+    int getEndX()
+    {
         return endX;
     }
 
-    int getStartY() {
+    int getStartY()
+    {
         return startY;
     }
 
-    int getEndY() {
+    int getEndY()
+    {
         return endY;
     }
 

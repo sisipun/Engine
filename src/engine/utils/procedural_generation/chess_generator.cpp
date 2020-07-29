@@ -1,19 +1,10 @@
 #include "chess_generator.h"
-#include "../random/random_generator.h"
 
-Map *ChessGenerator::generate(int width, int height)
+Map *ChessGenerator::generate(int width, int height, RandomGenerator generator)
 {
-    RandomGenerator generator = RandomGenerator();
     int size = width * height;
     int *map = new int[size];
-
-    for (int i = 0; i < width; i++)
-    {
-        for (int j = 0; j < height; j++)
-        {
-            *(map + (i * height) + j) = 0;
-        }
-    }
+    MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, map, width, height, 0);
 
     for (int i = 0; i < width; i++)
     {

@@ -1,19 +1,11 @@
 #include "drunkard_walk_generator.h"
-#include "../random/random_generator.h"
 
-Map *DrunkardWalkGenerator::generate(int width, int height)
+Map *DrunkardWalkGenerator::generate(int width, int height, RandomGenerator generator, int coverage)
 {
-    RandomGenerator generator = RandomGenerator();
     int size = width * height;
     int step_count = size * (coverage / 100.0);
     int *map = new int[size];
-    for (int i = 0; i < width; i++)
-    {
-        for (int j = 0; j < height; j++)
-        {
-            *(map + (i * height) + j) = 1;
-        }
-    }
+    MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, map, width, height, 1);
 
     int starterPositionX = generator.generateFromRange(width / 3, 2 * width / 3);
     int starterPositionY = generator.generateFromRange(height / 3, 2 * height / 3);
