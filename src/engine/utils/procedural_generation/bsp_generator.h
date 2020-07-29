@@ -7,7 +7,7 @@
 class BSPGenerator
 {
 public:
-    Map *generate(int width, int height, RandomGenerator generator = RandomGenerator(), int splitCount = 6);
+    Map *generate(int width, int height, int splitCount = 6, float ratio = 0.45, RandomGenerator generator = RandomGenerator());
 };
 
 class Leaf

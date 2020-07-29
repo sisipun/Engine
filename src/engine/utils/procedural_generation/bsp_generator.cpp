@@ -1,9 +1,8 @@
 #include "bsp_generator.h"
 
 const int RESPLIT_ATTEMPT_COUNT = 100;
-const float RATIO = 0.45;
 
-Leaf *split(int startX, int endX, int startY, int endY, int splitCount, RandomGenerator generator)
+Leaf *split(int startX, int endX, int startY, int endY, int splitCount, float ratio, RandomGenerator generator)
 {
     if (splitCount <= 0)
     {
@@ -23,10 +22,10 @@ Leaf *split(int startX, int endX, int startY, int endY, int splitCount, RandomGe
             int splitX = generator.generateFromRange(width / 3, 2 * width / 3);
             float lLeafRatio = static_cast<float>(splitX) / height;
             float rLeafRatio = static_cast<float>(width - splitX) / height;
-            if ((lLeafRatio > RATIO && rLeafRatio > RATIO))
+            if ((lLeafRatio > ratio && rLeafRatio > ratio))
             {
-                lLeaf = split(startX, startX + splitX, startY, endY, splitCount - 1, generator);
-                rLeaf = split(startX + splitX, endX, startY, endY, splitCount - 1, generator);
+                lLeaf = split(startX, startX + splitX, startY, endY, splitCount - 1, ratio, generator);
+                rLeaf = split(startX + splitX, endX, startY, endY, splitCount - 1, ratio, generator);
                 break;
             }
         }
@@ -35,10 +34,10 @@ Leaf *split(int startX, int endX, int startY, int endY, int splitCount, RandomGe
             int splitY = generator.generateFromRange(height / 3, 2 * height / 3);
             float lLeafRatio = static_cast<float>(splitY) / width;
             float rLeafRatio = static_cast<float>(height - splitY) / width;
-            if ((lLeafRatio > RATIO && rLeafRatio > RATIO))
+            if ((lLeafRatio > ratio && rLeafRatio > ratio))
             {
-                lLeaf = split(startX, endX, startY, startY + splitY, splitCount - 1, generator);
-                rLeaf = split(startX, endX, startY + splitY, endY, splitCount - 1, generator);
+                lLeaf = split(startX, endX, startY, startY + splitY, splitCount - 1, ratio, generator);
+                rLeaf = split(startX, endX, startY + splitY, endY, splitCount - 1, ratio, generator);
                 break;
             }
         }
@@ -86,9 +85,9 @@ void leafToMap(Leaf *leaf, int *map, int mapWidth, int mapHeight, RandomGenerato
     }
 }
 
-Map *BSPGenerator::generate(int width, int height, RandomGenerator generator, int splitCount)
+Map *BSPGenerator::generate(int width, int height, int splitCount, float ratio, RandomGenerator generator)
 {
-    Leaf *rootLeaf = split(0, width, 0, height, splitCount, generator);
+    Leaf *rootLeaf = split(0, width, 0, height, splitCount, ratio, generator);
 
     int size = width * height;
     int *map = new int[size];
