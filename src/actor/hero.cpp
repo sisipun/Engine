@@ -1,7 +1,7 @@
 #include "hero.h"
-#include "../utils/constants.h"
 
-void Hero::update(float delta) {
+void Hero::update(float delta)
+{
     this->lastHorizontalMove = this->horizontalVelocity * delta;
     this->lastVerticalMove = this->verticalVelocity * delta;
     this->body.x += this->lastHorizontalMove;

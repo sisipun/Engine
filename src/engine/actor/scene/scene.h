@@ -17,8 +17,9 @@ public:
     {
         for (auto actorName : actorNames)
         {
-            Actor* actor = storage->getActor(actorName);
-            if (actor == nullptr) {
+            Actor *actor = storage->getActor(actorName);
+            if (actor == nullptr)
+            {
                 actors.clear();
                 return false;
             }

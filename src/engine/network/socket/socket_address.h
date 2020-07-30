@@ -14,7 +14,7 @@ public:
     size_t GetSize() const;
     friend class UDPSocket;
     friend class TCPSocket;
-    
+
 private:
     sockaddr mSockAddr;
     sockaddr_in *GetAsSockAddrIn();
