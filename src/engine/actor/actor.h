@@ -3,6 +3,7 @@
 
 #include "../physics/body.h"
 #include "../physics/collision.h"
+#include "../physics/rigid_body.h"
 
 #include "SDL.h"
 #include <string>
@@ -10,7 +11,10 @@
 class Actor
 {
 public:
-    virtual ~Actor() {}
+    virtual ~Actor()
+    {
+        delete rigidBody;
+    }
 
     virtual void render(SDL_Renderer *renderer);
 
@@ -22,7 +26,11 @@ public:
 
     virtual bool isCollides(Actor *actor)
     {
-        return checkCollision(body, actor->body);
+        if (rigidBody == nullptr || actor->getRigidBody() == nullptr)
+        {
+            return false;
+        }
+        return checkCollision(rigidBody->getBody(), actor->getRigidBody()->getBody());
     }
 
     Body getBody()
@@ -35,25 +43,40 @@ public:
         return name;
     }
 
-    bool isManageCollisions()
+    RigidBody *getRigidBody()
     {
-        return manageCollisions;
+        return rigidBody;
     }
 
 protected:
-    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity, bool manageCollisions) : name(name),
-                                                                                                                  body(body),
-                                                                                                                  horizontalVelocity(horizontalVelocity),
-                                                                                                                  verticalVelocity(verticalVelocity),
-                                                                                                                  manageCollisions(manageCollisions) {}
+    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity, bool hasRigid) : name(name),
+                                                                                                          body(body),
+                                                                                                          horizontalVelocity(horizontalVelocity),
+                                                                                                          verticalVelocity(verticalVelocity)
+    {
+        if (hasRigid)
+        {
+            rigidBody = new RigidBody(body);
+        }
+        else
+        {
+            rigidBody = nullptr;
+        }
+    }
+
+    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity) : name(name),
+                                                                                           body(body),
+                                                                                           horizontalVelocity(horizontalVelocity),
+                                                                                           verticalVelocity(verticalVelocity),
+                                                                                           rigidBody(nullptr) {}
 
     Body body;
+    RigidBody *rigidBody;
     float horizontalVelocity;
     float verticalVelocity;
 
 private:
     std::string name;
-    bool manageCollisions;
 };
 
 #endif

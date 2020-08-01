@@ -45,7 +45,7 @@ bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors)
 {
     for (Actor *actor : actors)
     {
-        if (!storage->addActor(actor) || (actor->isManageCollisions() && !collisionManager->addActor(actor)))
+        if (!storage->addActor(actor) || (actor->getRigidBody() != nullptr && !collisionManager->addActor(actor)))
         {
             return false;
         }

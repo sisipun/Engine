@@ -14,7 +14,7 @@ public:
                                                                                               body,
                                                                                               horizontalVelocity,
                                                                                               verticalVelocity,
-                                                                                              false) {}
+                                                                                              true) {}
 };
 
 #endif

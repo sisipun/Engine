@@ -19,7 +19,7 @@ set(SOURCE_LIB
 
     src/engine/utils/random/random_generator.h
 
-    src/engine/utils/procedural_generation/map_generator.h
+    src/engine/utils/procedural_generation/map.h
     src/engine/utils/procedural_generation/chess_generator.h
     src/engine/utils/procedural_generation/chess_generator.cpp
     src/engine/utils/procedural_generation/drunkard_walk_generator.h
@@ -30,6 +30,7 @@ set(SOURCE_LIB
     src/engine/utils/procedural_generation/bsp_generator.cpp
 
     src/engine/physics/body.h
+    src/engine/physics/rigid_body.h
 
     src/engine/physics/collision.h
     src/engine/physics/collision.cpp

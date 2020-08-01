@@ -24,6 +24,11 @@ bool CollisionManager::addActor(Actor *actor)
         Logger::log("Duplicate actor name: %s\n", actor->getName().c_str());
         return false;
     }
+    if (actor->getRigidBody() == nullptr)
+    {
+        Logger::log("Actor with name: %s has no rigid body\n", actor->getName().c_str());
+        return false;
+    }
     managedActors.insert(std::pair<std::string, Actor *>(actor->getName(), actor));
     return true;
 }
