@@ -11,7 +11,7 @@ class ActorGroup : public Actor
 {
 public:
     ActorGroup(std::string name, std::vector<Actor *> children)
-        : Actor(name, {0, 0, 0, 0}, 0, 0, false), children(children) {}
+        : Actor(name, {0, 0, 0, 0}, 0, 0, false, false), children(children) {}
 
     void render(SDL_Renderer *renderer) override
     {

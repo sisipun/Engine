@@ -14,6 +14,7 @@ public:
                                                                             body,
                                                                             horizontalVelocity,
                                                                             verticalVelocity,
+                                                                            true,
                                                                             true) {}
 
     void update(float delta) override;

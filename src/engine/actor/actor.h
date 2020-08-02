@@ -43,16 +43,22 @@ public:
         return name;
     }
 
+    bool isManageCollisions()
+    {
+        return manageCollisions;
+    }
+
     RigidBody *getRigidBody()
     {
         return rigidBody;
     }
 
 protected:
-    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity, bool hasRigid) : name(name),
-                                                                                                          body(body),
-                                                                                                          horizontalVelocity(horizontalVelocity),
-                                                                                                          verticalVelocity(verticalVelocity)
+    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity, bool manageCollisions, bool hasRigid) : name(name),
+                                                                                                                                 body(body),
+                                                                                                                                 horizontalVelocity(horizontalVelocity),
+                                                                                                                                 verticalVelocity(verticalVelocity),
+                                                                                                                                 manageCollisions(manageCollisions)
     {
         if (hasRigid)
         {
@@ -68,6 +74,7 @@ protected:
                                                                                            body(body),
                                                                                            horizontalVelocity(horizontalVelocity),
                                                                                            verticalVelocity(verticalVelocity),
+                                                                                           manageCollisions(false),
                                                                                            rigidBody(nullptr) {}
 
     Body body;
@@ -77,6 +84,7 @@ protected:
 
 private:
     std::string name;
+    bool manageCollisions;
 };
 
 #endif
