@@ -6,6 +6,7 @@
 #include "engine/utils/procedural_generation/drunkard_walk_generator.h"
 #include "engine/utils/procedural_generation/cellular_automata_generator.h"
 #include "engine/utils/procedural_generation/bsp_generator.h"
+#include "engine/utils/procedural_generation/box_generator.h"
 #include "engine/utils/logger/logger.h"
 
 #include "utils/constants.h"
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
 
     int mapWidth = SCREEN_WIDTH / WALL_WIDTH - 2;
     int mapHeight = SCREEN_HEIGHT / WALL_WIDTH - 2;
-    BSPGenerator *mapGenerator = new BSPGenerator();
+    BoxGenerator *mapGenerator = new BoxGenerator();
     Map *map = mapGenerator->generate(mapWidth, mapHeight);
 
     for (int i = 0; i < map->getWidth(); i++)

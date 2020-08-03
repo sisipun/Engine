@@ -28,6 +28,8 @@ set(SOURCE_LIB
     src/engine/utils/procedural_generation/cellular_automata_generator.cpp
     src/engine/utils/procedural_generation/bsp_generator.h
     src/engine/utils/procedural_generation/bsp_generator.cpp
+    src/engine/utils/procedural_generation/box_generator.h
+    src/engine/utils/procedural_generation/box_generator.cpp
 
     src/engine/physics/body.h
     src/engine/physics/rigid_body.h
