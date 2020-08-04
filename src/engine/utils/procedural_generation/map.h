@@ -79,6 +79,27 @@ public:
             }
         }
     }
+
+    static bool isEmpty(int startX, int endX, int startY, int endY, int *map, int mapWidth, int mapHeight)
+    {
+        if (startX < 0 || startY < 0 || endX >= mapWidth || endY >= mapHeight)
+        {
+            return false;
+        }
+
+        for (int i = startX; i <= endX; i++)
+        {
+            for (int j = startY; j <= endY; j++)
+            {
+                if (*(map + (i * mapHeight) + j) != 0)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 };
 
 #endif

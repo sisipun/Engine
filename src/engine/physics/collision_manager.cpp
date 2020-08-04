@@ -3,7 +3,6 @@
 
 void CollisionManager::manageCollision(std::map<std::string, Actor *> actors)
 {
-    return;
     for (auto managedDef : managedActors)
     {
         for (auto actorDef : actors)
