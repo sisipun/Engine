@@ -7,19 +7,15 @@
 class RandomGenerator
 {
 public:
-    RandomGenerator(int seed)
-    {
-        srand(seed);
-    }
-
     RandomGenerator()
     {
-        srand(time(0));
     }
 
     int generateFromRange(int from, int to)
     {
-        return rand() % (to - from + 1) + from;
+        std::default_random_engine generator;
+        std::uniform_int_distribution<int> distribution(from, to);
+        return distribution(generator);
     }
 };
 

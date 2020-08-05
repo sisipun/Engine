@@ -18,6 +18,7 @@ set(SOURCE_LIB
     src/engine/utils/time/timer.cpp
 
     src/engine/utils/random/random_generator.h
+    src/engine/utils/random/standard_random_generator.h
 
     src/engine/utils/procedural_generation/map.h
     src/engine/utils/procedural_generation/chess_generator.h
