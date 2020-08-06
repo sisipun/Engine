@@ -13,10 +13,12 @@ public:
 
     int generateFromRange(int from, int to)
     {
-        std::default_random_engine generator;
         std::uniform_int_distribution<int> distribution(from, to);
         return distribution(generator);
     }
+
+private:
+    std::default_random_engine generator;
 };
 
 #endif
