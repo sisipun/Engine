@@ -7,18 +7,20 @@
 class RandomGenerator
 {
 public:
+    RandomGenerator(int seed)
+    {
+        srand(seed);
+    }
+
     RandomGenerator()
     {
+        srand(time(0));
     }
 
     int generateFromRange(int from, int to)
     {
-        std::uniform_int_distribution<int> distribution(from, to);
-        return distribution(generator);
+        return rand() % (to - from + 1) + from;
     }
-
-private:
-    std::default_random_engine generator;
 };
 
 #endif

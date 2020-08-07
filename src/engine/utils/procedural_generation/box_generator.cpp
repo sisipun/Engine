@@ -1,17 +1,13 @@
 #include "box_generator.h"
 #include <vector>
 
-const int ERASE_COUNT = 4;
-const int ROOM_COUNT = 4;
-const int ROOM_INIT_SIZE = 5;
-
-Map *BoxGenerator::generate(int width, int height, RandomGenerator generator)
+Map *BoxGenerator::generate(int width, int height, int eraseCount, int roomCount, int roomInitSize, RandomGenerator generator)
 {
     int size = width * height;
     int *map = new int[size];
     MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, map, width, height, 1);
 
-    for (int i = 0; i < ERASE_COUNT;)
+    for (int i = 0; i < eraseCount;)
     {
         int eraseX = generator.generateFromRange(0, 2 * width / 3);
         int eraseY = generator.generateFromRange(0, 2 * height / 3);
@@ -26,17 +22,17 @@ Map *BoxGenerator::generate(int width, int height, RandomGenerator generator)
     }
 
     std::vector<Room *> rooms;
-    for (int i = 0; i < ROOM_COUNT;)
+    for (int i = 0; i < roomCount;)
     {
-        int roomX = generator.generateFromRange(0, width - ROOM_INIT_SIZE);
-        int roomY = generator.generateFromRange(0, height - ROOM_INIT_SIZE);
-        if (!MapGeneratorUtils::isEmpty(roomX, roomX + ROOM_INIT_SIZE - 1, roomY, roomY + ROOM_INIT_SIZE - 1, map, width, height))
+        int roomX = generator.generateFromRange(0, width - roomInitSize);
+        int roomY = generator.generateFromRange(0, height - roomInitSize);
+        if (!MapGeneratorUtils::isEmpty(roomX, roomX + roomInitSize - 1, roomY, roomY + roomInitSize - 1, map, width, height))
         {
             continue;
         }
 
-        MapGeneratorUtils::boxToMap(roomX, roomX + ROOM_INIT_SIZE - 1, roomY, roomY + ROOM_INIT_SIZE - 1, map, width, height, 2);
-        rooms.push_back(new Room(roomX, roomY, ROOM_INIT_SIZE, ROOM_INIT_SIZE));
+        MapGeneratorUtils::boxToMap(roomX, roomX + roomInitSize - 1, roomY, roomY + roomInitSize - 1, map, width, height, 2);
+        rooms.push_back(new Room(roomX, roomY, roomInitSize, roomInitSize));
 
         i++;
     }

@@ -7,7 +7,7 @@
 class BoxGenerator
 {
 public:
-    Map *generate(int width, int height, RandomGenerator generator = RandomGenerator());
+    Map *generate(int width, int height, int eraseCount = 3, int roomCount = 3, int roomInitSize = 3,  RandomGenerator generator = RandomGenerator());
 };
 
 class Room
