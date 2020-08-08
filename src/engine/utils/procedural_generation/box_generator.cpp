@@ -1,8 +1,23 @@
 #include "box_generator.h"
 #include <vector>
 
+const int MIN_WIDTH = 10;
+const int MIN_HEIHGT = 10;
+
 Map *BoxGenerator::generate(int width, int height, int eraseCount, int roomCount, int roomInitSize, RandomGenerator generator)
 {
+    if (width <= 0 || height <= 0 || eraseCount <= 0 || roomCount <= 0 ||
+        roomInitSize <= 0 || width < (roomCount * roomInitSize) || height < (roomCount * roomInitSize))
+    {
+        return new Map(nullptr, 0, 0, 0, 0);
+    }
+    else if (width < MIN_WIDTH || height < MIN_HEIHGT)
+    {
+        int *empty = new int[height * width];
+        MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, empty, width, height, 0);
+        return new Map(empty, width, height, width / 2, height / 2);
+    }
+
     int size = width * height;
     int *map = new int[size];
     MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, map, width, height, 1);
@@ -41,14 +56,14 @@ Map *BoxGenerator::generate(int width, int height, int eraseCount, int roomCount
     while (extend)
     {
         extend = false;
-        for (Room* room : rooms)
+        for (Room *room : rooms)
         {
             extend = extend || room->extend(map, width, height);
         }
     }
 
     MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, map, width, height, 0);
-    for (Room* room : rooms)
+    for (Room *room : rooms)
     {
         room->addToMap(map, width, height);
         delete room;
