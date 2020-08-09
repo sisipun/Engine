@@ -1,6 +1,8 @@
 #include "bsp_generator.h"
 
 const int RESPLIT_ATTEMPT_COUNT = 100;
+const int MIN_WIDTH = 10;
+const int MIN_HEIHGT = 10;
 
 Leaf *split(int startX, int endX, int startY, int endY, int splitCount, float ratio, RandomGenerator generator)
 {
@@ -87,6 +89,16 @@ void leafToMap(Leaf *leaf, int *map, int mapWidth, int mapHeight, RandomGenerato
 
 Map *BSPGenerator::generate(int width, int height, int splitCount, float ratio, RandomGenerator generator)
 {
+    if (width <= 0 || height <= 0 || splitCount < 0 || ratio < 0)
+    {
+        return new Map(nullptr, 0, 0, 0, 0);
+    }
+    if (width < MIN_WIDTH || height < MIN_HEIHGT || splitCount == 0)
+    {
+        int *empty = new int[height * width];
+        MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, empty, width, height, 0);
+        return new Map(empty, width, height, width / 2, height / 2);
+    }
     Leaf *rootLeaf = split(0, width, 0, height, splitCount, ratio, generator);
 
     int size = width * height;
