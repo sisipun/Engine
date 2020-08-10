@@ -92,8 +92,7 @@ Map *BSPGenerator::generate(int width, int height, int splitCount, float ratio, 
     if (width <= 0 || height <= 0 || splitCount < 0 || ratio < 0)
     {
         return new Map(nullptr, 0, 0, 0, 0);
-    }
-    if (width < MIN_WIDTH || height < MIN_HEIHGT || splitCount == 0)
+    } else if (width < MIN_WIDTH || height < MIN_HEIHGT || splitCount == 0)
     {
         int *empty = new int[height * width];
         MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, empty, width, height, 0);

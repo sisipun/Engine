@@ -1,5 +1,8 @@
 #include "cellular_automata_generator.h"
 
+const int MIN_WIDTH = 10;
+const int MIN_HEIHGT = 10;
+
 int countAliveNeighbours(int *maze, int width, int height, int x, int y)
 {
     int count = 0;
@@ -65,9 +68,21 @@ int *doSimulationStep(int *maze, int width, int height, int birthLimit, int deat
     return newMap;
 }
 
-Map *CellularAutomataGenerator::generate(int width, int height, RandomGenerator generator, int birthLimit,
-                                         int deathLimit, int initialChance, int stepCount)
+Map *CellularAutomataGenerator::generate(int width, int height, int birthLimit, int deathLimit,
+                                         int initialChance, int stepCount, RandomGenerator generator)
 {
+    if (width <= 0 || height <= 0 || birthLimit < 0 || deathLimit < 0 || initialChance < 0 ||
+        initialChance > 100 || stepCount < 0)
+    {
+        return new Map(nullptr, 0, 0, 0, 0);
+    }
+    else if (width < MIN_WIDTH || height < MIN_HEIHGT || initialChance == 0 || stepCount == 0)
+    {
+        int *empty = new int[height * width];
+        MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, empty, width, height, 0);
+        return new Map(empty, width, height, width / 2, height / 2);
+    }
+
     int size = width * height;
     int *map = new int[size];
 

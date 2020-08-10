@@ -1,7 +1,21 @@
 #include "drunkard_walk_generator.h"
 
-Map *DrunkardWalkGenerator::generate(int width, int height, RandomGenerator generator, int coverage)
+const int MIN_WIDTH = 3;
+const int MIN_HEIHGT = 3;
+
+Map *DrunkardWalkGenerator::generate(int width, int height, int coverage, RandomGenerator generator)
 {
+    if (width <= 0 || height <= 0 || coverage < 0 || coverage > 100)
+    {
+        return new Map(nullptr, 0, 0, 0, 0);
+    }
+    else if (width < MIN_WIDTH || height < MIN_HEIHGT || coverage == 0)
+    {
+        int *empty = new int[height * width];
+        MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, empty, width, height, 0);
+        return new Map(empty, width, height, width / 2, height / 2);
+    }
+
     int size = width * height;
     int step_count = size * (coverage / 100.0);
     int *map = new int[size];

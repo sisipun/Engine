@@ -1,7 +1,19 @@
 #include "chess_generator.h"
 
+const int MIN_WIDTH = 3;
+const int MIN_HEIHGT = 3;
+
 Map *ChessGenerator::generate(int width, int height, RandomGenerator generator)
 {
+    if (width <= 0 || height <= 0)
+    {
+        return new Map(nullptr, 0, 0, 0, 0);
+    } else if (width < MIN_WIDTH || height < MIN_HEIHGT)
+    {
+        int *empty = new int[height * width];
+        MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, empty, width, height, 0);
+        return new Map(empty, width, height, width / 2, height / 2);
+    }
     int size = width * height;
     int *map = new int[size];
     MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, map, width, height, 0);
