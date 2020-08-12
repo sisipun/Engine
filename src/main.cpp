@@ -30,13 +30,16 @@ int main(int argc, char *argv[])
     BoxGenerator *mapGenerator = new BoxGenerator();
     Map *map = mapGenerator->generate(mapWidth, mapHeight);
 
-    for (int i = 0; i < map->getWidth(); i++)
+    if (map->getValue() != nullptr)
     {
-        for (int j = 0; j < map->getHeight(); j++)
+        for (int i = 0; i < map->getWidth(); i++)
         {
-            if (*(map->getValue() + (i * map->getHeight()) + j) == 1)
+            for (int j = 0; j < map->getHeight(); j++)
             {
-                walls.push_back(new Wall(std::to_string(i), {static_cast<float>((i + 1) * WALL_WIDTH), static_cast<float>((1 + j) * WALL_WIDTH), WALL_WIDTH, WALL_WIDTH}, 0, 0));
+                if (*(map->getValue() + (i * map->getHeight()) + j) == 1)
+                {
+                    walls.push_back(new Wall(std::to_string(i), {static_cast<float>((i + 1) * WALL_WIDTH), static_cast<float>((1 + j) * WALL_WIDTH), WALL_WIDTH, WALL_WIDTH}, 0, 0));
+                }
             }
         }
     }
