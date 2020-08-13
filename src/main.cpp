@@ -22,13 +22,15 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    RandomGenerator generator = RandomGenerator();
+
     std::vector<Actor *> actors;
     std::vector<Actor *> walls;
 
-    int mapWidth = SCREEN_WIDTH / WALL_WIDTH - 2;
-    int mapHeight = SCREEN_HEIGHT / WALL_WIDTH - 2;
-    BoxGenerator *mapGenerator = new BoxGenerator();
-    Map *map = mapGenerator->generate(mapWidth, mapHeight);
+    int mapWidth = 10;
+    int mapHeight = 10;
+    DrunkardWalkGenerator *mapGenerator = new DrunkardWalkGenerator();
+    Map *map = mapGenerator->generate(mapWidth, mapHeight, 30, generator);
 
     if (map->getValue() != nullptr)
     {
