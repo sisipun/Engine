@@ -26,6 +26,9 @@ Map *DrunkardWalkGenerator::generate(int width, int height, int coverage, Random
 
     int currentPositionX = starterPositionX;
     int currentPositionY = starterPositionY;
+
+    *(map + (currentPositionX * height) + currentPositionY) = 0;
+    
     for (int i = 0; i < step_count && i < size;)
     {
         int direction = generator.generateFromRange(0, 3);

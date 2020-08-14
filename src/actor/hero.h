@@ -23,6 +23,8 @@ public:
 
     void handleCollision(Actor *actor) override;
 
+    void render(SDL_Renderer *renderer) override;
+
 private:
     float lastHorizontalMove;
     float lastVerticalMove;
