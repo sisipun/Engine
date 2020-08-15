@@ -18,7 +18,6 @@ set(SOURCE_LIB
     src/engine/utils/time/timer.cpp
 
     src/engine/utils/random/random_generator.h
-    src/engine/utils/random/standard_random_generator.h
 
     src/engine/utils/procedural_generation/map.h
     src/engine/utils/procedural_generation/chess_generator.h
@@ -76,6 +75,9 @@ set(SOURCE_LIB
     src/actor/hero.cpp
     
     src/actor/wall.h
+
+    src/actor/mini_map.h
+    src/actor/mini_map.cpp
 )
 
 add_library(Components STATIC ${SOURCE_LIB})

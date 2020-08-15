@@ -12,6 +12,7 @@
 #include "utils/constants.h"
 #include "actor/hero.h"
 #include "actor/wall.h"
+#include "actor/mini_map.h"
 
 int main(int argc, char *argv[])
 {
@@ -45,7 +46,7 @@ int main(int argc, char *argv[])
             }
         }
     }
-    
+
     if (map->getStartY() - 1 >= 0 && *(map->getValue() + (map->getStartX() * map->getHeight()) + map->getStartY() - 1) == 0)
     {
     }
@@ -76,15 +77,24 @@ int main(int argc, char *argv[])
     }
 
     actors.push_back(new ActorGroup("wallGroup", walls));
-    actors.push_back(new Hero({static_cast<float>(map->getStartX() + 1) * WALL_WIDTH,
-                               static_cast<float>(map->getStartY() + 1) * WALL_WIDTH,
+    actors.push_back(new Hero({SCREEN_WIDTH / 2,
+                               SCREEN_HEIGHT / 2,
                                HERO_WIDTH,
                                HERO_HEIGHT},
                               0, 0));
 
-    std::vector<std::string> mainSceneActors;
+    actors.push_back(new MiniMap({10, 10, WALL_WIDTH, WALL_WIDTH},
+                                 map->getValue(),
+                                 map->getWidth(),
+                                 map->getHeight(),
+                                 map->getStartX(),
+                                 map->getStartY()));
+
+    std::vector<std::string>
+        mainSceneActors;
     mainSceneActors.push_back("hero");
     mainSceneActors.push_back("wallGroup");
+    mainSceneActors.push_back("miniMap");
     Scene *mainScene = new Scene(mainSceneActors);
 
     if (!engine.loadMedia(mainScene, actors))
