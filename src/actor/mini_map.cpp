@@ -27,3 +27,47 @@ void MiniMap::render(SDL_Renderer *renderer)
         static_cast<int>(body.height)};
     SDL_RenderFillRect(renderer, &rect);
 }
+
+bool MiniMap::moveLeft()
+{
+    if (currentX - 1 >= 0 && *(this->map + (currentX - 1 * height) + currentY) == 0)
+    {
+        currentX--;
+        return true;
+    }
+
+    return false;
+}
+
+bool MiniMap::moveRight()
+{
+    if (currentX + 1 < width && *(this->map + (currentX + 1 * height) + currentY) == 0)
+    {
+        currentX++;
+        return true;
+    }
+
+    return false;
+}
+
+bool MiniMap::moveUp()
+{
+    if (currentY - 1 >= 0 && *(this->map + (currentX * height) + currentY - 1) == 0)
+    {
+        currentY--;
+        return true;
+    }
+
+    return false;
+}
+
+bool MiniMap::moveDown()
+{
+    if (currentY + 1 < height && *(this->map + (currentX * height) + currentY + 1) == 0)
+    {
+        currentY++;
+        return true;
+    }
+
+    return false;
+}

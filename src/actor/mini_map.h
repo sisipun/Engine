@@ -34,6 +34,14 @@ public:
         delete[] this->map;
     }
 
+    bool moveLeft();
+
+    bool moveRight();
+
+    bool moveUp();
+
+    bool moveDown();
+
     void render(SDL_Renderer *renderer) override;
 
 private:
