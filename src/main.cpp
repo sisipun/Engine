@@ -49,6 +49,8 @@ int main(int argc, char *argv[])
 
     if (map->getStartY() - 1 >= 0 && *(map->getValue() + (map->getStartX() * map->getHeight()) + map->getStartY() - 1) == 0)
     {
+        walls.push_back(new Wall("northWallLeft", {0, 0, (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), WALL_WIDTH}, 0, 0));
+        walls.push_back(new Wall("northWallRight", {(SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), 0, SCREEN_WIDTH, WALL_WIDTH}, 0, 0));
     }
     else
     {
@@ -56,6 +58,8 @@ int main(int argc, char *argv[])
     }
     if (map->getStartY() + 1 < map->getHeight() && *(map->getValue() + (map->getStartX() * map->getHeight()) + map->getStartY() + 1) == 0)
     {
+        walls.push_back(new Wall("southWallLeft", {0, SCREEN_HEIGHT - WALL_WIDTH, (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), WALL_WIDTH}, 0, 0));
+        walls.push_back(new Wall("southWallRight", {(SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), SCREEN_HEIGHT - WALL_WIDTH, SCREEN_WIDTH, WALL_WIDTH}, 0, 0));
     }
     else
     {
@@ -63,17 +67,21 @@ int main(int argc, char *argv[])
     }
     if (map->getStartX() - 1 >= 0 && *(map->getValue() + ((map->getStartX() - 1) * map->getHeight()) + map->getStartY()) == 0)
     {
+        walls.push_back(new Wall("westWallTop", {0, 0, WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2)}, 0, 0));
+        walls.push_back(new Wall("westWallBottom", {0, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2), WALL_WIDTH, SCREEN_HEIGHT}, 0, 0));
     }
     else
     {
-        walls.push_back(new Wall("eastWall", {0, 0, WALL_WIDTH, SCREEN_HEIGHT}, 0, 0));
+        walls.push_back(new Wall("westWall", {0, 0, WALL_WIDTH, SCREEN_HEIGHT}, 0, 0));
     }
     if (map->getStartX() + 1 < map->getWidth() && *(map->getValue() + ((map->getStartX() + 1) * map->getHeight()) + map->getStartY()) == 0)
     {
+        walls.push_back(new Wall("eastWallTop", {SCREEN_WIDTH - WALL_WIDTH, 0, WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2)}, 0, 0));
+        walls.push_back(new Wall("eastWallBottom", {SCREEN_WIDTH - WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2), WALL_WIDTH, SCREEN_HEIGHT}, 0, 0));
     }
     else
     {
-        walls.push_back(new Wall("westWall", {SCREEN_WIDTH - WALL_WIDTH, 0, WALL_WIDTH, SCREEN_HEIGHT}, 0, 0));
+        walls.push_back(new Wall("eastWall", {SCREEN_WIDTH - WALL_WIDTH, 0, WALL_WIDTH, SCREEN_HEIGHT}, 0, 0));
     }
 
     actors.push_back(new ActorGroup("wallGroup", walls));
@@ -90,8 +98,7 @@ int main(int argc, char *argv[])
                                  map->getStartX(),
                                  map->getStartY()));
 
-    std::vector<std::string>
-        mainSceneActors;
+    std::vector<std::string> mainSceneActors;
     mainSceneActors.push_back("hero");
     mainSceneActors.push_back("wallGroup");
     mainSceneActors.push_back("miniMap");
