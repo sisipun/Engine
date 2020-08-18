@@ -1,22 +1,22 @@
-#ifndef WALL_H
-#define WALL_H
+#ifndef DOOR_H
+#define DOOR_H
 
 #include "../engine/actor/actor.h"
 #include "../engine/physics/body.h"
 
 #include <string>
 
-class Wall : public Actor
+class Door : public Actor
 {
 public:
-    Wall(std::string name, Body body) : Actor(
+    Door(std::string name, Body body) : Actor(
                                             name,
                                             body,
                                             0,
                                             0,
                                             false,
-                                            true,
-                                            true) {}
+                                            false,
+                                            false) {}
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "mini_map.h"
 
-void MiniMap::render(SDL_Renderer *renderer)
+void MiniMap::renderActor(SDL_Renderer *renderer)
 {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     for (int i = 0; i < width; i++)

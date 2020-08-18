@@ -15,6 +15,7 @@ public:
                                                                             horizontalVelocity,
                                                                             verticalVelocity,
                                                                             true,
+                                                                            true,
                                                                             true) {}
 
     void update(float delta) override;
@@ -23,7 +24,7 @@ public:
 
     void handleCollision(Actor *actor) override;
 
-    void render(SDL_Renderer *renderer) override;
+    void renderActor(SDL_Renderer *renderer) override;
 
 private:
     float lastHorizontalMove;

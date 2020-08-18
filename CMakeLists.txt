@@ -75,6 +75,8 @@ set(SOURCE_LIB
     src/actor/hero.cpp
     
     src/actor/wall.h
+    
+    src/actor/door.h
 
     src/actor/mini_map.h
     src/actor/mini_map.cpp

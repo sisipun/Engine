@@ -16,7 +16,7 @@ public:
         delete rigidBody;
     }
 
-    virtual void render(SDL_Renderer *renderer);
+    void render(SDL_Renderer *renderer);
 
     virtual void update(float delta);
 
@@ -54,11 +54,18 @@ public:
     }
 
 protected:
-    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity, bool manageCollisions, bool hasRigid) : name(name),
-                                                                                                                                 body(body),
-                                                                                                                                 horizontalVelocity(horizontalVelocity),
-                                                                                                                                 verticalVelocity(verticalVelocity),
-                                                                                                                                 manageCollisions(manageCollisions)
+    Actor(std::string name, Body body,
+          float horizontalVelocity,
+          float verticalVelocity,
+          bool manageCollisions = true,
+          bool hasRigid = true,
+          bool visiable = true)
+        : name(name),
+          body(body),
+          horizontalVelocity(horizontalVelocity),
+          verticalVelocity(verticalVelocity),
+          manageCollisions(manageCollisions),
+          visiable(visiable)
     {
         if (hasRigid)
         {
@@ -70,21 +77,17 @@ protected:
         }
     }
 
-    Actor(std::string name, Body body, float horizontalVelocity, float verticalVelocity) : name(name),
-                                                                                           body(body),
-                                                                                           horizontalVelocity(horizontalVelocity),
-                                                                                           verticalVelocity(verticalVelocity),
-                                                                                           manageCollisions(false),
-                                                                                           rigidBody(nullptr) {}
-
     Body body;
     RigidBody *rigidBody;
     float horizontalVelocity;
     float verticalVelocity;
+    
+    virtual void renderActor(SDL_Renderer *renderer);
 
 private:
     std::string name;
     bool manageCollisions;
+    bool visiable;
 };
 
 #endif

@@ -13,7 +13,8 @@ public:
                                                                                             0,
                                                                                             0,
                                                                                             false,
-                                                                                            false),
+                                                                                            false,
+                                                                                            true),
                                                                                       width(width),
                                                                                       height(height),
                                                                                       currentX(currentX),
@@ -42,7 +43,7 @@ public:
 
     bool moveDown();
 
-    void render(SDL_Renderer *renderer) override;
+    void renderActor(SDL_Renderer *renderer) override;
 
 private:
     int *map;
