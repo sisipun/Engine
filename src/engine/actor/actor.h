@@ -7,13 +7,13 @@
 
 #include "SDL.h"
 #include <string>
+#include <vector>
 
 class Actor
 {
 public:
     virtual ~Actor()
     {
-        delete rigidBody;
     }
 
     void render(SDL_Renderer *renderer);
@@ -26,11 +26,7 @@ public:
 
     virtual bool isCollides(Actor *actor)
     {
-        if (rigidBody == nullptr || actor->getRigidBody() == nullptr)
-        {
-            return false;
-        }
-        return checkCollision(rigidBody->getBody(), actor->getRigidBody()->getBody());
+        return checkCollision(body, actor->getBody());
     }
 
     Body getBody()
@@ -48,40 +44,33 @@ public:
         return manageCollisions;
     }
 
-    RigidBody *getRigidBody()
-    {
-        return rigidBody;
+    std::vector<std::string> getTags() {
+        return tags;
     }
 
 protected:
-    Actor(std::string name, Body body,
-          float horizontalVelocity,
-          float verticalVelocity,
+    Actor(std::string name,
+          Body body,
+          std::vector<std::string> tags = std::vector<std::string>(),
+          float horizontalVelocity = 0,
+          float verticalVelocity = 0,
           bool manageCollisions = true,
-          bool hasRigid = true,
           bool visiable = true)
         : name(name),
           body(body),
+          tags(tags),
           horizontalVelocity(horizontalVelocity),
           verticalVelocity(verticalVelocity),
           manageCollisions(manageCollisions),
           visiable(visiable)
     {
-        if (hasRigid)
-        {
-            rigidBody = new RigidBody(body);
-        }
-        else
-        {
-            rigidBody = nullptr;
-        }
     }
 
     Body body;
-    RigidBody *rigidBody;
+    std::vector<std::string> tags;
     float horizontalVelocity;
     float verticalVelocity;
-    
+
     virtual void renderActor(SDL_Renderer *renderer);
 
 private:

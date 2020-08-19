@@ -12,9 +12,9 @@ public:
     Door(std::string name, Body body) : Actor(
                                             name,
                                             body,
+                                            { "door" },
                                             0,
                                             0,
-                                            false,
                                             false,
                                             false) {}
 };

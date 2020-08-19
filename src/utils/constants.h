@@ -6,7 +6,7 @@ const int SCREEN_HEIGHT = 640;
 
 const int HERO_WIDTH = 10;
 const int HERO_HEIGHT = 10;
-const int HERO_VELOCITY = 50;
+const int HERO_VELOCITY = 100;
 
 const int WALL_WIDTH = 10;
 

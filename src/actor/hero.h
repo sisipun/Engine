@@ -12,9 +12,9 @@ public:
     Hero(Body body, float horizontalVelocity, float verticalVelocity) : Actor(
                                                                             "hero",
                                                                             body,
+                                                                            { "hero" },
                                                                             horizontalVelocity,
                                                                             verticalVelocity,
-                                                                            true,
                                                                             true,
                                                                             true) {}
 

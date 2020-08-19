@@ -1,6 +1,5 @@
 #include "engine/engine.h"
 #include "engine/actor/actor.h"
-#include "engine/actor/actor_group.h"
 #include "engine/actor/scene/scene.h"
 #include "engine/utils/procedural_generation/chess_generator.h"
 #include "engine/utils/procedural_generation/drunkard_walk_generator.h"
@@ -27,86 +26,69 @@ int main(int argc, char *argv[])
     RandomGenerator generator = RandomGenerator();
 
     std::vector<Actor *> actors;
-    std::vector<Actor *> walls;
 
     int mapWidth = 10;
     int mapHeight = 10;
     DrunkardWalkGenerator *mapGenerator = new DrunkardWalkGenerator();
     Map *map = mapGenerator->generate(mapWidth, mapHeight, 30, generator);
-
-    if (map->getValue() != nullptr)
-    {
-        for (int i = 0; i < map->getWidth(); i++)
-        {
-            for (int j = 0; j < map->getHeight(); j++)
-            {
-                if (*(map->getValue() + (i * map->getHeight()) + j) == 1)
-                {
-                    walls.push_back(new Wall(std::to_string(i), {static_cast<float>((i + 1) * WALL_WIDTH), static_cast<float>((1 + j) * WALL_WIDTH), WALL_WIDTH, WALL_WIDTH}));
-                }
-            }
-        }
-    }
+    actors.push_back(new MiniMap({ 10, 10, WALL_WIDTH, WALL_WIDTH },
+        map->getValue(),
+        map->getWidth(),
+        map->getHeight(),
+        map->getStartX(),
+        map->getStartY()));
 
     if (map->getStartY() - 1 >= 0 && *(map->getValue() + (map->getStartX() * map->getHeight()) + map->getStartY() - 1) == 0)
     {
-        walls.push_back(new Wall("northWestWall", {0, 0, (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), WALL_WIDTH}));
-        walls.push_back(new Door("northDoor", {(SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), 0, (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), WALL_WIDTH}));
-        walls.push_back(new Wall("northEastWall", {(SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), 0, SCREEN_WIDTH, WALL_WIDTH}));
+        actors.push_back(new Wall("northWestWall", { 0, 0, (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), WALL_WIDTH }));
+        actors.push_back(new Door("northDoor", { (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), 0, (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), WALL_WIDTH }));
+        actors.push_back(new Wall("northEastWall", { (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), 0, SCREEN_WIDTH, WALL_WIDTH }));
     }
     else
     {
-        walls.push_back(new Wall("northWall", {0, 0, SCREEN_WIDTH, WALL_WIDTH}));
+        actors.push_back(new Wall("northWall", { 0, 0, SCREEN_WIDTH, WALL_WIDTH }));
     }
     if (map->getStartY() + 1 < map->getHeight() && *(map->getValue() + (map->getStartX() * map->getHeight()) + map->getStartY() + 1) == 0)
     {
-        walls.push_back(new Wall("southWestWall", {0, SCREEN_HEIGHT - WALL_WIDTH, (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), WALL_WIDTH}));
-        walls.push_back(new Door("southDoor", {(SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), SCREEN_HEIGHT - WALL_WIDTH, (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), WALL_WIDTH}));
-        walls.push_back(new Wall("southEastWall", {(SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), SCREEN_HEIGHT - WALL_WIDTH, SCREEN_WIDTH, WALL_WIDTH}));
+        actors.push_back(new Wall("southWestWall", { 0, SCREEN_HEIGHT - WALL_WIDTH, (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), WALL_WIDTH }));
+        actors.push_back(new Door("southDoor", { (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), SCREEN_HEIGHT - WALL_WIDTH, (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), WALL_WIDTH }));
+        actors.push_back(new Wall("southEastWall", { (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), SCREEN_HEIGHT - WALL_WIDTH, SCREEN_WIDTH, WALL_WIDTH }));
     }
     else
     {
-        walls.push_back(new Wall("southWall", {0, SCREEN_HEIGHT - WALL_WIDTH, SCREEN_WIDTH, WALL_WIDTH}));
+        actors.push_back(new Wall("southWall", { 0, SCREEN_HEIGHT - WALL_WIDTH, SCREEN_WIDTH, WALL_WIDTH }));
     }
     if (map->getStartX() - 1 >= 0 && *(map->getValue() + ((map->getStartX() - 1) * map->getHeight()) + map->getStartY()) == 0)
     {
-        walls.push_back(new Wall("westNorthWall", {0, 0, WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2)}));
-        walls.push_back(new Door("westDoor", {0, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2)}));
-        walls.push_back(new Wall("westSouthWall", {0, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2), WALL_WIDTH, SCREEN_HEIGHT}));
+        actors.push_back(new Wall("westNorthWall", { 0, 0, WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2) }));
+        actors.push_back(new Door("westDoor", { 0, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2) }));
+        actors.push_back(new Wall("westSouthWall", { 0, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2), WALL_WIDTH, SCREEN_HEIGHT }));
     }
     else
     {
-        walls.push_back(new Wall("westWall", {0, 0, WALL_WIDTH, SCREEN_HEIGHT}));
+        actors.push_back(new Wall("westWall", { 0, 0, WALL_WIDTH, SCREEN_HEIGHT }));
     }
     if (map->getStartX() + 1 < map->getWidth() && *(map->getValue() + ((map->getStartX() + 1) * map->getHeight()) + map->getStartY()) == 0)
     {
-        walls.push_back(new Wall("eastNorthWall", {SCREEN_WIDTH - WALL_WIDTH, 0, WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2)}));
-        walls.push_back(new Door("eastDoor", {SCREEN_WIDTH - WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2)}));
-        walls.push_back(new Wall("eastSouthWall", {SCREEN_WIDTH - WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2), WALL_WIDTH, SCREEN_HEIGHT}));
+        actors.push_back(new Wall("eastNorthWall", { SCREEN_WIDTH - WALL_WIDTH, 0, WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2) }));
+        actors.push_back(new Door("eastDoor", { SCREEN_WIDTH - WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2) }));
+        actors.push_back(new Wall("eastSouthWall", { SCREEN_WIDTH - WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2), WALL_WIDTH, SCREEN_HEIGHT }));
     }
     else
     {
-        walls.push_back(new Wall("eastWall", {SCREEN_WIDTH - WALL_WIDTH, 0, WALL_WIDTH, SCREEN_HEIGHT}));
+        actors.push_back(new Wall("eastWall", { SCREEN_WIDTH - WALL_WIDTH, 0, WALL_WIDTH, SCREEN_HEIGHT }));
     }
 
-    actors.push_back(new ActorGroup("wallGroup", walls));
-    actors.push_back(new Hero({SCREEN_WIDTH / 2,
-                               SCREEN_HEIGHT / 2,
-                               HERO_WIDTH,
-                               HERO_HEIGHT},
-                              0, 0));
-
-    actors.push_back(new MiniMap({10, 10, WALL_WIDTH, WALL_WIDTH},
-                                 map->getValue(),
-                                 map->getWidth(),
-                                 map->getHeight(),
-                                 map->getStartX(),
-                                 map->getStartY()));
+    actors.push_back(new Hero({ SCREEN_WIDTH / 2,
+        SCREEN_HEIGHT / 2,
+        HERO_WIDTH,
+        HERO_HEIGHT },
+        0, 0));
 
     std::vector<std::string> mainSceneActors;
-    mainSceneActors.push_back("hero");
-    mainSceneActors.push_back("wallGroup");
-    mainSceneActors.push_back("miniMap");
+    for (Actor* actor : actors) {
+        mainSceneActors.push_back(actor->getName());
+    }
     Scene *mainScene = new Scene(mainSceneActors);
 
     if (!engine.loadMedia(mainScene, actors))

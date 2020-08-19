@@ -10,9 +10,9 @@ class MiniMap : public Actor
 public:
     MiniMap(Body body, int *map, int width, int height, int currentX, int currentY) : Actor("miniMap",
                                                                                             body,
+                                                                                            { "miniMap" },
                                                                                             0,
                                                                                             0,
-                                                                                            false,
                                                                                             false,
                                                                                             true),
                                                                                       width(width),

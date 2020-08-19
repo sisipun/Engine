@@ -12,11 +12,13 @@ public:
     Wall(std::string name, Body body) : Actor(
                                             name,
                                             body,
+                                            { "wall" },
                                             0,
                                             0,
                                             false,
-                                            true,
-                                            true) {}
+                                            true)
+    {
+    }
 };
 
 #endif

@@ -56,8 +56,6 @@ bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors)
         return false;
     }
 
-    collisionManager->manageCollision(storage->getActors());
-
     return true;
 }
 

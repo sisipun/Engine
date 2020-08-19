@@ -4,11 +4,12 @@
 void Hero::renderActor(SDL_Renderer *renderer)
 {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
-    SDL_Rect rect = {
+    SDL_Rect rect ={
         static_cast<int>(body.x),
         static_cast<int>(body.y),
         static_cast<int>(body.width),
-        static_cast<int>(body.height)};
+        static_cast<int>(body.height)
+    };
     SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -18,9 +19,6 @@ void Hero::update(float delta)
     this->lastVerticalMove = this->verticalVelocity * delta;
     this->body.x += this->lastHorizontalMove;
     this->body.y += this->lastVerticalMove;
-    if (this->rigidBody != nullptr) {
-        this->rigidBody->updateBody(body.x, body.y);
-    }
 }
 
 void Hero::handleInput(SDL_Event *event)
@@ -65,6 +63,10 @@ void Hero::handleInput(SDL_Event *event)
 
 void Hero::handleCollision(Actor *actor)
 {
-    this->body.x -= this->lastHorizontalMove;
-    this->body.y -= this->lastVerticalMove;
+    std::vector<std::string> actorTags = actor->getTags();
+    if (std::find(actorTags.begin(), actorTags.end(), "wall") != actorTags.end())
+    {
+        this->body.x -= this->lastHorizontalMove;
+        this->body.y -= this->lastVerticalMove;
+    }
 }
