@@ -9,14 +9,22 @@
 class Wall : public Actor
 {
 public:
-    Wall(std::string name, Body body) : Actor(
-                                            name,
-                                            body,
-                                            { "wall" },
-                                            0,
-                                            0,
-                                            false,
-                                            true)
+    Wall(
+        std::string name,
+        Body body,
+        std::vector<std::string> tags ={ "wall" },
+        float horizontalVelocity = 0,
+        float verticalVelocity = 0,
+        bool manageCollisions = false,
+        bool visiable = true
+    ) : Actor(
+        name,
+        body,
+        tags,
+        horizontalVelocity,
+        verticalVelocity,
+        manageCollisions,
+        visiable)
     {
     }
 };

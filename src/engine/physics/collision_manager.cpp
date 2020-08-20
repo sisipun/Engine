@@ -9,7 +9,7 @@ void CollisionManager::manageCollision(std::map<std::string, Actor *> actors)
         {
             if (managedDef.first != actorDef.first &&
                 (managedDef.second->isCollides(actorDef.second) ||
-                 actorDef.second->isCollides(managedDef.second)))
+                    actorDef.second->isCollides(managedDef.second)))
             {
                 managedDef.second->handleCollision(actorDef.second);
             }

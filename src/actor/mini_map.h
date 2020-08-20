@@ -8,17 +8,31 @@
 class MiniMap : public Actor
 {
 public:
-    MiniMap(Body body, int *map, int width, int height, int currentX, int currentY) : Actor("miniMap",
-                                                                                            body,
-                                                                                            { "miniMap" },
-                                                                                            0,
-                                                                                            0,
-                                                                                            false,
-                                                                                            true),
-                                                                                      width(width),
-                                                                                      height(height),
-                                                                                      currentX(currentX),
-                                                                                      currentY(currentY)
+    MiniMap(
+        Body body,
+        int *map,
+        int width,
+        int height,
+        int currentX,
+        int currentY,
+        std::string name = "miniMap",
+        std::vector<std::string> tags ={ "miniMap" },
+        float horizontalVelocity = 0,
+        float verticalVelocity = 0,
+        bool manageCollisions = false,
+        bool visiable = true
+    ) : Actor(
+        name,
+        body,
+        tags,
+        horizontalVelocity,
+        verticalVelocity,
+        manageCollisions,
+        visiable),
+        width(width),
+        height(height),
+        currentX(currentX),
+        currentY(currentY)
     {
         this->map = new int[width * height];
         for (int i = 0; i < width; i++)

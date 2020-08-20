@@ -16,13 +16,25 @@ public:
     {
     }
 
-    void render(SDL_Renderer *renderer);
+    void render(SDL_Renderer *renderer) {
+        if (!visiable)
+        {
+            return;
+        }
+        renderActor(renderer);
+    }
 
-    virtual void update(float delta);
+    void update(float delta) {
+        updateActor(delta);
+    }
 
-    virtual void handleInput(SDL_Event *event) {}
+    void handleInput(SDL_Event *event) {
+        handleActorInput(event);
+    }
 
-    virtual void handleCollision(Actor *actor) {}
+    void handleCollision(Actor *actor) {
+        handleActorCollision(actor);
+    }
 
     virtual bool isCollides(Actor *actor)
     {
@@ -49,32 +61,37 @@ public:
     }
 
 protected:
-    Actor(std::string name,
-          Body body,
-          std::vector<std::string> tags = std::vector<std::string>(),
-          float horizontalVelocity = 0,
-          float verticalVelocity = 0,
-          bool manageCollisions = true,
-          bool visiable = true)
-        : name(name),
-          body(body),
-          tags(tags),
-          horizontalVelocity(horizontalVelocity),
-          verticalVelocity(verticalVelocity),
-          manageCollisions(manageCollisions),
-          visiable(visiable)
+    Actor(
+        std::string name,
+        Body body,
+        std::vector<std::string> tags = std::vector<std::string>(),
+        float horizontalVelocity = 0,
+        float verticalVelocity = 0,
+        bool manageCollisions = true,
+        bool visiable = true
+    ) : name(name),
+        body(body),
+        tags(tags),
+        horizontalVelocity(horizontalVelocity),
+        verticalVelocity(verticalVelocity),
+        manageCollisions(manageCollisions),
+        visiable(visiable)
     {
     }
 
+    virtual void renderActor(SDL_Renderer *renderer);
+
+    virtual void updateActor(float delta);
+
+    virtual void handleActorInput(SDL_Event *event) {}
+
+    virtual void handleActorCollision(Actor *actor) {}
+
+    std::string name;
     Body body;
     std::vector<std::string> tags;
     float horizontalVelocity;
     float verticalVelocity;
-
-    virtual void renderActor(SDL_Renderer *renderer);
-
-private:
-    std::string name;
     bool manageCollisions;
     bool visiable;
 };

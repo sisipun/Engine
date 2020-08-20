@@ -1,14 +1,5 @@
 #include "actor.h"
 
-void Actor::render(SDL_Renderer *renderer)
-{
-    if (!visiable)
-    {
-        return;
-    }
-    this->renderActor(renderer);
-}
-
 void Actor::renderActor(SDL_Renderer *renderer)
 {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -21,7 +12,7 @@ void Actor::renderActor(SDL_Renderer *renderer)
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void Actor::update(float delta)
+void Actor::updateActor(float delta)
 {
     this->body.x += this->horizontalVelocity * delta;
     this->body.y += this->verticalVelocity * delta;

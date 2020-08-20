@@ -12,7 +12,7 @@ bool Engine::init(float screenWidth, float screenHeigh)
     }
 
     window = SDL_CreateWindow("Roguelike", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeigh,
-                              SDL_WINDOW_SHOWN);
+        SDL_WINDOW_SHOWN);
     if (window == nullptr)
     {
         Logger::log("Window could not be created! SDL_Error: %s\n", SDL_GetError());

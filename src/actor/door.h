@@ -9,14 +9,24 @@
 class Door : public Actor
 {
 public:
-    Door(std::string name, Body body) : Actor(
-                                            name,
-                                            body,
-                                            { "door" },
-                                            0,
-                                            0,
-                                            false,
-                                            false) {}
+    Door(
+        std::string name,
+        Body body,
+        std::vector<std::string> tags ={ "door" },
+        float horizontalVelocity = 0,
+        float verticalVelocity = 0,
+        bool manageCollisions = false,
+        bool visiable = false
+    ) : Actor(
+        name,
+        body,
+        tags,
+        horizontalVelocity,
+        verticalVelocity,
+        manageCollisions,
+        visiable)
+    {
+    }
 };
 
 #endif

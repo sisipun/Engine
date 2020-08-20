@@ -1,5 +1,7 @@
 #include "hero.h"
+#include "mini_map.h"
 #include "../utils/constants.h"
+#include "../engine/utils/logger/logger.h"
 
 void Hero::renderActor(SDL_Renderer *renderer)
 {
@@ -13,7 +15,7 @@ void Hero::renderActor(SDL_Renderer *renderer)
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void Hero::update(float delta)
+void Hero::updateActor(float delta)
 {
     this->lastHorizontalMove = this->horizontalVelocity * delta;
     this->lastVerticalMove = this->verticalVelocity * delta;
@@ -21,7 +23,7 @@ void Hero::update(float delta)
     this->body.y += this->lastVerticalMove;
 }
 
-void Hero::handleInput(SDL_Event *event)
+void Hero::handleActorInput(SDL_Event *event)
 {
     if (event->type == SDL_KEYDOWN)
     {
@@ -61,12 +63,17 @@ void Hero::handleInput(SDL_Event *event)
     }
 }
 
-void Hero::handleCollision(Actor *actor)
+void Hero::handleActorCollision(Actor *actor)
 {
     std::vector<std::string> actorTags = actor->getTags();
     if (std::find(actorTags.begin(), actorTags.end(), "wall") != actorTags.end())
     {
         this->body.x -= this->lastHorizontalMove;
         this->body.y -= this->lastVerticalMove;
+    }
+    if (std::find(actorTags.begin(), actorTags.end(), "door") != actorTags.end())
+    {
+        this->body.x = this->startX;
+        this->body.y = this->startY;
     }
 }

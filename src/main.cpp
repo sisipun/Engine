@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     if (map->getStartY() - 1 >= 0 && *(map->getValue() + (map->getStartX() * map->getHeight()) + map->getStartY() - 1) == 0)
     {
         actors.push_back(new Wall("northWestWall", { 0, 0, (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), WALL_WIDTH }));
-        actors.push_back(new Door("northDoor", { (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), 0, (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), WALL_WIDTH }));
+        actors.push_back(new Door("northDoor", { (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), 0, (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), WALL_WIDTH }, { "door", "north" }));
         actors.push_back(new Wall("northEastWall", { (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), 0, SCREEN_WIDTH, WALL_WIDTH }));
     }
     else
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     if (map->getStartY() + 1 < map->getHeight() && *(map->getValue() + (map->getStartX() * map->getHeight()) + map->getStartY() + 1) == 0)
     {
         actors.push_back(new Wall("southWestWall", { 0, SCREEN_HEIGHT - WALL_WIDTH, (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), WALL_WIDTH }));
-        actors.push_back(new Door("southDoor", { (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), SCREEN_HEIGHT - WALL_WIDTH, (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), WALL_WIDTH }));
+        actors.push_back(new Door("southDoor", { (SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), SCREEN_HEIGHT - WALL_WIDTH, (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), WALL_WIDTH }, { "door", "south" }));
         actors.push_back(new Wall("southEastWall", { (SCREEN_WIDTH / 2) + (DOOR_WIDTH / 2), SCREEN_HEIGHT - WALL_WIDTH, SCREEN_WIDTH, WALL_WIDTH }));
     }
     else
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     if (map->getStartX() - 1 >= 0 && *(map->getValue() + ((map->getStartX() - 1) * map->getHeight()) + map->getStartY()) == 0)
     {
         actors.push_back(new Wall("westNorthWall", { 0, 0, WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2) }));
-        actors.push_back(new Door("westDoor", { 0, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2) }));
+        actors.push_back(new Door("westDoor", { 0, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2) }, { "door", "west" }));
         actors.push_back(new Wall("westSouthWall", { 0, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2), WALL_WIDTH, SCREEN_HEIGHT }));
     }
     else
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     if (map->getStartX() + 1 < map->getWidth() && *(map->getValue() + ((map->getStartX() + 1) * map->getHeight()) + map->getStartY()) == 0)
     {
         actors.push_back(new Wall("eastNorthWall", { SCREEN_WIDTH - WALL_WIDTH, 0, WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2) }));
-        actors.push_back(new Door("eastDoor", { SCREEN_WIDTH - WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2) }));
+        actors.push_back(new Door("eastDoor", { SCREEN_WIDTH - WALL_WIDTH, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2) }, { "door", "east" }));
         actors.push_back(new Wall("eastSouthWall", { SCREEN_WIDTH - WALL_WIDTH, (SCREEN_HEIGHT / 2) + (DOOR_WIDTH / 2), WALL_WIDTH, SCREEN_HEIGHT }));
     }
     else

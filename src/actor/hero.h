@@ -9,26 +9,40 @@
 class Hero : public Actor
 {
 public:
-    Hero(Body body, float horizontalVelocity, float verticalVelocity) : Actor(
-                                                                            "hero",
-                                                                            body,
-                                                                            { "hero" },
-                                                                            horizontalVelocity,
-                                                                            verticalVelocity,
-                                                                            true,
-                                                                            true) {}
-
-    void update(float delta) override;
-
-    void handleInput(SDL_Event *event) override;
-
-    void handleCollision(Actor *actor) override;
+    Hero(
+        Body body,
+        float horizontalVelocity,
+        float verticalVelocity,
+        std::string name = "hero",
+        std::vector<std::string> tags ={ "hero" },
+        bool manageCollisions = true,
+        bool visiable = true
+    ) : Actor(
+        name,
+        body,
+        tags,
+        horizontalVelocity,
+        verticalVelocity,
+        manageCollisions,
+        visiable),
+        startX(body.x),
+        startY(body.y)
+    {
+    }
 
     void renderActor(SDL_Renderer *renderer) override;
+
+    void updateActor(float delta) override;
+
+    void handleActorInput(SDL_Event *event) override;
+
+    void handleActorCollision(Actor *actor) override;
 
 private:
     float lastHorizontalMove;
     float lastVerticalMove;
+    float startX;
+    float startY;
 };
 
 #endif
