@@ -40,6 +40,11 @@ set(SOURCE_LIB
     src/engine/physics/collision_manager.h
     src/engine/physics/collision_manager.cpp
 
+    src/engine/event/event.h
+
+    src/engine/event/event_manager.h
+    src/engine/event/event_manager.cpp
+
     src/engine/actor/actor.h
     src/engine/actor/actor.cpp
 

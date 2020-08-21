@@ -1,7 +1,6 @@
 #include "hero.h"
 #include "mini_map.h"
 #include "../utils/constants.h"
-#include "../engine/utils/logger/logger.h"
 
 void Hero::renderActor(SDL_Renderer *renderer)
 {

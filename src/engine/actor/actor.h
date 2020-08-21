@@ -4,6 +4,7 @@
 #include "../physics/body.h"
 #include "../physics/collision.h"
 #include "../physics/rigid_body.h"
+#include "../event/event.h"
 
 #include "SDL.h"
 #include <string>
@@ -34,6 +35,10 @@ public:
 
     void handleCollision(Actor *actor) {
         handleActorCollision(actor);
+    }
+
+    void handleEvent(Event event) {
+        handleActorEvent(event);
     }
 
     virtual bool isCollides(Actor *actor)
@@ -86,6 +91,8 @@ protected:
     virtual void handleActorInput(SDL_Event *event) {}
 
     virtual void handleActorCollision(Actor *actor) {}
+
+    virtual void handleActorEvent(Event event) {}
 
     std::string name;
     Body body;
