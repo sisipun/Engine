@@ -1,21 +1,33 @@
 #include "event_manager.h"
-#include "../utils/logger/logger.h"
 
-bool EventManager::subsribe(Actor *actor)
+bool EventManager::subscribe(std::string eventType, Actor *actor)
 {
-    if (managedActors.find(actor->getName()) != managedActors.end())
+    std::map<std::string, std::vector<Actor *>>::iterator it = subscribers.find(eventType);
+    if (it == subscribers.end())
     {
-        Logger::log("Duplicate actor name: %s\n", actor->getName().c_str());
-        return false;
+        subscribers.insert(std::pair<std::string, std::vector<Actor *>>(eventType, std::vector<Actor *>{actor}));
     }
-    managedActors.insert(std::pair<std::string, Actor *>(actor->getName(), actor));
+    else
+    {
+        subscribers[eventType].push_back(actor);
+    }
     return true;
 }
 
-void EventManager::notifyEvent(Event event)
+bool EventManager::notifyEvent(Event event)
 {
-    for (auto managedDef : managedActors)
+    std::string eventType = event.getType();
+    std::map<std::string, std::vector<Actor *>>::iterator it = subscribers.find(eventType);
+    if (it == subscribers.end())
     {
-        managedDef.second->handleEvent(event);
+        return false;
+    }
+    else
+    {
+        for (auto subscriber : subscribers[eventType])
+        {
+            subscriber->handleEvent(event);
+        }
+        return true;
     }
 }

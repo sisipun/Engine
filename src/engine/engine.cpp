@@ -1,7 +1,7 @@
 #include "engine.h"
 #include "utils/logger/logger.h"
 
-Engine::Engine() : window(nullptr), renderer(nullptr), storage(nullptr), timer(nullptr), currentScene(nullptr), delta(0) {}
+Engine::Engine() : window(nullptr), renderer(nullptr), context(nullptr), timer(nullptr), currentScene(nullptr), delta(0) {}
 
 bool Engine::init(float screenWidth, float screenHeigh)
 {
@@ -12,7 +12,7 @@ bool Engine::init(float screenWidth, float screenHeigh)
     }
 
     window = SDL_CreateWindow("Roguelike", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeigh,
-        SDL_WINDOW_SHOWN);
+                              SDL_WINDOW_SHOWN);
     if (window == nullptr)
     {
         Logger::log("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -32,7 +32,7 @@ bool Engine::init(float screenWidth, float screenHeigh)
         return false;
     }
 
-    storage = new Storage();
+    context = new Context();
     collisionManager = new CollisionManager();
 
     event = new SDL_Event();
@@ -45,7 +45,7 @@ bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors)
 {
     for (Actor *actor : actors)
     {
-        if (!storage->addActor(actor) || (actor->isManageCollisions() && !collisionManager->addActor(actor)))
+        if (!context->storeActor(actor) || (actor->isManageCollisions() && !collisionManager->addActor(actor)))
         {
             return false;
         }
@@ -61,7 +61,7 @@ bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors)
 
 bool Engine::changeScene(Scene *scene)
 {
-    if (!scene->init(storage))
+    if (!scene->init(context))
     {
         return false;
     }
@@ -83,7 +83,7 @@ void Engine::update()
 
     currentScene->update(delta);
 
-    collisionManager->manageCollision(storage->getActors());
+    collisionManager->manageCollision(context->getActors());
 
     delta = timer->getTicks() * 0.001;
 }
@@ -109,12 +109,12 @@ bool Engine::isQuit()
 void Engine::close()
 {
     delete timer;
-    delete storage;
+    delete context;
     delete collisionManager;
     delete currentScene;
 
     timer = nullptr;
-    storage = nullptr;
+    context = nullptr;
     collisionManager = nullptr;
     currentScene = nullptr;
 

@@ -3,7 +3,7 @@
 
 #include "actor/actor.h"
 #include "actor/scene/scene.h"
-#include "storage/storage.h"
+#include "context/context.h"
 #include "physics/collision_manager.h"
 #include "utils/time/timer.h"
 
@@ -34,7 +34,7 @@ private:
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Event *event;
-    Storage *storage;
+    Context *context;
     CollisionManager *collisionManager;
     Timer *timer;
     Scene *currentScene;

@@ -16,23 +16,23 @@ public:
         int currentX,
         int currentY,
         std::string name = "miniMap",
-        std::vector<std::string> tags ={ "miniMap" },
+        std::vector<std::string> tags = {"miniMap"},
+        std::vector<std::string> eventTypes = {"heroUp", "heroDown", "heroLeft", "heroRight"},
         float horizontalVelocity = 0,
         float verticalVelocity = 0,
         bool manageCollisions = false,
-        bool visiable = true
-    ) : Actor(
-        name,
-        body,
-        tags,
-        horizontalVelocity,
-        verticalVelocity,
-        manageCollisions,
-        visiable),
-        width(width),
-        height(height),
-        currentX(currentX),
-        currentY(currentY)
+        bool visiable = true) : Actor(name,
+                                      body,
+                                      tags,
+                                      eventTypes,
+                                      horizontalVelocity,
+                                      verticalVelocity,
+                                      manageCollisions,
+                                      visiable),
+                                width(width),
+                                height(height),
+                                currentX(currentX),
+                                currentY(currentY)
     {
         this->map = new int[width * height];
         for (int i = 0; i < width; i++)
@@ -58,6 +58,8 @@ public:
     bool moveDown();
 
     void renderActor(SDL_Renderer *renderer) override;
+
+    void handleActorEvent(Event event) override;
 
 private:
     int *map;

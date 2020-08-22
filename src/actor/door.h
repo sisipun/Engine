@@ -12,19 +12,19 @@ public:
     Door(
         std::string name,
         Body body,
-        std::vector<std::string> tags ={ "door" },
+        std::vector<std::string> tags = {"door"},
+        std::vector<std::string> eventTypes = {},
         float horizontalVelocity = 0,
         float verticalVelocity = 0,
         bool manageCollisions = false,
-        bool visiable = false
-    ) : Actor(
-        name,
-        body,
-        tags,
-        horizontalVelocity,
-        verticalVelocity,
-        manageCollisions,
-        visiable)
+        bool visiable = false) : Actor(name,
+                                       body,
+                                       tags,
+                                       eventTypes,
+                                       horizontalVelocity,
+                                       verticalVelocity,
+                                       manageCollisions,
+                                       visiable)
     {
     }
 };

@@ -14,19 +14,19 @@ public:
         float horizontalVelocity,
         float verticalVelocity,
         std::string name = "hero",
-        std::vector<std::string> tags ={ "hero" },
+        std::vector<std::string> tags = {"hero"},
+        std::vector<std::string> eventTypes = {},
         bool manageCollisions = true,
-        bool visiable = true
-    ) : Actor(
-        name,
-        body,
-        tags,
-        horizontalVelocity,
-        verticalVelocity,
-        manageCollisions,
-        visiable),
-        startX(body.x),
-        startY(body.y)
+        bool visiable = true) : Actor(name,
+                                      body,
+                                      tags,
+                                      eventTypes,
+                                      horizontalVelocity,
+                                      verticalVelocity,
+                                      manageCollisions,
+                                      visiable),
+                                startX(body.x),
+                                startY(body.y)
     {
     }
 

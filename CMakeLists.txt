@@ -71,6 +71,9 @@ set(SOURCE_LIB
     src/engine/network/stream/output_memory_stream.h
     src/engine/network/stream/output_memory_stream.cpp
 
+    src/engine/context/context.h
+    src/engine/context/context.cpp
+
     src/engine/engine.h
     src/engine/engine.cpp
 

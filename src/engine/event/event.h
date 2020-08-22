@@ -6,9 +6,17 @@
 class Event
 {
 public:
-    Event(std::string type) : type(type) {}
+    Event(std::string type) : type(type)
+    {
+    }
+
+    const std::string getType()
+    {
+        return type;
+    }
+
 private:
-    std::string type;
+    const std::string type;
 };
 
 #endif

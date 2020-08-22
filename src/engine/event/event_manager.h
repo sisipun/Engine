@@ -6,16 +6,17 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 class EventManager
 {
 public:
-    bool subsribe(Actor *actor);
+    bool subscribe(std::string eventType, Actor *actor);
 
-    void notifyEvent(Event event);
+    bool notifyEvent(Event event);
 
 private:
-    std::map<std::string, Actor *> managedActors;
+    std::map<std::string, std::vector<Actor *>> subscribers;
 };
 
 #endif

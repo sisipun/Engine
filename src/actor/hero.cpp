@@ -5,12 +5,11 @@
 void Hero::renderActor(SDL_Renderer *renderer)
 {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
-    SDL_Rect rect ={
+    SDL_Rect rect = {
         static_cast<int>(body.x),
         static_cast<int>(body.y),
         static_cast<int>(body.width),
-        static_cast<int>(body.height)
-    };
+        static_cast<int>(body.height)};
     SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -74,5 +73,21 @@ void Hero::handleActorCollision(Actor *actor)
     {
         this->body.x = this->startX;
         this->body.y = this->startY;
+        if (std::find(actorTags.begin(), actorTags.end(), "north") != actorTags.end())
+        {
+            this->context->notifyEvent(Event("heroUp"));
+        }
+        else if (std::find(actorTags.begin(), actorTags.end(), "south") != actorTags.end())
+        {
+            this->context->notifyEvent(Event("heroDown"));
+        }
+        else if (std::find(actorTags.begin(), actorTags.end(), "west") != actorTags.end())
+        {
+            this->context->notifyEvent(Event("heroLeft"));
+        }
+        else if (std::find(actorTags.begin(), actorTags.end(), "east") != actorTags.end())
+        {
+            this->context->notifyEvent(Event("heroRight"));
+        }
     }
 }

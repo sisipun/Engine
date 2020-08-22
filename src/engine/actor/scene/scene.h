@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "../../storage/storage.h"
+#include "../../context/context.h"
 #include "../actor.h"
 
 #include "SDL.h"
@@ -13,11 +13,11 @@ class Scene
 public:
     Scene(std::vector<std::string> actorNames) : actorNames(actorNames) {}
 
-    bool init(Storage *storage)
+    bool init(Context *context)
     {
         for (auto actorName : actorNames)
         {
-            Actor *actor = storage->getActor(actorName);
+            Actor *actor = context->getActor(actorName);
             if (actor == nullptr)
             {
                 actors.clear();
