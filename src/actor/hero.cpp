@@ -1,5 +1,4 @@
 #include "hero.h"
-#include "mini_map.h"
 #include "../utils/constants.h"
 
 void Hero::renderActor(SDL_Renderer *renderer)
@@ -15,10 +14,10 @@ void Hero::renderActor(SDL_Renderer *renderer)
 
 void Hero::updateActor(float delta)
 {
-    this->lastHorizontalMove = this->horizontalVelocity * delta;
-    this->lastVerticalMove = this->verticalVelocity * delta;
-    this->body.x += this->lastHorizontalMove;
-    this->body.y += this->lastVerticalMove;
+    lastHorizontalMove = horizontalVelocity * delta;
+    lastVerticalMove = verticalVelocity * delta;
+    body.x += lastHorizontalMove;
+    body.y += lastVerticalMove;
 }
 
 void Hero::handleActorInput(SDL_Event *event)
@@ -28,16 +27,16 @@ void Hero::handleActorInput(SDL_Event *event)
         switch (event->key.keysym.sym)
         {
         case SDLK_RIGHT:
-            this->horizontalVelocity = HERO_VELOCITY;
+            horizontalVelocity = HERO_VELOCITY;
             break;
         case SDLK_LEFT:
-            this->horizontalVelocity = -HERO_VELOCITY;
+            horizontalVelocity = -HERO_VELOCITY;
             break;
         case SDLK_UP:
-            this->verticalVelocity = -HERO_VELOCITY;
+            verticalVelocity = -HERO_VELOCITY;
             break;
         case SDLK_DOWN:
-            this->verticalVelocity = HERO_VELOCITY;
+            verticalVelocity = HERO_VELOCITY;
             break;
         }
     }
@@ -46,16 +45,16 @@ void Hero::handleActorInput(SDL_Event *event)
         switch (event->key.keysym.sym)
         {
         case SDLK_RIGHT:
-            this->horizontalVelocity = 0;
+            horizontalVelocity = 0;
             break;
         case SDLK_LEFT:
-            this->horizontalVelocity = 0;
+            horizontalVelocity = 0;
             break;
         case SDLK_UP:
-            this->verticalVelocity = 0;
+            verticalVelocity = 0;
             break;
         case SDLK_DOWN:
-            this->verticalVelocity = 0;
+            verticalVelocity = 0;
             break;
         }
     }
@@ -66,28 +65,28 @@ void Hero::handleActorCollision(Actor *actor)
     std::vector<std::string> actorTags = actor->getTags();
     if (std::find(actorTags.begin(), actorTags.end(), "wall") != actorTags.end())
     {
-        this->body.x -= this->lastHorizontalMove;
-        this->body.y -= this->lastVerticalMove;
+        body.x -= lastHorizontalMove;
+        body.y -= lastVerticalMove;
     }
     if (std::find(actorTags.begin(), actorTags.end(), "door") != actorTags.end())
     {
-        this->body.x = this->startX;
-        this->body.y = this->startY;
+        body.x = startX;
+        body.y = startY;
         if (std::find(actorTags.begin(), actorTags.end(), "north") != actorTags.end())
         {
-            this->context->notifyEvent(Event("heroUp"));
+            context->notifyEvent(Event("heroUp"));
         }
         else if (std::find(actorTags.begin(), actorTags.end(), "south") != actorTags.end())
         {
-            this->context->notifyEvent(Event("heroDown"));
+            context->notifyEvent(Event("heroDown"));
         }
         else if (std::find(actorTags.begin(), actorTags.end(), "west") != actorTags.end())
         {
-            this->context->notifyEvent(Event("heroLeft"));
+            context->notifyEvent(Event("heroLeft"));
         }
         else if (std::find(actorTags.begin(), actorTags.end(), "east") != actorTags.end())
         {
-            this->context->notifyEvent(Event("heroRight"));
+            context->notifyEvent(Event("heroRight"));
         }
     }
 }

@@ -30,6 +30,7 @@ public:
     {
     }
 
+protected:
     void renderActor(SDL_Renderer *renderer) override;
 
     void updateActor(float delta) override;

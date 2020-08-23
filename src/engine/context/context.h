@@ -22,6 +22,8 @@ public:
 
     bool storeActor(Actor *actor);
 
+    bool deleteActor(std::string name);
+
     bool subscribeEvent(std::string eventType, Actor *actor);
 
     bool notifyEvent(Event event);

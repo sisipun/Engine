@@ -2,7 +2,6 @@
 #define ENGINE_H
 
 #include "actor/actor.h"
-#include "actor/scene/scene.h"
 #include "context/context.h"
 #include "physics/collision_manager.h"
 #include "utils/time/timer.h"
@@ -16,11 +15,7 @@ class Engine
 public:
     Engine();
 
-    bool init(float screenWidth, float screenHeigh);
-
-    bool loadMedia(Scene *startScene, std::vector<Actor *> actors);
-
-    bool changeScene(Scene *scene);
+    bool init(float screenWidth, float screenHeigh, std::vector<Actor *> actors);
 
     void update();
 
@@ -37,9 +32,7 @@ private:
     Context *context;
     CollisionManager *collisionManager;
     Timer *timer;
-    Scene *currentScene;
     float delta;
-
     bool quit;
 };
 

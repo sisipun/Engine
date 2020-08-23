@@ -13,6 +13,6 @@ void Actor::renderActor(SDL_Renderer *renderer)
 
 void Actor::updateActor(float delta)
 {
-    this->body.x += this->horizontalVelocity * delta;
-    this->body.y += this->verticalVelocity * delta;
+    body.x += horizontalVelocity * delta;
+    body.y += verticalVelocity * delta;
 }

@@ -77,27 +77,27 @@ bool Room::extend(int *map, int mapWidth, int mapHeight)
     if (MapGeneratorUtils::isEmpty(x - 1, x - 1, y, y + height - 1, map, mapWidth, mapHeight))
     {
         MapGeneratorUtils::boxToMap(x - 1, x + width - 1, y, y + height - 1, map, mapWidth, mapHeight, 2);
-        this->x--;
-        this->width++;
+        x--;
+        width++;
         return true;
     }
     else if (MapGeneratorUtils::isEmpty(x, x + width - 1, y - 1, y - 1, map, mapWidth, mapHeight))
     {
         MapGeneratorUtils::boxToMap(x, x + width - 1, y - 1, y + height - 1, map, mapWidth, mapHeight, 2);
-        this->y--;
-        this->height++;
+        y--;
+        height++;
         return true;
     }
     else if (MapGeneratorUtils::isEmpty(x, x + width - 1, y + height, y + height, map, mapWidth, mapHeight))
     {
         MapGeneratorUtils::boxToMap(x, x + width - 1, y, y + height, map, mapWidth, mapHeight, 2);
-        this->height++;
+        height++;
         return true;
     }
     else if (MapGeneratorUtils::isEmpty(x + width, x + width, y, y + height - 1, map, mapWidth, mapHeight))
     {
         MapGeneratorUtils::boxToMap(x, x + width, y, y + height - 1, map, mapWidth, mapHeight, 2);
-        this->width++;
+        width++;
         return true;
     }
 

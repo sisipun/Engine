@@ -13,6 +13,8 @@ public:
 
     bool addActor(Actor *actor);
 
+    bool deleteActor(std::string name);
+
     Actor *getActor(std::string name);
 
     std::map<std::string, Actor *> getActors()

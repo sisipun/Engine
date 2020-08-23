@@ -1,4 +1,6 @@
 #include "mini_map.h"
+#include "../utils/constants.h"
+#include "door.h"
 
 void MiniMap::renderActor(SDL_Renderer *renderer)
 {
@@ -7,7 +9,7 @@ void MiniMap::renderActor(SDL_Renderer *renderer)
     {
         for (int j = 0; j < height; j++)
         {
-            if (*(this->map + (i * height) + j) == 1)
+            if (*(map + (i * height) + j) == 1)
             {
                 SDL_Rect rect = {
                     static_cast<int>(body.x + i * body.width),
@@ -30,7 +32,7 @@ void MiniMap::renderActor(SDL_Renderer *renderer)
 
 bool MiniMap::moveLeft()
 {
-    if (currentX - 1 >= 0 && *(this->map + ((currentX - 1) * height) + currentY) == 0)
+    if (currentX - 1 >= 0 && *(map + ((currentX - 1) * height) + currentY) == 0)
     {
         currentX--;
         return true;
@@ -41,7 +43,7 @@ bool MiniMap::moveLeft()
 
 bool MiniMap::moveRight()
 {
-    if (currentX + 1 < width && *(this->map + ((currentX + 1) * height) + currentY) == 0)
+    if (currentX + 1 < width && *(map + ((currentX + 1) * height) + currentY) == 0)
     {
         currentX++;
         return true;
@@ -52,7 +54,7 @@ bool MiniMap::moveRight()
 
 bool MiniMap::moveUp()
 {
-    if (currentY - 1 >= 0 && *(this->map + (currentX * height) + currentY - 1) == 0)
+    if (currentY - 1 >= 0 && *(map + (currentX * height) + currentY - 1) == 0)
     {
         currentY--;
         return true;
@@ -63,7 +65,7 @@ bool MiniMap::moveUp()
 
 bool MiniMap::moveDown()
 {
-    if (currentY + 1 < height && *(this->map + (currentX * height) + currentY + 1) == 0)
+    if (currentY + 1 < height && *(map + (currentX * height) + currentY + 1) == 0)
     {
         currentY++;
         return true;
@@ -72,22 +74,77 @@ bool MiniMap::moveDown()
     return false;
 }
 
+void addDoor(Context *context, std::string name, Body body, std::vector<std::string> tags)
+{
+    Actor *door = context->getActor(name);
+    if (door == nullptr)
+    {
+        context->storeActor(new Door(name, body, tags));
+    }
+}
+
+void removeDoor(Context *context, std::string name)
+{
+    context->deleteActor(name);
+}
+
 void MiniMap::handleActorEvent(Event event)
 {
+    bool mapMoved = false;
     if (event.getType() == "heroUp")
     {
         moveUp();
+        mapMoved = true;
     }
     else if (event.getType() == "heroDown")
     {
         moveDown();
+        mapMoved = true;
     }
     else if (event.getType() == "heroLeft")
     {
         moveLeft();
+        mapMoved = true;
     }
     else if (event.getType() == "heroRight")
     {
         moveRight();
+        mapMoved = true;
+    }
+
+    if (mapMoved)
+    {
+        if (currentY - 1 >= 0 && *(map + (currentX * height) + currentY - 1) == 0)
+        {
+            addDoor(context, "northDoor", {(SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), 0, DOOR_WIDTH, DOOR_HEIGHT}, {"door", "north"});
+        }
+        else
+        {
+            removeDoor(context, "northDoor");
+        }
+        if (currentY + 1 < height && *(map + (currentX * height) + currentY + 1) == 0)
+        {
+            addDoor(context, "southDoor", {(SCREEN_WIDTH / 2) - (DOOR_WIDTH / 2), SCREEN_HEIGHT - DOOR_HEIGHT, DOOR_WIDTH, DOOR_HEIGHT}, {"door", "south"});
+        }
+        else
+        {
+            removeDoor(context, "southDoor");
+        }
+        if (currentX - 1 >= 0 && *(map + ((currentX - 1) * height) + currentY) == 0)
+        {
+            addDoor(context, "westDoor", {0, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), DOOR_HEIGHT, DOOR_WIDTH}, {"door", "west"});
+        }
+        else
+        {
+            removeDoor(context, "westDoor");
+        }
+        if (currentX + 1 < width && *(map + ((currentX + 1) * height) + currentY) == 0)
+        {
+            addDoor(context, "eastDoor", {SCREEN_WIDTH - DOOR_HEIGHT, (SCREEN_HEIGHT / 2) - (DOOR_WIDTH / 2), DOOR_HEIGHT, DOOR_WIDTH}, {"door", "east"});
+        }
+        else
+        {
+            removeDoor(context, "eastDoor");
+        }
     }
 }

@@ -28,6 +28,10 @@ bool Context::storeActor(Actor *actor)
     return actor->injectContext(this) && storage->addActor(actor);
 }
 
+bool Context::deleteActor(std::string name) {
+    return storage->deleteActor(name);
+}
+
 bool Context::subscribeEvent(std::string eventType, Actor *actor)
 {
     return eventManager->subscribe(eventType, actor);

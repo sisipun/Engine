@@ -48,8 +48,6 @@ set(SOURCE_LIB
     src/engine/actor/actor.h
     src/engine/actor/actor.cpp
 
-    src/engine/actor/scene/scene.h
-
     src/engine/storage/storage.h
     src/engine/storage/storage.cpp
 
@@ -85,6 +83,7 @@ set(SOURCE_LIB
     src/actor/wall.h
     
     src/actor/door.h
+    src/actor/door.cpp
 
     src/actor/mini_map.h
     src/actor/mini_map.cpp

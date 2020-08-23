@@ -11,5 +11,6 @@ const int HERO_VELOCITY = 100;
 const int WALL_WIDTH = 10;
 
 const int DOOR_WIDTH = 140;
+const int DOOR_HEIGHT = 16;
 
 #endif

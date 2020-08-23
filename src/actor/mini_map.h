@@ -46,7 +46,7 @@ public:
 
     virtual ~MiniMap()
     {
-        delete[] this->map;
+        delete[] map;
     }
 
     bool moveLeft();
@@ -57,6 +57,7 @@ public:
 
     bool moveDown();
 
+protected:
     void renderActor(SDL_Renderer *renderer) override;
 
     void handleActorEvent(Event event) override;

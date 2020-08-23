@@ -17,16 +17,19 @@ public:
         float horizontalVelocity = 0,
         float verticalVelocity = 0,
         bool manageCollisions = false,
-        bool visiable = false) : Actor(name,
-                                       body,
-                                       tags,
-                                       eventTypes,
-                                       horizontalVelocity,
-                                       verticalVelocity,
-                                       manageCollisions,
-                                       visiable)
+        bool visiable = true) : Actor(name,
+                                      body,
+                                      tags,
+                                      eventTypes,
+                                      horizontalVelocity,
+                                      verticalVelocity,
+                                      manageCollisions,
+                                      visiable)
     {
     }
+
+protected:
+    void renderActor(SDL_Renderer *renderer) override;
 };
 
 #endif

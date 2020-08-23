@@ -1,9 +1,9 @@
 #include "engine.h"
 #include "utils/logger/logger.h"
 
-Engine::Engine() : window(nullptr), renderer(nullptr), context(nullptr), timer(nullptr), currentScene(nullptr), delta(0) {}
+Engine::Engine() : window(nullptr), renderer(nullptr), context(nullptr), timer(nullptr), delta(0) {}
 
-bool Engine::init(float screenWidth, float screenHeigh)
+bool Engine::init(float screenWidth, float screenHeigh, std::vector<Actor *> actors)
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
     {
@@ -38,11 +38,6 @@ bool Engine::init(float screenWidth, float screenHeigh)
     event = new SDL_Event();
     timer = new Timer();
 
-    return true;
-}
-
-bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors)
-{
     for (Actor *actor : actors)
     {
         if (!context->storeActor(actor) || (actor->isManageCollisions() && !collisionManager->addActor(actor)))
@@ -51,22 +46,6 @@ bool Engine::loadMedia(Scene *startScene, std::vector<Actor *> actors)
         }
     }
 
-    if (!changeScene(startScene))
-    {
-        return false;
-    }
-
-    return true;
-}
-
-bool Engine::changeScene(Scene *scene)
-{
-    if (!scene->init(context))
-    {
-        return false;
-    }
-
-    this->currentScene = scene;
     return true;
 }
 
@@ -77,11 +56,17 @@ void Engine::update()
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(renderer);
 
-    currentScene->render(renderer);
+    for (auto actorDef : context->getActors())
+    {
+        actorDef.second->render(renderer);
+    }
 
     SDL_RenderPresent(renderer);
 
-    currentScene->update(delta);
+    for (auto actorDef : context->getActors())
+    {
+        actorDef.second->update(delta);
+    }
 
     collisionManager->manageCollision(context->getActors());
 
@@ -97,7 +82,10 @@ void Engine::handleInput()
             quit = true;
         }
 
-        currentScene->handleInput(event);
+        for (auto actorDef : context->getActors())
+        {
+            actorDef.second->handleInput(event);
+        }
     }
 }
 
@@ -111,12 +99,10 @@ void Engine::close()
     delete timer;
     delete context;
     delete collisionManager;
-    delete currentScene;
 
     timer = nullptr;
     context = nullptr;
     collisionManager = nullptr;
-    currentScene = nullptr;
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

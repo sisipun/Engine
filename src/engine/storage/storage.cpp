@@ -22,6 +22,18 @@ bool Storage::addActor(Actor *actor)
     return true;
 }
 
+bool Storage::deleteActor(std::string name) {
+    if (actors.find(name) == actors.end())
+    {
+        Logger::log("Actor with name: %s not exitst\n", name.c_str());
+        return false;
+    }
+
+    delete actors[name];
+    actors.erase(name);
+    return true;
+}
+
 Actor *Storage::getActor(std::string name)
 {
     std::map<std::string, Actor *>::iterator actorPair = actors.find(name);
