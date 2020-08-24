@@ -3,7 +3,6 @@
 
 #include "../physics/body.h"
 #include "../physics/collision.h"
-#include "../physics/rigid_body.h"
 #include "../context/context.h"
 #include "../event/event.h"
 
@@ -78,9 +77,9 @@ public:
         return name;
     }
 
-    bool isManageCollisions()
+    bool hasCollider()
     {
-        return manageCollisions;
+        return collider;
     }
 
     std::vector<std::string> getTags()
@@ -106,14 +105,14 @@ protected:
         std::vector<std::string> eventTypes = {},
         float horizontalVelocity = 0,
         float verticalVelocity = 0,
-        bool manageCollisions = true,
+        bool collider = true,
         bool visiable = true) : name(name),
                                 body(body),
                                 tags(tags),
                                 eventTypes(eventTypes),
                                 horizontalVelocity(horizontalVelocity),
                                 verticalVelocity(verticalVelocity),
-                                manageCollisions(manageCollisions),
+                                collider(collider),
                                 visiable(visiable),
                                 context(nullptr)
     {
@@ -135,7 +134,7 @@ protected:
     std::vector<std::string> eventTypes;
     float horizontalVelocity;
     float verticalVelocity;
-    bool manageCollisions;
+    bool collider;
     bool visiable;
     Context *context;
 };

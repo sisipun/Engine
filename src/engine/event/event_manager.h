@@ -13,9 +13,12 @@ class EventManager
 public:
     bool subscribe(std::string eventType, Actor *actor);
 
-    bool notifyEvent(Event event);
+    bool pushEvent(Event event);
+
+    bool notifyEvents();
 
 private:
+    std::vector<Event> events;
     std::map<std::string, std::vector<Actor *>> subscribers;
 };
 

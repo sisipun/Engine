@@ -74,19 +74,19 @@ void Hero::handleActorCollision(Actor *actor)
         body.y = startY;
         if (std::find(actorTags.begin(), actorTags.end(), "north") != actorTags.end())
         {
-            context->notifyEvent(Event("heroUp"));
+            context->pushEvent(Event("heroUp"));
         }
         else if (std::find(actorTags.begin(), actorTags.end(), "south") != actorTags.end())
         {
-            context->notifyEvent(Event("heroDown"));
+            context->pushEvent(Event("heroDown"));
         }
         else if (std::find(actorTags.begin(), actorTags.end(), "west") != actorTags.end())
         {
-            context->notifyEvent(Event("heroLeft"));
+            context->pushEvent(Event("heroLeft"));
         }
         else if (std::find(actorTags.begin(), actorTags.end(), "east") != actorTags.end())
         {
-            context->notifyEvent(Event("heroRight"));
+            context->pushEvent(Event("heroRight"));
         }
     }
 }

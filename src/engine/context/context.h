@@ -20,13 +20,17 @@ public:
 
     std::map<std::string, Actor *> getActors();
 
+    std::map<std::string, Actor *> getColliders();
+
     bool storeActor(Actor *actor);
 
     bool deleteActor(std::string name);
 
     bool subscribeEvent(std::string eventType, Actor *actor);
 
-    bool notifyEvent(Event event);
+    bool pushEvent(Event event);
+
+    bool notifyEvents();
 
 private:
     Storage *storage;

@@ -14,20 +14,29 @@ bool EventManager::subscribe(std::string eventType, Actor *actor)
     return true;
 }
 
-bool EventManager::notifyEvent(Event event)
+bool EventManager::pushEvent(Event event)
 {
-    std::string eventType = event.getType();
-    std::map<std::string, std::vector<Actor *>>::iterator it = subscribers.find(eventType);
-    if (it == subscribers.end())
+    events.push_back(event);
+    return true;
+}
+
+bool EventManager::notifyEvents()
+{
+    bool notifiedAny = false;
+    for (Event event : events)
     {
-        return false;
-    }
-    else
-    {
-        for (auto subscriber : subscribers[eventType])
+        std::string eventType = event.getType();
+        std::map<std::string, std::vector<Actor *>>::iterator it = subscribers.find(eventType);
+        if (it != subscribers.end())
         {
-            subscriber->handleEvent(event);
+            for (auto subscriber : subscribers[eventType])
+            {
+                subscriber->handleEvent(event);
+            }
+            notifiedAny = true;
         }
-        return true;
     }
+
+    events.clear();
+    return notifiedAny;
 }

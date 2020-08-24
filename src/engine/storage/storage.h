@@ -22,8 +22,14 @@ public:
         return actors;
     }
 
+    std::map<std::string, Actor *> getColliders()
+    {
+        return colliders;
+    }
+
 private:
     std::map<std::string, Actor *> actors;
+    std::map<std::string, Actor *> colliders;
 };
 
 #endif

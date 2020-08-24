@@ -19,6 +19,9 @@ bool Storage::addActor(Actor *actor)
         return false;
     }
     actors.insert(std::pair<std::string, Actor *>(actor->getName(), actor));
+    if (actor->hasCollider()) {
+        colliders.insert(std::pair<std::string, Actor *>(actor->getName(), actor));
+    }
     return true;
 }
 
@@ -31,6 +34,10 @@ bool Storage::deleteActor(std::string name) {
 
     delete actors[name];
     actors.erase(name);
+
+    if (colliders.find(name) != colliders.end()) {
+        colliders.erase(name);
+    }
     return true;
 }
 
@@ -39,7 +46,7 @@ Actor *Storage::getActor(std::string name)
     std::map<std::string, Actor *>::iterator actorPair = actors.find(name);
     if (actorPair == actors.end())
     {
-        Logger::log("Cant find actor with name: %s\n", name.c_str());
+        Logger::log("Can't find actor with name: %s\n", name.c_str());
         return nullptr;
     }
     return actorPair->second;

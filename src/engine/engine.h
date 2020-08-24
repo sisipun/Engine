@@ -3,7 +3,6 @@
 
 #include "actor/actor.h"
 #include "context/context.h"
-#include "physics/collision_manager.h"
 #include "utils/time/timer.h"
 
 #include "SDL.h"
@@ -30,7 +29,6 @@ private:
     SDL_Renderer *renderer;
     SDL_Event *event;
     Context *context;
-    CollisionManager *collisionManager;
     Timer *timer;
     float delta;
     bool quit;

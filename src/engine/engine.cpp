@@ -33,14 +33,13 @@ bool Engine::init(float screenWidth, float screenHeigh, std::vector<Actor *> act
     }
 
     context = new Context();
-    collisionManager = new CollisionManager();
 
     event = new SDL_Event();
     timer = new Timer();
 
     for (Actor *actor : actors)
     {
-        if (!context->storeActor(actor) || (actor->isManageCollisions() && !collisionManager->addActor(actor)))
+        if (!context->storeActor(actor))
         {
             return false;
         }
@@ -68,7 +67,18 @@ void Engine::update()
         actorDef.second->update(delta);
     }
 
-    collisionManager->manageCollision(context->getActors());
+    for (auto firstActorDef : context->getColliders())
+    {
+        for (auto secondActorDef : context->getColliders())
+        {
+            if (firstActorDef.first != secondActorDef.first && firstActorDef.second->isCollides(secondActorDef.second))
+            {
+                firstActorDef.second->handleCollision(secondActorDef.second);
+            }
+        }
+    }
+
+    context->notifyEvents();
 
     delta = timer->getTicks() * 0.001;
 }
@@ -98,11 +108,9 @@ void Engine::close()
 {
     delete timer;
     delete context;
-    delete collisionManager;
 
     timer = nullptr;
     context = nullptr;
-    collisionManager = nullptr;
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

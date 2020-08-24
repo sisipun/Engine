@@ -16,14 +16,14 @@ public:
         std::vector<std::string> eventTypes = {},
         float horizontalVelocity = 0,
         float verticalVelocity = 0,
-        bool manageCollisions = false,
+        bool collider = true,
         bool visiable = true) : Actor(name,
                                       body,
                                       tags,
                                       eventTypes,
                                       horizontalVelocity,
                                       verticalVelocity,
-                                      manageCollisions,
+                                      collider,
                                       visiable)
     {
     }

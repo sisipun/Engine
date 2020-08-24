@@ -32,13 +32,9 @@ set(SOURCE_LIB
     src/engine/utils/procedural_generation/box_generator.cpp
 
     src/engine/physics/body.h
-    src/engine/physics/rigid_body.h
 
     src/engine/physics/collision.h
     src/engine/physics/collision.cpp
-
-    src/engine/physics/collision_manager.h
-    src/engine/physics/collision_manager.cpp
 
     src/engine/event/event.h
 
