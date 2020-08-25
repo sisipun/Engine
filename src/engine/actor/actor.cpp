@@ -1,6 +1,6 @@
 #include "actor.h"
 
-void Actor::renderActor(SDL_Renderer *renderer)
+void Actor::renderActor(SDL_Renderer *renderer) const
 {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_Rect rect = {

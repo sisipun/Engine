@@ -15,14 +15,14 @@ public:
 
     bool deleteActor(std::string name);
 
-    Actor *getActor(std::string name);
+    Actor *getActor(std::string name) const;
 
-    std::map<std::string, Actor *> getActors()
+    std::map<std::string, Actor *> getActors() const
     {
         return actors;
     }
 
-    std::map<std::string, Actor *> getColliders()
+    std::map<std::string, Actor *> getColliders() const
     {
         return colliders;
     }

@@ -10,7 +10,7 @@ public:
     {
     }
 
-    const std::string getType()
+    const std::string getType() const
     {
         return type;
     }

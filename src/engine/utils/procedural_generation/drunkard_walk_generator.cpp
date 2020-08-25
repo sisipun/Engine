@@ -1,15 +1,23 @@
 #include "drunkard_walk_generator.h"
+#include "../logger/logger.h"
 
 const int MIN_WIDTH = 3;
 const int MIN_HEIHGT = 3;
 
-Map *DrunkardWalkGenerator::generate(int width, int height, int coverage, RandomGenerator generator)
+Map *DrunkardWalkGenerator::generate(int width, int height, int coverage, RandomGenerator generator) const
 {
-    if (width <= 0 || height <= 0 || coverage < 0 || coverage > 100)
+    if (width < 0 || height < 0 || coverage < 0 || coverage > 100)
     {
+        Logger::log(
+            "Invalid params: \nwidth = %d (Should be more than zero) \
+            \nheight = %d (Should be more than zero) \
+            \ncoverage = %d (Should be in range from 0 to 100)",
+            width,
+            height,
+            coverage);
         return new Map(nullptr, 0, 0, 0, 0);
     }
-    else if (width < MIN_WIDTH || height < MIN_HEIHGT || coverage == 0)
+    else if (width == 0 || height == 0 || coverage == 0)
     {
         int *empty = new int[height * width];
         MapGeneratorUtils::boxToMap(0, width - 1, 0, height - 1, empty, width, height, 0);
@@ -28,8 +36,8 @@ Map *DrunkardWalkGenerator::generate(int width, int height, int coverage, Random
     int currentPositionY = starterPositionY;
 
     *(map + (currentPositionX * height) + currentPositionY) = 0;
-    
-    for (int i = 0; i < step_count && i < size;)
+
+    for (int i = 1; i < step_count;)
     {
         int direction = generator.generateFromRange(0, 3);
         if (direction == 0 && currentPositionX + 1 < width)

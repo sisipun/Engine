@@ -19,37 +19,37 @@ public:
         delete[] map;
     }
 
-    int *getValue()
+    const int *const getValue() const
     {
         return map;
     }
 
-    int getWidth()
+    const int getWidth() const
     {
         return width;
     }
 
-    int getHeight()
+    const int getHeight() const
     {
         return height;
     }
 
-    int getStartX()
+    const int getStartX() const
     {
         return startX;
     }
 
-    int getStartY()
+    const int getStartY() const
     {
         return startY;
     }
 
 private:
-    int *map;
-    int width;
-    int height;
-    int startX;
-    int startY;
+    const int *const map;
+    const int width;
+    const int height;
+    const int startX;
+    const int startY;
 };
 
 class MapGeneratorUtils
@@ -81,25 +81,25 @@ public:
     }
 
     static bool isEmpty(int startX, int endX, int startY, int endY, int *map, int mapWidth, int mapHeight)
-{
-    if (startX < 0 || startY < 0 || endX >= mapWidth || endY >= mapHeight)
     {
-        return false;
-    }
-
-    for (int i = startX; i <= endX; i++)
-    {
-        for (int j = startY; j <= endY; j++)
+        if (startX < 0 || startY < 0 || endX >= mapWidth || endY >= mapHeight)
         {
-            if (*(map + (i * mapHeight) + j) != 0)
+            return false;
+        }
+
+        for (int i = startX; i <= endX; i++)
+        {
+            for (int j = startY; j <= endY; j++)
             {
-                return false;
+                if (*(map + (i * mapHeight) + j) != 0)
+                {
+                    return false;
+                }
             }
         }
-    }
 
-    return true;
-}
+        return true;
+    }
 };
 
 #endif

@@ -13,17 +13,17 @@ Context::~Context()
     delete eventManager;
 }
 
-Actor *Context::getActor(std::string name)
+Actor *Context::getActor(std::string name) const
 {
     return storage->getActor(name);
 }
 
-std::map<std::string, Actor *> Context::getActors()
+std::map<std::string, Actor *> Context::getActors() const
 {
     return storage->getActors();
 }
 
-std::map<std::string, Actor *> Context::getColliders()
+std::map<std::string, Actor *> Context::getColliders() const
 {
     return storage->getColliders();
 }

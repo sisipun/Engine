@@ -17,7 +17,7 @@ public:
     {
     }
 
-    void render(SDL_Renderer *renderer)
+    void render(SDL_Renderer *renderer) const
     {
         if (!visiable || context == nullptr)
         {
@@ -62,27 +62,27 @@ public:
         handleActorEvent(event);
     }
 
-    virtual bool isCollides(Actor *actor)
+    virtual bool isCollides(Actor *actor) const
     {
         return checkCollision(body, actor->getBody());
     }
 
-    Body getBody()
+    Body getBody() const
     {
         return body;
     }
 
-    std::string getName()
+    const std::string getName() const
     {
         return name;
     }
 
-    bool hasCollider()
+    bool hasCollider() const
     {
         return collider;
     }
 
-    std::vector<std::string> getTags()
+    const std::vector<std::string> getTags() const
     {
         return tags;
     }
@@ -118,7 +118,7 @@ protected:
     {
     }
 
-    virtual void renderActor(SDL_Renderer *renderer);
+    virtual void renderActor(SDL_Renderer *renderer) const;
 
     virtual void updateActor(float delta);
 
@@ -128,10 +128,10 @@ protected:
 
     virtual void handleActorEvent(Event event) {}
 
-    std::string name;
+    const std::string name;
     Body body;
-    std::vector<std::string> tags;
-    std::vector<std::string> eventTypes;
+    const std::vector<std::string> tags;
+    const std::vector<std::string> eventTypes;
     float horizontalVelocity;
     float verticalVelocity;
     bool collider;

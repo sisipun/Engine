@@ -31,7 +31,7 @@ public:
     }
 
 protected:
-    void renderActor(SDL_Renderer *renderer) override;
+    void renderActor(SDL_Renderer *renderer) const override;
 
     void updateActor(float delta) override;
 

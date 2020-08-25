@@ -41,9 +41,9 @@ bool Storage::deleteActor(std::string name) {
     return true;
 }
 
-Actor *Storage::getActor(std::string name)
+Actor *Storage::getActor(std::string name) const
 {
-    std::map<std::string, Actor *>::iterator actorPair = actors.find(name);
+    auto actorPair = actors.find(name);
     if (actorPair == actors.end())
     {
         Logger::log("Can't find actor with name: %s\n", name.c_str());

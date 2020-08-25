@@ -10,7 +10,7 @@ class MiniMap : public Actor
 public:
     MiniMap(
         Body body,
-        int *map,
+        const int *map,
         int width,
         int height,
         int currentX,
@@ -29,19 +29,13 @@ public:
                                       verticalVelocity,
                                       collider,
                                       visiable),
+                                map(new int[width * height]),
                                 width(width),
                                 height(height),
                                 currentX(currentX),
                                 currentY(currentY)
     {
-        this->map = new int[width * height];
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                *(this->map + (i * height) + j) = *(map + (i * height) + j);
-            }
-        }
+        std::copy(map, map + (width * height), this->map);
     }
 
     virtual ~MiniMap()
@@ -58,14 +52,14 @@ public:
     bool moveDown();
 
 protected:
-    void renderActor(SDL_Renderer *renderer) override;
+    void renderActor(SDL_Renderer *renderer) const override;
 
     void handleActorEvent(Event event) override;
 
 private:
-    int *map;
-    int width;
-    int height;
+    int *const map;
+    const int width;
+    const int height;
     int currentX;
     int currentY;
 };

@@ -16,11 +16,11 @@ public:
 
     ~Context();
 
-    Actor *getActor(std::string name);
+    Actor *getActor(std::string name) const;
 
-    std::map<std::string, Actor *> getActors();
+    std::map<std::string, Actor *> getActors() const;
 
-    std::map<std::string, Actor *> getColliders();
+    std::map<std::string, Actor *> getColliders() const;
 
     bool storeActor(Actor *actor);
 

@@ -21,7 +21,7 @@ void Timer::stop()
     mStarted = false;
 }
 
-Uint32 Timer::getTicks()
+Uint32 Timer::getTicks() const
 {
     Uint32 time = 0;
     if (mStarted)

@@ -7,7 +7,7 @@
 class DrunkardWalkGenerator
 {
 public:
-    Map *generate(int width, int height, int coverage = 50, RandomGenerator generator = RandomGenerator());
+    Map *generate(int width, int height, int coverage = 50, RandomGenerator generator = RandomGenerator()) const;
 };
 
 #endif

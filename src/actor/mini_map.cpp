@@ -2,7 +2,7 @@
 #include "../utils/constants.h"
 #include "door.h"
 
-void MiniMap::renderActor(SDL_Renderer *renderer)
+void MiniMap::renderActor(SDL_Renderer *renderer) const
 {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     for (int i = 0; i < width; i++)

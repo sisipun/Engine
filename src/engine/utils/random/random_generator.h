@@ -17,7 +17,7 @@ public:
         srand(time(0));
     }
 
-    int generateFromRange(int from, int to)
+    int generateFromRange(int from, int to) const
     {
         return rand() % (to - from + 1) + from;
     }
