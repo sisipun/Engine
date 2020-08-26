@@ -1,8 +1,6 @@
 #ifndef MAP_GENERATOR_H
 #define MAP_GENERATOR_H
 
-#include "../logger/logger.h"
-
 class Map
 {
 public:

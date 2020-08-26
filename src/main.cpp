@@ -1,12 +1,8 @@
 #include "engine/engine.h"
 #include "engine/actor/actor.h"
-#include "engine/utils/procedural_generation/chess_generator.h"
-#include "engine/utils/procedural_generation/drunkard_walk_generator.h"
-#include "engine/utils/procedural_generation/cellular_automata_generator.h"
-#include "engine/utils/procedural_generation/bsp_generator.h"
-#include "engine/utils/procedural_generation/box_generator.h"
 #include "engine/utils/logger/logger.h"
 
+#include "utils/procedural_generation/drunkard_walk_generator.h"
 #include "utils/constants.h"
 #include "actor/hero.h"
 #include "actor/wall.h"

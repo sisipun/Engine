@@ -19,18 +19,6 @@ set(SOURCE_LIB
 
     src/engine/utils/random/random_generator.h
 
-    src/engine/utils/procedural_generation/map.h
-    src/engine/utils/procedural_generation/chess_generator.h
-    src/engine/utils/procedural_generation/chess_generator.cpp
-    src/engine/utils/procedural_generation/drunkard_walk_generator.h
-    src/engine/utils/procedural_generation/drunkard_walk_generator.cpp
-    src/engine/utils/procedural_generation/cellular_automata_generator.h
-    src/engine/utils/procedural_generation/cellular_automata_generator.cpp
-    src/engine/utils/procedural_generation/bsp_generator.h
-    src/engine/utils/procedural_generation/bsp_generator.cpp
-    src/engine/utils/procedural_generation/box_generator.h
-    src/engine/utils/procedural_generation/box_generator.cpp
-
     src/engine/physics/body.h
 
     src/engine/physics/collision.h
@@ -72,6 +60,10 @@ set(SOURCE_LIB
     src/engine/engine.cpp
 
     src/utils/constants.h
+
+    src/utils/procedural_generation/map.h
+    src/utils/procedural_generation/drunkard_walk_generator.h
+    src/utils/procedural_generation/drunkard_walk_generator.cpp
 
     src/actor/hero.h
     src/actor/hero.cpp

@@ -1,5 +1,5 @@
 #include "drunkard_walk_generator.h"
-#include "../logger/logger.h"
+#include "../../engine/utils/logger/logger.h"
 
 const int MIN_WIDTH = 3;
 const int MIN_HEIHGT = 3;
@@ -37,24 +37,37 @@ Map *DrunkardWalkGenerator::generate(int width, int height, int coverage, Random
 
     *(map + (currentPositionX * height) + currentPositionY) = 0;
 
+    bool moveX = true;
     for (int i = 1; i < step_count;)
     {
-        int direction = generator.generateFromRange(0, 3);
-        if (direction == 0 && currentPositionX + 1 < width)
+        int changeDirection = generator.generateFromRange(0, 10);
+        if (changeDirection == 0)
         {
-            currentPositionX += 1;
+            moveX = !moveX;
         }
-        else if (direction == 1 && currentPositionX - 1 >= 0)
+        int direction = generator.generateFromRange(0, 1);
+
+        if (moveX)
         {
-            currentPositionX -= 1;
+            if (direction == 0 && currentPositionX + 1 < width)
+            {
+                currentPositionX += 1;
+            }
+            else if (direction == 1 && currentPositionX - 1 >= 0)
+            {
+                currentPositionX -= 1;
+            }
         }
-        else if (direction == 2 && currentPositionY + 1 < height)
+        else
         {
-            currentPositionY += 1;
-        }
-        else if (direction == 3 && currentPositionY - 1 >= 0)
-        {
-            currentPositionY -= 1;
+            if (direction == 0 && currentPositionY + 1 < height)
+            {
+                currentPositionY += 1;
+            }
+            else if (direction == 1 && currentPositionY - 1 >= 0)
+            {
+                currentPositionY -= 1;
+            }
         }
 
         if (*(map + (currentPositionX * height) + currentPositionY) == 1)
