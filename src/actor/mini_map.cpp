@@ -4,7 +4,7 @@
 
 void MiniMap::renderActor(SDL_Renderer *renderer) const
 {
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x55);
     for (int i = 0; i < width; i++)
     {
         for (int j = 0; j < height; j++)
@@ -12,8 +12,8 @@ void MiniMap::renderActor(SDL_Renderer *renderer) const
             if (*(map + (i * height) + j) == 1)
             {
                 SDL_Rect rect = {
-                    static_cast<int>(body.x + i * body.width),
-                    static_cast<int>(body.y + j * body.height),
+                    static_cast<int>(body.x + (i + 1) * body.width),
+                    static_cast<int>(body.y + (j + 1) * body.height),
                     static_cast<int>(body.width),
                     static_cast<int>(body.height)};
                 SDL_RenderFillRect(renderer, &rect);
@@ -21,13 +21,56 @@ void MiniMap::renderActor(SDL_Renderer *renderer) const
         }
     }
 
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x55);
+    for (int i = 0; i < width; i++)
+    {
+        for (int j = 0; j < height; j++)
+        {
+            if (*(map + (i * height) + j) == 0)
+            {
+                SDL_Rect rect = {
+                    static_cast<int>(body.x + (i + 1) * body.width),
+                    static_cast<int>(body.y + (j + 1) * body.height),
+                    static_cast<int>(body.width),
+                    static_cast<int>(body.height)};
+                SDL_RenderFillRect(renderer, &rect);
+            }
+        }
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0x55);
     SDL_Rect rect = {
-        static_cast<int>(body.x + currentX * body.width),
-        static_cast<int>(body.y + currentY * body.height),
+        static_cast<int>(body.x + (currentX + 1) * body.width),
+        static_cast<int>(body.y + (currentY + 1) * body.height),
         static_cast<int>(body.width),
         static_cast<int>(body.height)};
     SDL_RenderFillRect(renderer, &rect);
+
+    SDL_SetRenderDrawColor(renderer, 0x66, 0x66, 0x66, 0x66);
+    SDL_Rect left = {
+        static_cast<int>(body.x),
+        static_cast<int>(body.y),
+        static_cast<int>(body.width),
+        static_cast<int>((height + 2) * body.height)};
+    SDL_RenderFillRect(renderer, &left);
+    SDL_Rect right = {
+        static_cast<int>(body.x + ((body.width + 1) * width)),
+        static_cast<int>(body.y),
+        static_cast<int>(body.width),
+        static_cast<int>((height + 2) * body.height)};
+    SDL_RenderFillRect(renderer, &right);
+    SDL_Rect top = {
+        static_cast<int>(body.x),
+        static_cast<int>(body.y),
+        static_cast<int>((width + 2) * body.width),
+        static_cast<int>(body.height)};
+    SDL_RenderFillRect(renderer, &top);
+    SDL_Rect bottom = {
+        static_cast<int>(body.x),
+        static_cast<int>(body.y + ((body.height + 1) * height)),
+        static_cast<int>((width + 2) * body.width),
+        static_cast<int>(body.height)};
+    SDL_RenderFillRect(renderer, &bottom);
 }
 
 bool MiniMap::moveLeft()

@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     int mapHeight = 10;
     DrunkardWalkGenerator *mapGenerator = new DrunkardWalkGenerator();
     Map *map = mapGenerator->generate(mapWidth, mapHeight, 30, generator);
-    actors.push_back(new MiniMap({10, 10, WALL_WIDTH, WALL_WIDTH},
+    actors.push_back(new MiniMap({20, 20, WALL_WIDTH, WALL_WIDTH},
                                  map->getValue(),
                                  map->getWidth(),
                                  map->getHeight(),

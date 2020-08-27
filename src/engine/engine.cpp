@@ -26,6 +26,8 @@ bool Engine::init(float screenWidth, float screenHeigh, std::vector<Actor *> act
         return false;
     }
 
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
     {
         Logger::log("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
