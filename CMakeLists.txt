@@ -65,6 +65,9 @@ set(SOURCE_LIB
     src/utils/procedural_generation/drunkard_walk_generator.h
     src/utils/procedural_generation/drunkard_walk_generator.cpp
 
+    src/actor/bullet.h
+    src/actor/bullet.cpp
+
     src/actor/hero.h
     src/actor/hero.cpp
     

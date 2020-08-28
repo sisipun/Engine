@@ -13,4 +13,8 @@ const int WALL_WIDTH = 10;
 const int DOOR_WIDTH = 140;
 const int DOOR_HEIGHT = 16;
 
+const int BULLET_WIDTH = 5;
+const int BULLET_HEIGHT = 5;
+const int BULLET_VELOCITY = 400;
+
 #endif

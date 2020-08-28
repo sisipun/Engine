@@ -1,5 +1,5 @@
 #include "hero.h"
-#include "../utils/constants.h"
+#include "bullet.h"
 
 void Hero::renderActor(SDL_Renderer *renderer) const
 {
@@ -20,6 +20,12 @@ void Hero::updateActor(float delta)
     body.y += lastVerticalMove;
 }
 
+std::string addBullet(Context* context, unsigned long bulletIndex, Body body, float horizontalVelocity, float verticalVelocity) {
+    std::string bulletName = "bullet" + std::to_string(bulletIndex);
+    context->storeActor(new Bullet(bulletName, body, horizontalVelocity, verticalVelocity));
+    return bulletName;
+}
+
 void Hero::handleActorInput(SDL_Event *event)
 {
     if (event->type == SDL_KEYDOWN)
@@ -37,6 +43,18 @@ void Hero::handleActorInput(SDL_Event *event)
             break;
         case SDLK_DOWN:
             verticalVelocity = HERO_VELOCITY;
+            break;
+        case SDLK_w:
+            bullets.push_back(addBullet(context, bullets.size(), {body.x, body.y, BULLET_WIDTH, BULLET_HEIGHT}, 0, -BULLET_VELOCITY));
+            break;
+        case SDLK_s:
+            bullets.push_back(addBullet(context, bullets.size(), {body.x, body.y, BULLET_WIDTH, BULLET_HEIGHT}, 0, BULLET_VELOCITY));
+            break;
+        case SDLK_a:
+            bullets.push_back(addBullet(context, bullets.size(), {body.x, body.y, BULLET_WIDTH, BULLET_HEIGHT}, -BULLET_VELOCITY, 0));
+            break;
+        case SDLK_d:
+            bullets.push_back(addBullet(context, bullets.size(), {body.x, body.y, BULLET_WIDTH, BULLET_HEIGHT}, BULLET_VELOCITY, 0));
             break;
         }
     }
@@ -72,6 +90,9 @@ void Hero::handleActorCollision(Actor *actor)
     {
         body.x = startX;
         body.y = startY;
+        for (std::string bulletName: bullets) {
+            context->deleteActor(bulletName);
+        }
         if (std::find(actorTags.begin(), actorTags.end(), "north") != actorTags.end())
         {
             context->pushEvent(Event("heroUp"));
@@ -88,5 +109,15 @@ void Hero::handleActorCollision(Actor *actor)
         {
             context->pushEvent(Event("heroRight"));
         }
+    }
+}
+
+void Hero::handleActorEvent(Event event)
+{
+    if (event.getType() == "deleteBullet")
+    {
+        std::string bulletName = event.getParam("name");
+        context->deleteActor(bulletName);
+        bullets.erase(std::remove(bullets.begin(), bullets.end(), bulletName), bullets.end());
     }
 }

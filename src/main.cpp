@@ -51,8 +51,7 @@ int main(int argc, char *argv[])
     actors.push_back(new Hero({SCREEN_WIDTH / 2,
                                SCREEN_HEIGHT / 2,
                                HERO_WIDTH,
-                               HERO_HEIGHT},
-                              0, 0));
+                               HERO_HEIGHT}));
 
     Engine engine;
     if (!engine.init(SCREEN_WIDTH, SCREEN_HEIGHT, actors))
