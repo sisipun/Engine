@@ -68,6 +68,9 @@ set(SOURCE_LIB
     src/actor/bullet.h
     src/actor/bullet.cpp
 
+    src/actor/enemy.h
+    src/actor/enemy.cpp
+
     src/actor/hero.h
     src/actor/hero.cpp
     

@@ -62,11 +62,6 @@ public:
         handleActorEvent(event);
     }
 
-    virtual bool isCollides(Actor *actor) const
-    {
-        return checkCollision(body, actor->getBody());
-    }
-
     Body getBody() const
     {
         return body;
@@ -95,6 +90,11 @@ public:
             this->context->subscribeEvent(eventType, this);
         }
         return true;
+    }
+
+    virtual bool isCollides(Actor *actor) const
+    {
+        return collider && checkCollision(body, actor->getBody());
     }
 
 protected:
