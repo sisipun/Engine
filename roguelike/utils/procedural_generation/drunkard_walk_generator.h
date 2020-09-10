@@ -2,7 +2,7 @@
 #define DRUNKARD_WALK_GENERATOR_H
 
 #include "map.h"
-#include "../../engine/utils/random/random_generator.h"
+#include "../../../engine/utils/random/random_generator.h"
 
 class DrunkardWalkGenerator
 {

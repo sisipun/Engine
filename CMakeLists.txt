@@ -9,78 +9,78 @@ find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS})
 
-set(SOURCE_EXE src/main.cpp)
+set(SOURCE_EXE roguelike/main.cpp)
 set(SOURCE_LIB
-    src/engine/utils/logger/logger.h
-    src/engine/utils/logger/logger.cpp
+    engine/utils/logger/logger.h
+    engine/utils/logger/logger.cpp
     
-    src/engine/utils/time/timer.h
-    src/engine/utils/time/timer.cpp
+    engine/utils/time/timer.h
+    engine/utils/time/timer.cpp
 
-    src/engine/utils/random/random_generator.h
+    engine/utils/random/random_generator.h
 
-    src/engine/physics/body.h
+    engine/physics/body.h
 
-    src/engine/physics/collision.h
-    src/engine/physics/collision.cpp
+    engine/physics/collision.h
+    engine/physics/collision.cpp
 
-    src/engine/event/event.h
+    engine/event/event.h
 
-    src/engine/event/event_manager.h
-    src/engine/event/event_manager.cpp
+    engine/event/event_manager.h
+    engine/event/event_manager.cpp
 
-    src/engine/actor/actor.h
-    src/engine/actor/actor.cpp
+    engine/actor/actor.h
+    engine/actor/actor.cpp
 
-    src/engine/storage/storage.h
-    src/engine/storage/storage.cpp
+    engine/storage/storage.h
+    engine/storage/storage.cpp
 
-    src/engine/network/socket/socket_address.h
-    src/engine/network/socket/socket_address.cpp
+    engine/network/socket/socket_address.h
+    engine/network/socket/socket_address.cpp
 
-    src/engine/network/socket/socket_address_factory.h 
+    engine/network/socket/socket_address_factory.h 
 
-    src/engine/network/socket/tcp_socket.h
-    src/engine/network/socket/tcp_socket.cpp
+    engine/network/socket/tcp_socket.h
+    engine/network/socket/tcp_socket.cpp
 
-    src/engine/network/socket/udp_socket.h
-    src/engine/network/socket/udp_socket.cpp
+    engine/network/socket/udp_socket.h
+    engine/network/socket/udp_socket.cpp
     
-    src/engine/network/socket/socket_utils.h
+    engine/network/socket/socket_utils.h
 
-    src/engine/network/stream/input_memory_stream.h
-    src/engine/network/stream/input_memory_stream.cpp
-    src/engine/network/stream/output_memory_stream.h
-    src/engine/network/stream/output_memory_stream.cpp
+    engine/network/stream/input_memory_stream.h
+    engine/network/stream/input_memory_stream.cpp
+    engine/network/stream/output_memory_stream.h
+    engine/network/stream/output_memory_stream.cpp
 
-    src/engine/context/context.h
-    src/engine/context/context.cpp
+    engine/context/context.h
+    engine/context/context.cpp
 
-    src/engine/engine.h
-    src/engine/engine.cpp
+    engine/engine.h
+    engine/engine.cpp
 
-    src/utils/constants.h
+    roguelike/utils/constants.h
 
-    src/utils/procedural_generation/map.h
-    src/utils/procedural_generation/drunkard_walk_generator.h
-    src/utils/procedural_generation/drunkard_walk_generator.cpp
+    roguelike/utils/procedural_generation/map.h
+    roguelike/utils/procedural_generation/drunkard_walk_generator.h
+    roguelike/utils/procedural_generation/drunkard_walk_generator.cpp
 
-    src/actor/bullet.h
-    src/actor/bullet.cpp
+    roguelike/actor/bullet.h
+    roguelike/actor/bullet.cpp
 
-    src/actor/enemy.h
-    src/actor/enemy.cpp
+    roguelike/actor/enemy.h
+    roguelike/actor/enemy.cpp
 
-    src/actor/hero.h
-    src/actor/hero.cpp
+    roguelike/actor/hero.h
+    roguelike/actor/hero.cpp
     
-    src/actor/wall.h
+    roguelike/actor/wall.h
     
-    src/actor/door.h
-    src/actor/door.cpp
+    roguelike/actor/door.h
+    roguelike/actor/door.cpp
 
-    src/actor/mini_map.h
-    src/actor/mini_map.cpp
+    roguelike/actor/mini_map.h
+    roguelike/actor/mini_map.cpp
 )
 
 add_library(Components STATIC ${SOURCE_LIB})

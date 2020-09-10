@@ -1,7 +1,7 @@
 #ifndef MINI_MAP_H
 #define MINI_MAP_H
 
-#include "../engine/actor/actor.h"
+#include "../../engine/actor/actor.h"
 
 #include <string>
 

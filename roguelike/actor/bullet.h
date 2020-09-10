@@ -1,8 +1,8 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include "../engine/actor/actor.h"
-#include "../engine/physics/body.h"
+#include "../../engine/actor/actor.h"
+#include "../../engine/physics/body.h"
 
 #include <string>
 

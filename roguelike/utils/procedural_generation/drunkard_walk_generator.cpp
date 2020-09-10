@@ -1,5 +1,5 @@
 #include "drunkard_walk_generator.h"
-#include "../../engine/utils/logger/logger.h"
+#include "../../../engine/utils/logger/logger.h"
 
 const int MIN_WIDTH = 3;
 const int MIN_HEIHGT = 3;

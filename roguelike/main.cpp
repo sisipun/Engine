@@ -1,6 +1,6 @@
-#include "engine/engine.h"
-#include "engine/actor/actor.h"
-#include "engine/utils/logger/logger.h"
+#include "../engine/engine.h"
+#include "../engine/actor/actor.h"
+#include "../engine/utils/logger/logger.h"
 
 #include "utils/procedural_generation/drunkard_walk_generator.h"
 #include "utils/constants.h"
