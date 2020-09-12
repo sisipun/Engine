@@ -59,8 +59,6 @@ set(SOURCE_LIB
     engine.cpp
 )
 
-set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 add_library(Engine SHARED ${SOURCE_LIB})
 
 target_link_libraries(Engine ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
