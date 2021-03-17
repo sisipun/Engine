@@ -12,5 +12,8 @@ _deps
 .DS_Store
 .vscode/*
 build/*
+*/.vscode/*
+*/build/*
 engine/build/*
 roguelike/build/*
+roguelike/sandbox/*
