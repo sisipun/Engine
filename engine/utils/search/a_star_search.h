@@ -1,5 +1,5 @@
-#ifndef A_SEARCH
-#define A_SEARCH
+#ifndef A_STAR_SEARCH
+#define A_STAR_SEARCH
 
 #include <map>
 #include <cmath>

@@ -18,6 +18,9 @@ set(SOURCE_LIB
 
     utils/random/random_generator.h
 
+    utils/search/a_star_search.h
+    utils/search/a_star_search.cpp
+
     physics/body.h
 
     physics/collision.h
