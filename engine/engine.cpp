@@ -11,7 +11,7 @@ bool Engine::init(float screenWidth, float screenHeigh, std::vector<Actor *> act
         return false;
     }
 
-    window = SDL_CreateWindow("Roguelike", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeigh,
+    window = SDL_CreateWindow("Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeigh,
                               SDL_WINDOW_SHOWN);
     if (window == nullptr)
     {

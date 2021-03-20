@@ -5,8 +5,8 @@
 #include "context/context.h"
 #include "utils/time/timer.h"
 
-#include "SDL.h"
-#include "SDL_mixer.h"
+#include <SDL.h>
+#include <SDL_mixer.h>
 #include <vector>
 
 class Engine

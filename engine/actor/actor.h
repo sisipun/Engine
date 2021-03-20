@@ -6,7 +6,7 @@
 #include "../context/context.h"
 #include "../event/event.h"
 
-#include "SDL.h"
+#include <SDL.h>
 #include <string>
 #include <vector>
 
