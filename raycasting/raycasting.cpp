@@ -2,6 +2,19 @@
 
 #include "raycasting.h"
 
+std::vector<Body>::iterator findContains(std::vector<Body>* bodies, float x, float y)
+{
+    for (std::vector<Body>::iterator ptr = bodies->begin(); ptr < bodies->end(); ptr++)
+    {
+        if ((*ptr).contains(x, y))
+        {
+            return ptr;
+        }
+    }
+
+    return bodies->end();
+}
+
 void setColor(SDL_Renderer *renderer, int value)
 {
     if (value == 0)
@@ -27,25 +40,17 @@ bool Raycasting::isCorrectPoint(float x, float y)
     return int(x) > 0 && int(y) > 0 && int(x) < resolution && int(y) < resolution;
 }
 
-void Raycasting::drawMap(SDL_Renderer *renderer, int *map, int mapWidth, int mapHeight, float playerX, float playerY, float playerWidth, float playerHeight)
+void Raycasting::drawMap(SDL_Renderer *renderer, std::vector<Body> bodies, float playerX, float playerY, float playerWidth, float playerHeight)
 {
-    int rectWidth = resolution / mapWidth;
-    int rectHeight = resolution / mapHeight;
-    for (int i = 0; i < mapWidth; i++)
+    for (Body body : bodies)
     {
-        for (int j = 0; j < mapHeight; j++)
-        {
-            if (map[i + j * mapWidth] != 0)
-            {
-                setColor(renderer, map[i + j * mapWidth]);
-                SDL_Rect rect = {
-                    i * rectWidth,
-                    j * rectHeight,
-                    rectWidth,
-                    rectHeight};
-                SDL_RenderFillRect(renderer, &rect);
-            }
-        }
+        SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
+        SDL_Rect rect = {
+            int(body.x),
+            int(body.y),
+            int(body.width),
+            int(body.height)};
+        SDL_RenderFillRect(renderer, &rect);
     }
     SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
     SDL_Rect rect = {
@@ -56,18 +61,16 @@ void Raycasting::drawMap(SDL_Renderer *renderer, int *map, int mapWidth, int map
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void Raycasting::drawFov(SDL_Renderer *renderer, float startFovX, float startFovY, float fovAngel, float fovSize, float fovStep, int *map, int mapWidth, int mapHeight)
+void Raycasting::drawFov(SDL_Renderer *renderer, std::vector<Body> bodies, float playerX, float playerY, float fovAngel, float fovSize, float fovStep)
 {
     for (int i = 0; i < resolution; i++)
     {
         float currentAngel = fovAngel - fovSize / 2 + i * fovSize / resolution;
-        float currentX = startFovX;
-        float currentY = startFovY;
+        float currentX = playerX;
+        float currentY = playerY;
         float distance = 0;
-        int currentValue = 0;
-        while (
-            isCorrectPoint(currentX, currentY) &&
-            (currentValue = map[int(currentX * mapWidth / resolution) + int(currentY * mapHeight / resolution) * mapWidth]) == 0)
+        std::vector<Body>::iterator currentValue = bodies.end();
+        while (isCorrectPoint(currentX, currentY) && (currentValue = findContains(&bodies, currentX, currentY)) == bodies.end())
         {
             SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0xFF);
             SDL_Rect rect = {
@@ -76,17 +79,20 @@ void Raycasting::drawFov(SDL_Renderer *renderer, float startFovX, float startFov
                 int(fovStep),
                 int(fovStep)};
             SDL_RenderFillRect(renderer, &rect);
-            currentX = startFovX + distance * cos(currentAngel);
-            currentY = startFovY - distance * sin(currentAngel);
+            currentX = playerX + distance * cos(currentAngel);
+            currentY = playerY - distance * sin(currentAngel);
             distance += fovStep;
         }
-        float columnSize = int(resolution / sqrt(distance * cos(currentAngel - fovAngel)));
-        setColor(renderer, currentValue);
-        SDL_Rect rect = {
-            int(resolution + i),
-            int(resolution / 2 - columnSize / 2),
-            int(1),
-            int(columnSize)};
-        SDL_RenderFillRect(renderer, &rect);
+        if (currentValue != bodies.end())
+        {
+            float columnSize = int(resolution / sqrt(distance * cos(currentAngel - fovAngel)));
+            SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
+            SDL_Rect rect = {
+                int(resolution + i),
+                int(resolution / 2 - columnSize / 2),
+                int(1),
+                int(columnSize)};
+            SDL_RenderFillRect(renderer, &rect);
+        }
     }
 }

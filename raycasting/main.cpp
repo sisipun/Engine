@@ -1,3 +1,4 @@
+#include <vector>
 #include <SDL.h>
 
 #include "raycasting.h"
@@ -24,27 +25,7 @@ int main(int argc, char *argv[])
     }
 
     SDL_Event *event = new SDL_Event();
-
-    int mapWidth = 16;
-    int mapHeight = 16;
-    int map[] = {
-        1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 1,
-        1, 0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 1,
-        1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1,
-        1, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1,
-        1, 0, 0, 0, 0, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-        1, 1, 2, 2, 1, 3, 3, 3, 1, 3, 1, 1, 1, 1, 1, 1,
-    };
+    std::vector<Body> bodies = {{200, 200, 30, 30}, {0, 0, 30, 400}};
     float playerX = 150;
     float playerY = 100;
     float playerHorizontalVelocity = 0;
@@ -62,17 +43,11 @@ int main(int argc, char *argv[])
     {
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
         SDL_RenderClear(renderer);
-        raycasting->drawMap(renderer, map, mapWidth, mapHeight, playerX, playerY, playerWidth, playerHeight);
-        raycasting->drawFov(renderer, playerX + playerWidth / 2, playerY + playerHeight / 2, playerAngel, playerFov, playerFovStep, map, mapWidth, mapHeight);
+        raycasting->drawMap(renderer, bodies, playerX, playerY, playerWidth, playerHeight);
+        raycasting->drawFov(renderer, bodies, playerX + playerWidth / 2, playerY + playerHeight / 2, playerAngel, playerFov, playerFovStep);
         SDL_RenderPresent(renderer);
-        if (raycasting->isCorrectPoint(playerX + playerHorizontalVelocity, playerY) && map[int((playerX + playerHorizontalVelocity) * mapWidth / resolution) + int(playerY * mapHeight / resolution) * mapWidth] == 0)
-        {
-            playerX += playerHorizontalVelocity;
-        }
-        if (raycasting->isCorrectPoint(playerX, playerY + playerVerticalVelocity) && map[int(playerX * mapWidth / resolution) + int((playerY + playerVerticalVelocity) * mapHeight / resolution) * mapWidth] == 0)
-        {
-            playerY += playerVerticalVelocity;
-        }
+        playerX += playerHorizontalVelocity;
+        playerY += playerVerticalVelocity;
         playerAngel += M_PI / 365;
         if (SDL_PollEvent(event) != 0)
         {
