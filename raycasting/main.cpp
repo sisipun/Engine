@@ -36,15 +36,15 @@ int main(int argc, char *argv[])
     float playerAngel = 3 * M_PI / 2;
     float playerFov = M_PI / 3;
     float playerFovStep = 3;
-    Raycasting *raycasting = new Raycasting(resolution);
+    Raycasting *raycasting = new Raycasting();
 
     bool quit = false;
     while (!quit)
     {
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
         SDL_RenderClear(renderer);
-        raycasting->drawMap(renderer, bodies, playerX, playerY, playerWidth, playerHeight);
-        raycasting->drawFov(renderer, bodies, playerX + playerWidth / 2, playerY + playerHeight / 2, playerAngel, playerFov, playerFovStep);
+        raycasting->drawMap(renderer, {0, 0, resolution}, bodies, playerX, playerY, playerWidth, playerHeight);
+        raycasting->drawFov(renderer, {resolution, 0, resolution}, bodies, playerX + playerWidth / 2, playerY + playerHeight / 2, playerAngel, playerFov, playerFovStep);
         SDL_RenderPresent(renderer);
         playerX += playerHorizontalVelocity;
         playerY += playerVerticalVelocity;

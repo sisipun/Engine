@@ -4,6 +4,16 @@
 #include <vector>
 #include <SDL.h>
 
+struct Window
+{
+    float x, y, resolution;
+
+    bool isCorrectPoint(float x, float y)
+    {
+        return x > 0 && y > 0 && x < resolution && y < resolution;
+    }
+};
+
 struct Body
 {
     float x, y, width, height;
@@ -17,16 +27,9 @@ struct Body
 class Raycasting
 {
 public:
-    Raycasting(int resolution) : resolution(resolution) {}
+    void drawMap(SDL_Renderer *renderer, Window window, std::vector<Body> bodies, float playerX, float playerY, float playerWidth, float playerHeight);
 
-    bool isCorrectPoint(float x, float y);
-
-    void drawMap(SDL_Renderer *renderer, std::vector<Body> bodies, float playerX, float playerY, float playerWidth, float playerHeight);
-
-    void drawFov(SDL_Renderer *renderer, std::vector<Body> bodies, float playerX, float playerY, float fovAngel, float fovSize, float fovStep);
-
-private:
-    int resolution;
+    void drawFov(SDL_Renderer *renderer, Window window, std::vector<Body> bodies, float playerX, float playerY, float fovAngel, float fovSize, float fovStep);
 };
 
 #endif
