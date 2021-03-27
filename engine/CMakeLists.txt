@@ -21,6 +21,9 @@ set(SOURCE_LIB
     utils/search/a_star_search.h
     utils/search/a_star_search.cpp
 
+    render/raycasting.h
+    render/raycasting.cpp
+
     physics/body.h
 
     physics/collision.h

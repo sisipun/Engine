@@ -15,28 +15,7 @@ std::vector<Body>::iterator findContains(std::vector<Body>* bodies, float x, flo
     return bodies->end();
 }
 
-void Raycasting::drawMap(SDL_Renderer *renderer, Window window, std::vector<Body> bodies, float playerX, float playerY, float playerWidth, float playerHeight)
-{
-    for (Body body : bodies)
-    {
-        SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0xFF, 0xFF);
-        SDL_Rect rect = {
-            int(window.x + body.x),
-            int(window.y + body.y),
-            int(body.width),
-            int(body.height)};
-        SDL_RenderFillRect(renderer, &rect);
-    }
-    SDL_SetRenderDrawColor(renderer, 0x00, 0xFF, 0x00, 0xFF);
-    SDL_Rect rect = {
-        int(window.x + playerX),
-        int(window.y + playerY),
-        int(playerWidth),
-        int(playerHeight)};
-    SDL_RenderFillRect(renderer, &rect);
-}
-
-void Raycasting::drawFov(SDL_Renderer *renderer, Window window, std::vector<Body> bodies, float playerX, float playerY, float fovAngel, float fovSize, float fovStep)
+void Raycasting::render(SDL_Renderer *renderer, Window window, std::vector<Body> bodies, float playerX, float playerY, float fovAngel, float fovSize, float fovStep)
 {
     for (int i = 0; i < window.resolution; i++)
     {

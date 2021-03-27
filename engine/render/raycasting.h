@@ -27,9 +27,7 @@ struct Body
 class Raycasting
 {
 public:
-    void drawMap(SDL_Renderer *renderer, Window window, std::vector<Body> bodies, float playerX, float playerY, float playerWidth, float playerHeight);
-
-    void drawFov(SDL_Renderer *renderer, Window window, std::vector<Body> bodies, float playerX, float playerY, float fovAngel, float fovSize, float fovStep);
+    void render(SDL_Renderer *renderer, Window window, std::vector<Body> bodies, float playerX, float playerY, float fovAngel, float fovSize, float fovStep);
 };
 
 #endif
