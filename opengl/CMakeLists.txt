@@ -16,6 +16,9 @@ add_subdirectory(stbimage/)
 set(SOURCE_LIB
     shader.h
     shader.cpp
+
+    camera.h
+    camera.cpp
 )
 
 add_library(Components STATIC ${SOURCE_LIB})
