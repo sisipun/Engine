@@ -18,6 +18,30 @@ public:
         return fov;
     }
 
+    glm::vec3 getPosition() const {
+        return position;
+    }
+
+    void setPosition(glm::vec3 position) {
+        this->position = position;
+        updateCameraVectors();
+    }
+
+    void setPitch(float pitch) {
+        this->pitch = pitch;
+        updateCameraVectors();
+    }
+
+    void setYaw(float yaw) {
+        this->yaw = yaw;
+        updateCameraVectors();
+    }
+
+    void setRoll(float roll) {
+        this->roll = roll;
+        updateCameraVectors();
+    }
+
 private:
     glm::vec3 position;
     glm::vec3 front;
