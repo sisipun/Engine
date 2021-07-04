@@ -42,6 +42,18 @@ public:
         updateCameraVectors();
     }
 
+    float getPitch() {
+        return pitch;
+    }
+
+    float getYaw() {
+        return yaw;
+    }
+
+    float getRoll() {
+        return roll;
+    }
+
 private:
     glm::vec3 position;
     glm::vec3 front;
