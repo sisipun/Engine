@@ -24,17 +24,16 @@ struct Texture
 class Mesh
 {
 public:
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
-
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
 
-    // TODO Shader const & and method const??
-    void draw(Shader const &shader) const;
+    void draw(const Shader &shader) const;
 
 private:
     unsigned int VAO, VBO, EBO;
+
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+    std::vector<Texture> textures;
 };
 
 #endif

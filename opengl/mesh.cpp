@@ -26,8 +26,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     glBindVertexArray(0);
 }
 
-// TODO Change shader to const link
-void Mesh::draw(Shader const &shader) const
+void Mesh::draw(const Shader &shader) const
 {
     unsigned int diffuseNumber = 1;
     unsigned int specularNumber = 1;

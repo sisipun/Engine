@@ -14,44 +14,53 @@ public:
 
     glm::mat4 getViewMatrix() const;
 
-    float getFov() const {
-        return fov;
-    }
-
-    glm::vec3 getPosition() const {
+    glm::vec3 getPosition() const
+    {
         return position;
     }
 
-    void setPosition(glm::vec3 position) {
+    void setPosition(glm::vec3 position)
+    {
         this->position = position;
         updateCameraVectors();
     }
 
-    void setPitch(float pitch) {
+    float getPitch()
+    {
+        return pitch;
+    }
+
+    void setPitch(float pitch)
+    {
         this->pitch = pitch;
         updateCameraVectors();
     }
 
-    void setYaw(float yaw) {
+    float getYaw()
+    {
+        return yaw;
+    }
+
+    void setYaw(float yaw)
+    {
         this->yaw = yaw;
         updateCameraVectors();
     }
 
-    void setRoll(float roll) {
+    float getRoll()
+    {
+        return roll;
+    }
+
+    void setRoll(float roll)
+    {
         this->roll = roll;
         updateCameraVectors();
     }
 
-    float getPitch() {
-        return pitch;
-    }
-
-    float getYaw() {
-        return yaw;
-    }
-
-    float getRoll() {
-        return roll;
+    float getFov() const
+    {
+        return fov;
     }
 
 private:

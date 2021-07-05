@@ -16,10 +16,10 @@ public:
     void draw(Shader const &shader) const;
 
 private:
-    void processNode(aiNode *node, const aiScene *scene);
-    Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-    std::vector<Texture> loadTextures(aiMaterial *material, aiTextureType type, std::string typeName);
-    
+    void processNode(const aiNode *node, const aiScene *scene);
+    Mesh processMesh(const aiMesh *mesh, const aiScene *scene);
+    std::vector<Texture> loadTextures(const aiMaterial *material, const aiTextureType type, const std::string &typeName);
+
     std::vector<Mesh> meshes;
     std::vector<Texture> loadedTextures;
     std::string path;

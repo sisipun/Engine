@@ -5,10 +5,12 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
     std::fstream vertexFile(vertexPath), fragmentFile(fragmentPath);
     if (!vertexFile)
     {
+        // TODO use logger
         std::cout << "Can't read vertex file" << std::endl;
     }
     if (!fragmentFile)
     {
+        // TODO use logger
         std::cout << "Can't read fragment file" << std::endl;
     }
     std::stringstream vertexStream, fragmentStream;
@@ -75,6 +77,7 @@ void Shader::checkShaderCompilation(unsigned int shader) const
     if (!success)
     {
         glGetShaderInfoLog(shader, 1024, NULL, log);
+        // TODO use logger
         std::cout << "Can't compile shader: " << log << std::endl;
     }
 }
@@ -87,6 +90,7 @@ void Shader::checkProgramLinking(unsigned int program) const
     if (!success)
     {
         glGetProgramInfoLog(program, 1024, NULL, log);
+        // TODO use logger
         std::cout << "Can't link programm: " << log << std::endl;
     }
 }

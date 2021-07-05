@@ -32,6 +32,7 @@ int loadTexture(const std::string &path)
     }
     else
     {
+        // TODO use logger here
         std::cout << "Texture failed to load at path: " << path << std::endl;
     }
 
@@ -39,14 +40,14 @@ int loadTexture(const std::string &path)
     return texture;
 }
 
-Model::Model(std::string const &path)
+Model::Model(const std::string &path)
 {
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
-    // TODO use logger here
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
+        // TODO use logger here
         std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
         return;
     }
@@ -55,7 +56,7 @@ Model::Model(std::string const &path)
     processNode(scene->mRootNode, scene);
 }
 
-void Model::draw(Shader const &shader) const
+void Model::draw(const Shader &shader) const
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
     {
@@ -64,7 +65,7 @@ void Model::draw(Shader const &shader) const
 }
 
 // TODO change to links and const method also const
-void Model::processNode(aiNode *node, const aiScene *scene)
+void Model::processNode(const aiNode *node, const aiScene *scene)
 {
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
@@ -78,7 +79,7 @@ void Model::processNode(aiNode *node, const aiScene *scene)
     }
 }
 
-Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
+Mesh Model::processMesh(const aiMesh *mesh, const aiScene *scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -145,7 +146,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadTextures(aiMaterial *material, aiTextureType type, std::string typeName)
+std::vector<Texture> Model::loadTextures(const aiMaterial *material, const aiTextureType type, const std::string &typeName)
 {
     std::vector<Texture> textures;
     // TODO make optimization with existion textues
