@@ -21,6 +21,9 @@ set(SOURCE_LIB
     camera.h
     camera.cpp
 
+    light.h
+    light.cpp
+
     mesh.h
     mesh.cpp
 

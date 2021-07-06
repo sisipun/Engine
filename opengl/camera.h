@@ -4,13 +4,17 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "shader.h"
+
 class Camera
 {
 public:
-    Camera(glm::vec3 position, glm::vec3 up, float pitch, float yaw, float roll, float fov) : position(position), front(glm::vec3(0.0f, 0.0f, -1.0f)), up(up), pitch(pitch), yaw(yaw), roll(roll), fov(fov)
+    Camera(glm::vec3 position, glm::vec3 up, float aspectRatio, float range, float pitch, float yaw, float roll, float fov) : position(position), front(glm::vec3(0.0f, 0.0f, -1.0f)), up(up), aspectRatio(aspectRatio), range(range), pitch(pitch), yaw(yaw), roll(roll), fov(fov)
     {
         updateCameraVectors();
     }
+
+    void draw(Shader const &shader) const;
 
     glm::mat4 getViewMatrix() const;
 
@@ -67,6 +71,9 @@ private:
     glm::vec3 position;
     glm::vec3 front;
     glm::vec3 up;
+
+    float aspectRatio;
+    float range;
 
     float pitch;
     float yaw;

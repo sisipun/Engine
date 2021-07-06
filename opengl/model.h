@@ -23,6 +23,8 @@ private:
     std::vector<Mesh> meshes;
     std::vector<Texture> loadedTextures;
     std::string path;
+
+    glm::mat4 model;
 };
 
 #endif

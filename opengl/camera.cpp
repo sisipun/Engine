@@ -1,8 +1,10 @@
 #include "camera.h"
 
-glm::mat4 Camera::getViewMatrix() const
+void Camera::draw(Shader const &shader) const
 {
-    return glm::lookAt(position, position + front, up);
+    shader.setVec3("viewPos", position);
+    shader.setMat4("view", glm::lookAt(position, position + front, up));
+    shader.setMat4("projection", glm::perspective(glm::radians(fov), aspectRatio, 0.1f, range));
 }
 
 void Camera::updateCameraVectors()

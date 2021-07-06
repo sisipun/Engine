@@ -40,7 +40,7 @@ int loadTexture(const std::string &path)
     return texture;
 }
 
-Model::Model(const std::string &path)
+Model::Model(const std::string &path): path(path), model(glm::mat4(1.0f))
 {
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -52,12 +52,12 @@ Model::Model(const std::string &path)
         return;
     }
 
-    this->path = path;
     processNode(scene->mRootNode, scene);
 }
 
 void Model::draw(const Shader &shader) const
 {
+    shader.setMat4("model", model);
     for (unsigned int i = 0; i < meshes.size(); i++)
     {
         meshes[i].draw(shader);

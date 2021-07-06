@@ -9,6 +9,7 @@
 #include "shader.h"
 #include "camera.h"
 #include "model.h"
+#include "light.h"
 
 static const int SCREEN_WIDTH = 800;
 static const int SCREEN_HEIGHT = 600;
@@ -45,14 +46,10 @@ int main(int argc, char *argv[])
     glEnable(GL_DEPTH_TEST);
 
     Shader shader("../shader.vert", "../shader.frag");
-    Camera camera(glm::vec3(1.0, 0.0, 1.0f), glm::vec3(0.0f, 0.1f, 0.0f), 0.0f, -90.0f, 0.0f, 90.0f);
+    Camera camera(glm::vec3(1.0, 0.0, 1.0f), glm::vec3(0.0f, 0.1f, 0.0f), float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 100.0f, 0.0f, -90.0f, 0.0f, 90.0f);
+    Light light(glm::vec3(1.0f, 2.0f, 1.0f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f));
     Model ourModel("../backpack/backpack.obj");
-    glm::vec3 lightPos = glm::vec3(1.0f, 2.0f, 1.0f);
-    glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
-    shader.use();
-    shader.setVec3("lightColor", lightColor);
-    shader.setVec3("lightPos", lightPos);
     while (!quit)
     {
         if (SDL_PollEvent(event) != 0)
@@ -108,17 +105,11 @@ int main(int argc, char *argv[])
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::vec3 lightPos = glm::vec3(sin(SDL_GetTicks() / 1000.0f), 2.0f, cos(SDL_GetTicks() / 1000.0f));
-
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = camera.getViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.getFov()), float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 0.1f, 100.0f);
+        // glm::vec3 lightPos = glm::vec3(sin(SDL_GetTicks() / 1000.0f), 2.0f, cos(SDL_GetTicks() / 1000.0f));
 
         shader.use();
-        shader.setMat4("model", model);
-        shader.setMat4("view", view);
-        shader.setMat4("projection", projection);
-
+        camera.draw(shader);
+        light.draw(shader);
         ourModel.draw(shader);
 
         SDL_GL_SwapWindow(window);
