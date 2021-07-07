@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
     glEnable(GL_DEPTH_TEST);
 
     Shader shader("../shader.vert", "../shader.frag");
-    Camera camera(glm::vec3(1.0, 0.0, 1.0f), glm::vec3(0.0f, 0.1f, 0.0f), float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 100.0f, 0.0f, -90.0f, 0.0f, 90.0f);
-    Light light(glm::vec3(1.0f, 2.0f, 1.0f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f));
+    Camera camera(glm::vec3(0.0, 3.0, 3.0f), glm::vec3(0.0f, 0.1f, 0.0f), float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 100.0f, 0.0f, -90.0f, 0.0f, 90.0f);
+    Light light(glm::vec3(0.0f, 3.0f, -3.0f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f));
     Model ourModel("../backpack/backpack.obj");
 
     while (!quit)
@@ -104,8 +104,6 @@ int main(int argc, char *argv[])
         }
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // glm::vec3 lightPos = glm::vec3(sin(SDL_GetTicks() / 1000.0f), 2.0f, cos(SDL_GetTicks() / 1000.0f));
 
         shader.use();
         camera.draw(shader);

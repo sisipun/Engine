@@ -14,6 +14,14 @@ public:
 
     void draw(Shader const &shader) const;
 
+    glm::vec3 getPosition() const {
+        return position;
+    }
+
+    void setPosition(glm::vec3 position) {
+        this->position = position;
+    }
+
 private:
     glm::vec3 position;
     glm::vec3 ambient;
