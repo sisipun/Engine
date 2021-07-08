@@ -1,6 +1,8 @@
+#include <glad/glad.h>
+
 #include "mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) : vertices(vertices), indices(indices), textures(textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Material> materials) : vertices(vertices), indices(indices), materials(materials)
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -28,41 +30,10 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 
 void Mesh::draw(const Shader &shader) const
 {
-    unsigned int diffuseNumber = 1;
-    unsigned int specularNumber = 1;
-    unsigned int normalNumber = 1;
-    unsigned int heightNumber = 1;
-
-    for (unsigned int i = 0; i < textures.size(); i++)
-    {
-        glActiveTexture(GL_TEXTURE0 + i);
-
-        Texture texture = textures[i];
-        std::string type = texture.type;
-        std::string number;
-        if (type == "texture_diffuse")
-        {
-            number = std::to_string(diffuseNumber++);
-        }
-        else if (type == "texture_specular")
-        {
-            number = std::to_string(specularNumber++);
-        }
-        else if (type == "texture_normal")
-        {
-            number = std::to_string(normalNumber++);
-        }
-        else if (type == "texture_height")
-        {
-            number = std::to_string(specularNumber++);
-        }
-
-        shader.setInt("material." + type + number, i);
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+    for (unsigned int i = 0; i < materials.size(); i++) {
+        materials[i].draw(shader);
     }
-
-    glActiveTexture(GL_TEXTURE0);
-
+    
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

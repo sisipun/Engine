@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <assimp/scene.h>
+#include <glm/glm.hpp>
 
 #include "shader.h"
 #include "mesh.h"

@@ -24,6 +24,9 @@ set(SOURCE_LIB
     light.h
     light.cpp
 
+    material.h
+    material.cpp
+
     mesh.h
     mesh.cpp
 

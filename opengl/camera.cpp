@@ -1,3 +1,5 @@
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "camera.h"
 
 void Camera::draw(Shader const &shader) const

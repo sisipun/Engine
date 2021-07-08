@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
     Shader shader("../shader.vert", "../shader.frag");
     Camera camera(glm::vec3(0.0, 3.0, 3.0f), glm::vec3(0.0f, 0.1f, 0.0f), float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 100.0f, 0.0f, -90.0f, 0.0f, 90.0f);
-    Light light(glm::vec3(0.0f, 3.0f, -3.0f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f));
+    Light light(glm::vec3(0.0f, 3.0f, -3.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
     Model ourModel("../backpack/backpack.obj");
 
     while (!quit)

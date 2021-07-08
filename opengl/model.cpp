@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+#include <glad/glad.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -83,7 +84,7 @@ Mesh Model::processMesh(const aiMesh *mesh, const aiScene *scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<Material> materials;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -133,6 +134,8 @@ Mesh Model::processMesh(const aiMesh *mesh, const aiScene *scene)
     if (mesh->mMaterialIndex >= 0)
     {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+
+        std::vector<Texture> textures;
         std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR, "texture_specular");
@@ -141,15 +144,23 @@ Mesh Model::processMesh(const aiMesh *mesh, const aiScene *scene)
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
         std::vector<Texture> heightMaps = loadTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+        
+        float shiness;
+        material->Get(AI_MATKEY_SHININESS, shiness);
+        
+
+        float shinessStrength;
+        material->Get(AI_MATKEY_SHININESS_STRENGTH, shinessStrength);
+
+        materials.push_back(Material(textures, shiness, shinessStrength));
     }
 
-    return Mesh(vertices, indices, textures);
+    return Mesh(vertices, indices, materials);
 }
 
 std::vector<Texture> Model::loadTextures(const aiMaterial *material, const aiTextureType type, const std::string &typeName)
 {
     std::vector<Texture> textures;
-    // TODO make optimization with existion textues
     for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
     {
         aiString fileName;
