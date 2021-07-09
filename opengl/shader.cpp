@@ -44,6 +44,10 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
     glDeleteShader(fragmentShader);
 }
 
+void Shader::setBool(const std::string &name, bool value) const {
+    setInt(name, value ? 1 : 0);
+}
+
 void Shader::setInt(const std::string &name, int value) const
 {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);

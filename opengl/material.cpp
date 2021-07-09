@@ -8,6 +8,10 @@ void Material::draw(const Shader &shader) const {
     unsigned int normalNumber = 1;
     unsigned int heightNumber = 1;
 
+    shader.setVec3("material.ambient", ambient);
+    shader.setVec3("material.diffuse", diffuse);
+    shader.setVec3("material.specular", specular);
+
     for (unsigned int i = 0; i < textures.size(); i++)
     {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -38,6 +42,8 @@ void Material::draw(const Shader &shader) const {
 
     glActiveTexture(GL_TEXTURE0);
 
+    shader.setBool("material.hasDiffuse", diffuseNumber != 1);
+    shader.setBool("material.hasSpecular", specularNumber != 1);
     shader.setFloat("material.shiness", shiness);
     shader.setFloat("material.shinessStrength", shinessStrength);
 }

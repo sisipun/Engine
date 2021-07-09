@@ -17,13 +17,16 @@ struct Texture
 class Material
 {
 public:
-    Material(std::vector<Texture> textures, float shiness, float shinessStrength) : textures(textures), shiness(shiness), shinessStrength(shinessStrength)
+    Material(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, std::vector<Texture> textures, float shiness, float shinessStrength) : ambient(ambient), diffuse(diffuse), specular(specular), textures(textures), shiness(shiness), shinessStrength(shinessStrength)
     {
     }
 
     void draw(const Shader &shader) const;
 
 private:
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
     std::vector<Texture> textures;
     float shiness;
     float shinessStrength;
