@@ -45,11 +45,11 @@ int main(int argc, char *argv[])
     stbi_set_flip_vertically_on_load(true);
     glEnable(GL_DEPTH_TEST);
 
-    Shader shader("../shader.vert", "../shader.frag");
+    Shader shader("../shader.vert", "../shader.geom", "../shader.frag");
     Camera camera(glm::vec3(0.0, 3.0, 3.0f), glm::vec3(0.0f, 0.1f, 0.0f), float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 100.0f, 0.0f, -90.0f, 0.0f, 90.0f);
     Light light(glm::vec3(0.0f, 3.0f, -3.0f), glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f));
-    // Model ourModel("../backpack/backpack.obj");
-    Model ourModel("../donut/donut.obj");
+    Model ourModel("../backpack/backpack.obj");
+    // Model ourModel("../donut/donut.obj");
 
     while (!quit)
     {
