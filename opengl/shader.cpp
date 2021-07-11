@@ -7,7 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 
-Shader::Shader(const std::string &vertexPath, const std::string &geometryPath, const std::string &fragmentPath)
+void Shader::load()
 {
     std::fstream vertexFile(vertexPath), geometryFile(geometryPath), fragmentFile(fragmentPath);
     if (!vertexFile)

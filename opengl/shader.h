@@ -10,7 +10,11 @@ class Shader
 public:
     unsigned int ID;
 
-    Shader(const std::string &vertexPath, const std::string& geometryPath, const std::string &fragmentPath);
+    Shader(const std::string &vertexPath, const std::string &geometryPath, const std::string &fragmentPath) : vertexPath(vertexPath), geometryPath(geometryPath), fragmentPath(fragmentPath)
+    {
+    }
+
+    void load();
 
     void setBool(const std::string &name, bool value) const;
 
@@ -25,6 +29,10 @@ public:
     void use() const;
 
 private:
+    std::string vertexPath;
+    std::string geometryPath;
+    std::string fragmentPath;
+
     void checkShaderCompilation(unsigned int shader) const;
 
     void checkProgramLinking(unsigned int program) const;

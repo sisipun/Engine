@@ -32,10 +32,13 @@ set(SOURCE_LIB
 
     model.h
     model.cpp
+
+    renderer.h
+    renderer.cpp
 )
 
 add_library(Components STATIC ${SOURCE_LIB})
 add_executable(OpenGL main.cpp)
 
-target_link_libraries(Components GLAD STBIMAGE ${assimp_LIBRARIES} ${GLM_LIBRARIES})
-target_link_libraries(OpenGL Components ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
+target_link_libraries(Components GLAD STBIMAGE ${assimp_LIBRARIES} ${GLM_LIBRARIES}  ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
+target_link_libraries(OpenGL Components)
