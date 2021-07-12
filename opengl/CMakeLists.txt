@@ -24,6 +24,12 @@ set(SOURCE_LIB
     light.h
     light.cpp
 
+    point_light.h
+    point_light.cpp
+
+    dir_light.h
+    dir_light.cpp
+
     material.h
     material.cpp
 

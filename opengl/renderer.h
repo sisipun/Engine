@@ -7,7 +7,7 @@
 
 #include "shader.h"
 #include "camera.h"
-#include "light.h"
+#include "dir_light.h"
 #include "model.h"
 
 class Renderer
@@ -24,7 +24,7 @@ private:
     int screeHeight;
     Shader shader;
     Camera camera;
-    Light light;
+    DirLight light;
 
     SDL_GLContext context;
     SDL_Window *window;
