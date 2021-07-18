@@ -10,15 +10,10 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 .DS_Store
-.vscode/*
-build/*
-Debug/*
-.vs/*
+*.vs*
+*Debug*
 */.vscode/*
 */Debug/*
 */.vs/*
 */out/*
 */build/*
-engine/build/*
-roguelike/build/*
-roguelike/raycasting/*
