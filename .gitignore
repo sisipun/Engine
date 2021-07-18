@@ -12,7 +12,12 @@ _deps
 .DS_Store
 .vscode/*
 build/*
+Debug/*
+.vs/*
 */.vscode/*
+*/Debug/*
+*/.vs/*
+*/out/*
 */build/*
 engine/build/*
 roguelike/build/*
