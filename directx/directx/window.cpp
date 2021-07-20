@@ -1,0 +1,100 @@
+#include "window.h"
+
+Window::WindowClass Window::WindowClass::wndClass;
+
+Window::Window(int x, int y, int width, int height, const wchar_t* name) noexcept
+{
+	RECT wr;
+	wr.left = x;
+	wr.right = wr.left + width;
+	wr.top = y;
+	wr.bottom = wr.top + height;
+	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
+
+	hWnd = CreateWindow(
+		WindowClass::getName(),
+		name,
+		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+		x,
+		y,
+		wr.right - wr.left,
+		wr.bottom - wr.top,
+		nullptr,
+		nullptr,
+		WindowClass::getInstance(),
+		this
+	);
+
+	ShowWindow(hWnd, SW_SHOWDEFAULT);
+}
+
+Window::~Window()
+{
+	DestroyWindow(hWnd);
+}
+
+Window::WindowClass::WindowClass() noexcept
+{
+	WNDCLASSEX wc = {};
+	wc.cbSize = sizeof(wc);
+	wc.style = CS_OWNDC;
+	wc.lpfnWndProc = handleMsgSetup;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = getInstance();
+	wc.hIcon = nullptr;
+	wc.hCursor = nullptr;
+	wc.hbrBackground = nullptr;
+	wc.lpszMenuName = nullptr;
+	wc.lpszClassName = getName();
+	wc.hIconSm = nullptr;
+	RegisterClassEx(&wc);
+}
+
+Window::WindowClass::~WindowClass() noexcept
+{
+	UnregisterClass(getName(), getInstance());
+}
+
+const wchar_t* Window::WindowClass::getName() noexcept
+{
+	return wndClassName;
+}
+
+HINSTANCE Window::WindowClass::getInstance() noexcept
+{
+	return wndClass.hInstance;
+}
+
+LRESULT CALLBACK Window::handleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+{
+	if (msg == WM_NCCREATE)
+	{
+		const CREATESTRUCT* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
+		Window* const pWnd = static_cast<Window*>(pCreate->lpCreateParams);
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
+		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::handleMsgProxy));
+
+		return pWnd->handleMsg(hWnd, msg, wParam, lParam);
+	}
+
+	return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+LRESULT CALLBACK Window::handleMsgProxy(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+{
+	Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	return pWnd->handleMsg(hWnd, msg, wParam, lParam);
+}
+
+LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+{
+	switch (msg)
+	{
+	case WM_CLOSE:
+		PostQuitMessage(0);
+		return 0;
+	}
+
+	return DefWindowProc(hWnd, msg, wParam, lParam);
+}
