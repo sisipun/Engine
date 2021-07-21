@@ -1,5 +1,5 @@
-#ifndef WIN_API
-#define WIN_API
+#ifndef WIN_API_H
+#define WIN_API_H
 
 #define _WIN32_WINNT 0x0601
 #include <sdkddkver.h>

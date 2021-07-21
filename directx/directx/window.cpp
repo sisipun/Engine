@@ -1,15 +1,69 @@
+#include <sstream>
+
 #include "window.h"
+
 
 Window::WindowClass Window::WindowClass::wndClass;
 
-Window::Window(int x, int y, int width, int height, const wchar_t* name) noexcept
+Window::Exception::Exception(int line, const char* file, HRESULT hResult) noexcept : BaseException(line, file), hResult(hResult)
+{
+}
+
+const char* Window::Exception::what() const noexcept
+{
+	std::ostringstream oss;
+	oss << getType() << std::endl << "[Error code] " << getErrorCode() << std::endl << "[Description] " << getErrorString() << std::endl << getOriginString();
+	whatBuffer = oss.str();
+	return whatBuffer.c_str();
+}
+
+const char* Window::Exception::getType() const noexcept
+{
+	return "Window Exception";
+}
+
+std::string Window::Exception::translateErrorCode(HRESULT hResult) noexcept
+{
+	char* msgBuf = nullptr;
+	DWORD msgLen = FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		nullptr,
+		hResult,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		reinterpret_cast<LPSTR>(&msgBuf),
+		0,
+		nullptr
+	);
+	if (msgLen == 0)
+	{
+		return "Undefined error code";
+	}
+	std::string errorString = msgBuf;
+	LocalFree(msgBuf);
+	return errorString;
+}
+
+HRESULT Window::Exception::getErrorCode() const noexcept
+{
+	return hResult;
+}
+
+std::string Window::Exception::getErrorString() const noexcept
+{
+	return translateErrorCode(hResult);
+}
+
+Window::Window(int x, int y, int width, int height, const char* name)
 {
 	RECT wr;
 	wr.left = x;
 	wr.right = wr.left + width;
 	wr.top = y;
 	wr.bottom = wr.top + height;
-	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
+	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE)))
+	{
+		throw WND_LAST_EXCEPT();
+	}
 
 	hWnd = CreateWindow(
 		WindowClass::getName(),
@@ -24,6 +78,11 @@ Window::Window(int x, int y, int width, int height, const wchar_t* name) noexcep
 		WindowClass::getInstance(),
 		this
 	);
+
+	if (hWnd == nullptr)
+	{
+		throw WND_LAST_EXCEPT();
+	}
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 }
@@ -56,7 +115,7 @@ Window::WindowClass::~WindowClass() noexcept
 	UnregisterClass(getName(), getInstance());
 }
 
-const wchar_t* Window::WindowClass::getName() noexcept
+const char* Window::WindowClass::getName() noexcept
 {
 	return wndClassName;
 }
@@ -70,7 +129,7 @@ LRESULT CALLBACK Window::handleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 {
 	if (msg == WM_NCCREATE)
 	{
-		const CREATESTRUCT* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
+		const CREATESTRUCT* const pCreate = reinterpret_cast<CREATESTRUCT*>(lParam);
 		Window* const pWnd = static_cast<Window*>(pCreate->lpCreateParams);
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::handleMsgProxy));

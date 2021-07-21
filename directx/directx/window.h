@@ -4,11 +4,26 @@
 #include <string>
 
 #include "win_api.h"
+#include "base_exception.h"
+
 
 class Window
 {
 public:
-	Window(int x, int y, int width, int height, const wchar_t* name) noexcept;
+	class Exception : public BaseException
+	{
+	public:
+		Exception(int line, const char* file, HRESULT hResult) noexcept;
+		const char* what() const noexcept override;
+		virtual const char* getType() const noexcept override;
+		static std::string translateErrorCode(HRESULT hResult) noexcept;
+		HRESULT getErrorCode() const noexcept;
+		std::string getErrorString() const noexcept;
+	private:
+		HRESULT hResult;
+	};
+
+	Window(int x, int y, int width, int height, const char* name);
 	~Window();
 	Window(const Window&) = delete;
 	Window operator=(const Window&) = delete;
@@ -16,7 +31,7 @@ private:
 	class WindowClass
 	{
 	public:
-		static const wchar_t* getName() noexcept;
+		static const char* getName() noexcept;
 		static HINSTANCE getInstance() noexcept;
 	private:
 		WindowClass() noexcept;
@@ -24,7 +39,7 @@ private:
 		WindowClass(const WindowClass&) = delete;
 		WindowClass operator=(const WindowClass&) = delete;
 		static WindowClass wndClass;
-		static constexpr const wchar_t* wndClassName = L"WindowClass";
+		static constexpr const char* wndClassName = "WindowClass";
 		HINSTANCE hInstance;
 	};
 
@@ -34,5 +49,8 @@ private:
 
 	HWND hWnd;
 };
+
+#define WND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)
+#define WND_LAST_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, GetLastError())
 
 #endif
