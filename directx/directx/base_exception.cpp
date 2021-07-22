@@ -29,7 +29,8 @@ const std::string& BaseException::getFile() const noexcept
 	return file;
 }
 
-std::string BaseException::getOriginString() const noexcept {
+std::string BaseException::getOriginString() const noexcept
+{
 	std::ostringstream oss;
 	oss << "[FILE] " << file << std::endl << "[LINE] " << line;
 	return oss.str();

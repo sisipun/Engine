@@ -160,11 +160,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="base_exception.cpp" />
+    <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base_exception.h" />
+    <ClInclude Include="keyboard.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="win_api.h" />
   </ItemGroup>

@@ -18,6 +18,9 @@ int CALLBACK WinMain(
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			if (w.keyboard.keyIsPressed(VK_SPACE)) {
+				MessageBox(nullptr, "Key pressed", "Pressed", MB_OK | MB_ICONEXCLAMATION);
+			}
 		}
 
 		if (gResult == -1)

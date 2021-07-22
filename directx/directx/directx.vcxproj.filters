@@ -24,6 +24,9 @@
     <ClCompile Include="base_exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="base_exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

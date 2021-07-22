@@ -5,6 +5,7 @@
 
 #include "win_api.h"
 #include "base_exception.h"
+#include "keyboard.h"
 
 
 class Window
@@ -19,6 +20,7 @@ public:
 		static std::string translateErrorCode(HRESULT hResult) noexcept;
 		HRESULT getErrorCode() const noexcept;
 		std::string getErrorString() const noexcept;
+
 	private:
 		HRESULT hResult;
 	};
@@ -27,6 +29,8 @@ public:
 	~Window();
 	Window(const Window&) = delete;
 	Window operator=(const Window&) = delete;
+
+	Keyboard keyboard;
 private:
 	class WindowClass
 	{

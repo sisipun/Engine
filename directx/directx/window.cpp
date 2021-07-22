@@ -153,6 +153,23 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		return 0;
+	case WM_KILLFOCUS:
+		keyboard.clearState();
+		break;
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+		if (!(lParam & 0x40000000) || keyboard.autorepeatIsEnabled())
+		{
+			keyboard.onKeyPressed(wParam);
+		}
+		break;
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		keyboard.onKeyReleased(wParam);
+		break;
+	case WM_CHAR:
+		keyboard.onChar(wParam);
+		break;
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
