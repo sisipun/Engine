@@ -1,6 +1,8 @@
 #include "window.h"
 #include "base_exception.h"
 
+#include <sstream>
+
 int CALLBACK WinMain(
 	HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -20,6 +22,16 @@ int CALLBACK WinMain(
 			DispatchMessage(&msg);
 			if (w.keyboard.keyIsPressed(VK_SPACE)) {
 				MessageBox(nullptr, "Key pressed", "Pressed", MB_OK | MB_ICONEXCLAMATION);
+			}
+
+			while (!w.mouse.isEmpty())
+			{
+				const auto e = *w.mouse.read();
+				if (e.getType() == Mouse::Event::Type::MOVE) {
+					std::ostringstream oss;
+					oss << "Mouse position : (" << e.getPositionX() << ", " << e.getPositionY() << ")";
+					w.setTitle(oss.str());
+				}
 			}
 		}
 

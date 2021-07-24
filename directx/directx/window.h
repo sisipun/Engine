@@ -6,6 +6,7 @@
 #include "win_api.h"
 #include "base_exception.h"
 #include "keyboard.h"
+#include "mouse.h"
 
 
 class Window
@@ -29,8 +30,11 @@ public:
 	~Window();
 	Window(const Window&) = delete;
 	Window operator=(const Window&) = delete;
+	void setTitle(const std::string& title);
 
 	Keyboard keyboard;
+	Mouse mouse;
+
 private:
 	class WindowClass
 	{
@@ -52,6 +56,8 @@ private:
 	LRESULT WINAPI handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
 	HWND hWnd;
+	int width; 
+	int height;
 };
 
 #define WND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)

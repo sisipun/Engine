@@ -53,14 +53,14 @@ std::string Window::Exception::getErrorString() const noexcept
 	return translateErrorCode(hResult);
 }
 
-Window::Window(int x, int y, int width, int height, const char* name)
+Window::Window(int x, int y, int width, int height, const char* name) : width(width), height(height)
 {
 	RECT wr;
 	wr.left = x;
 	wr.right = wr.left + width;
 	wr.top = y;
 	wr.bottom = wr.top + height;
-	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE)))
+	if (!AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE))
 	{
 		throw WND_LAST_EXCEPT();
 	}
@@ -90,6 +90,14 @@ Window::Window(int x, int y, int width, int height, const char* name)
 Window::~Window()
 {
 	DestroyWindow(hWnd);
+}
+
+void Window::setTitle(const std::string& title)
+{
+	if (!SetWindowText(hWnd, title.c_str()))
+	{
+		throw WND_LAST_EXCEPT();
+	}
 }
 
 Window::WindowClass::WindowClass() noexcept
@@ -156,6 +164,8 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_KILLFOCUS:
 		keyboard.clearState();
 		break;
+
+
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 		if (!(lParam & 0x40000000) || keyboard.autorepeatIsEnabled())
@@ -170,6 +180,78 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_CHAR:
 		keyboard.onChar(wParam);
 		break;
+
+
+	case WM_MOUSEMOVE:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
+		{
+			mouse.onMouseMove(point.x, point.y);
+			if (!mouse.isInWindow())
+			{
+				SetCapture(hWnd);
+				mouse.onMouseEnter();
+			}
+		}
+		else
+		{
+			if (wParam & (MK_LBUTTON | MK_RBUTTON))
+			{
+
+				mouse.onMouseMove(point.x, point.y);
+			}
+			else
+			{
+				ReleaseCapture();
+				mouse.onMouseLeave();
+			}
+		}
+		break;
+	}
+	case WM_LBUTTONDOWN:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		mouse.onLeftPressed(point.x, point.y);
+		break;
+	}
+	case WM_RBUTTONDOWN:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		mouse.onRightPressed(point.x, point.y);
+		break;
+	}
+	case WM_LBUTTONUP:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		mouse.onLeftReleased(point.x, point.y);
+
+		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height)
+		{
+			ReleaseCapture();
+			mouse.onMouseLeave();
+		}
+		break;
+	}
+	case WM_RBUTTONUP:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		mouse.onRightReleased(point.x, point.y);
+
+		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height)
+		{
+			ReleaseCapture();
+			mouse.onMouseLeave();
+		}
+		break;
+	}
+	case WM_MOUSEWHEEL:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+		mouse.onWheelDelta(point.x, point.y, delta);
+		break;
+	}
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
