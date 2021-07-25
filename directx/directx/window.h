@@ -31,6 +31,7 @@ public:
 	Window(const Window&) = delete;
 	Window operator=(const Window&) = delete;
 	void setTitle(const std::string& title);
+	static std::optional<int> processMessage() noexcept;
 
 	Keyboard keyboard;
 	Mouse mouse;
@@ -56,7 +57,7 @@ private:
 	LRESULT WINAPI handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
 	HWND hWnd;
-	int width; 
+	int width;
 	int height;
 };
 

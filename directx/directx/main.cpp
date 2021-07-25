@@ -1,4 +1,4 @@
-#include "window.h"
+#include "app.h"
 #include "base_exception.h"
 
 #include <sstream>
@@ -12,37 +12,7 @@ int CALLBACK WinMain(
 {
 	try
 	{
-		Window w(100, 100, 500, 500, "Hello");
-
-		MSG msg = {};
-		BOOL gResult;
-		while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0)
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (w.keyboard.keyIsPressed(VK_SPACE)) {
-				MessageBox(nullptr, "Key pressed", "Pressed", MB_OK | MB_ICONEXCLAMATION);
-			}
-
-			while (!w.mouse.isEmpty())
-			{
-				const auto e = *w.mouse.read();
-				if (e.getType() == Mouse::Event::Type::MOVE) {
-					std::ostringstream oss;
-					oss << "Mouse position : (" << e.getPositionX() << ", " << e.getPositionY() << ")";
-					w.setTitle(oss.str());
-				}
-			}
-		}
-
-		if (gResult == -1)
-		{
-			return -1;
-		}
-		else
-		{
-			return msg.wParam;
-		}
+		App().start();
 	}
 	catch (const BaseException& e)
 	{

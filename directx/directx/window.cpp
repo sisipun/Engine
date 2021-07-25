@@ -100,6 +100,23 @@ void Window::setTitle(const std::string& title)
 	}
 }
 
+std::optional<int> Window::processMessage() noexcept
+{
+	MSG message;
+	while (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE))
+	{
+		if (message.message == WM_QUIT)
+		{
+			return message.wParam;
+		}
+
+		TranslateMessage(&message);
+		DispatchMessage(&message);
+	}
+
+	return std::nullopt;
+}
+
 Window::WindowClass::WindowClass() noexcept
 {
 	WNDCLASSEX wc = {};
