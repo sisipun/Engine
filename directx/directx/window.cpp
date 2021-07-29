@@ -85,6 +85,8 @@ Window::Window(int x, int y, int width, int height, const char* name) : width(wi
 	}
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
+
+	renderer = std::make_unique<Renderer>(hWnd);
 }
 
 Window::~Window()
@@ -115,6 +117,11 @@ std::optional<int> Window::processMessage() noexcept
 	}
 
 	return std::nullopt;
+}
+
+Renderer& Window::getRenderer() const noexcept
+{
+	return *renderer;
 }
 
 Window::WindowClass::WindowClass() noexcept

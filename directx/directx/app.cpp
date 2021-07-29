@@ -22,6 +22,8 @@ int App::start()
 
 void App::processFrame()
 {
+	window.getRenderer().clearBuffer(sin(timer.peek()), cos(timer.peek()), 0.5f);
+	window.getRenderer().endFrame();
 	if (window.keyboard.keyIsPressed(VK_SPACE))
 	{
 		MessageBox(nullptr, "Key pressed", "Pressed", MB_OK | MB_ICONEXCLAMATION);

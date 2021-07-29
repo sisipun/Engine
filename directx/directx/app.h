@@ -2,6 +2,7 @@
 #define APP_H
 
 #include "window.h"
+#include "timer.h"
 
 class App
 {
@@ -14,6 +15,7 @@ private:
 	void processFrame();
 
 	Window window;
+	Timer timer;
 };
 
 #endif 
