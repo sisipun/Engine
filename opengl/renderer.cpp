@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <stbimage/stb_image.h>
 
-Renderer::Renderer(int screenWidth, int screeHeight) : screenWidth(screenWidth), screeHeight(screeHeight), shader(Shader("../shader.vert", "../shader.geom", "../shader.frag")), camera(Camera(glm::vec3(0.0, 3.0, 3.0f), glm::vec3(0.0f, 0.1f, 0.0f), float(screenWidth) / float(screeHeight), 100.0f, 0.0f, -90.0f, 0.0f, 90.0f)), light(DirLight(glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(3.0f, -3.0f, 3.0f)))
+Renderer::Renderer(int screenWidth, int screeHeight) : screenWidth(screenWidth), screeHeight(screeHeight), shader(Shader("../shader.vert", "../shader.geom", "../shader.frag")), camera(Camera(glm::vec3(0.0, 3.0, 3.0f), glm::vec3(0.0f, 0.1f, 0.0f), float(screenWidth) / float(screeHeight), 100.0f, 0.0f, -90.0f, 0.0f, 90.0f)), light(DirLight(glm::vec3(0.2f), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(3.0f, 3.0f, 3.0f)))
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -44,7 +44,7 @@ Renderer::~Renderer()
     SDL_Quit();
 }
 
-void Renderer::draw(std::vector<Model> models) const
+void Renderer::draw(const std::vector<Model>& models) const
 {
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
