@@ -17,7 +17,7 @@ public:
 
     ~Renderer();
 
-    void draw(std::vector<Model> models) const;
+    void draw(const std::vector<Model>& models) const;
 
 private:
     int screenWidth;
