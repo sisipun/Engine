@@ -165,6 +165,7 @@
   <ItemGroup>
     <ClCompile Include="app.cpp" />
     <ClCompile Include="base_exception.cpp" />
+    <ClCompile Include="base_hr_exception.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mouse.cpp" />
@@ -175,6 +176,7 @@
   <ItemGroup>
     <ClInclude Include="app.h" />
     <ClInclude Include="base_exception.h" />
+    <ClInclude Include="base_hr_exception.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="renderer.h" />

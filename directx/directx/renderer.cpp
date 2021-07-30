@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "renderer.h"
 
 Renderer::Renderer(HWND hWnd)
@@ -19,7 +21,9 @@ Renderer::Renderer(HWND hWnd)
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = 0;
 
-	D3D11CreateDeviceAndSwapChain(
+	HRESULT hResult;
+
+	if (FAILED(hResult = D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -32,15 +36,20 @@ Renderer::Renderer(HWND hWnd)
 		&device,
 		nullptr,
 		&deviceContext
-	);
+	)))
+	{
+		throw Renderer::HrException(__LINE__, __FILE__, hResult);
+	}
 
 	ID3D11Resource* backBuffer = nullptr;
-	swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&backBuffer));
-	device->CreateRenderTargetView(
-		backBuffer,
-		nullptr,
-		&renderTarget
-	);
+	if (FAILED(hResult = swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&backBuffer))))
+	{
+		throw Renderer::HrException(__LINE__, __FILE__, hResult);
+	}
+	if (FAILED(hResult = device->CreateRenderTargetView(backBuffer, nullptr, &renderTarget)))
+	{
+		throw Renderer::HrException(__LINE__, __FILE__, hResult);
+	}
 	backBuffer->Release();
 }
 
@@ -66,5 +75,24 @@ Renderer::~Renderer()
 
 void Renderer::endFrame()
 {
-	swapChain->Present(1u, 0u);
+	HRESULT hResult;
+	if (FAILED(hResult = swapChain->Present(1u, 0u)))
+	{
+		if (hResult == DXGI_ERROR_DEVICE_REMOVED)
+		{
+			throw Renderer::DeviceRemovedException(__LINE__, __FILE__, hResult);
+		}
+
+		throw Renderer::HrException(__LINE__, __FILE__, hResult);
+	}
+}
+
+const char* Renderer::HrException::getType() const noexcept
+{
+	return "Renderer exception";
+}
+
+const char* Renderer::DeviceRemovedException::getType() const noexcept
+{
+	return "Renderer exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)";
 }
