@@ -41,35 +41,14 @@ Renderer::Renderer(HWND hWnd)
 		throw Renderer::HrException(__LINE__, __FILE__, hResult);
 	}
 
-	ID3D11Resource* backBuffer = nullptr;
-	if (FAILED(hResult = swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&backBuffer))))
+	Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
+	if (FAILED(hResult = swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer)))
 	{
 		throw Renderer::HrException(__LINE__, __FILE__, hResult);
 	}
-	if (FAILED(hResult = device->CreateRenderTargetView(backBuffer, nullptr, &renderTarget)))
+	if (FAILED(hResult = device->CreateRenderTargetView(backBuffer.Get(), nullptr, &renderTarget)))
 	{
 		throw Renderer::HrException(__LINE__, __FILE__, hResult);
-	}
-	backBuffer->Release();
-}
-
-Renderer::~Renderer()
-{
-	if (renderTarget != nullptr)
-	{
-		renderTarget->Release();
-	}
-	if (deviceContext != nullptr)
-	{
-		deviceContext->Release();
-	}
-	if (swapChain != nullptr)
-	{
-		swapChain->Release();
-	}
-	if (device != nullptr)
-	{
-		device->Release();
 	}
 }
 
@@ -85,6 +64,12 @@ void Renderer::endFrame()
 
 		throw Renderer::HrException(__LINE__, __FILE__, hResult);
 	}
+}
+
+void Renderer::clearBuffer(float red, float green, float blue) noexcept
+{
+	const float color[] = { red, green, blue };
+	deviceContext->ClearRenderTargetView(renderTarget.Get(), color);
 }
 
 const char* Renderer::HrException::getType() const noexcept
