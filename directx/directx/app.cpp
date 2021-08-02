@@ -23,6 +23,7 @@ int App::start()
 void App::processFrame()
 {
 	window.getRenderer().clearBuffer(sin(timer.peek()), cos(timer.peek()), 0.5f);
+	window.getRenderer().drawTestTriangle();
 	window.getRenderer().endFrame();
 	if (window.keyboard.keyIsPressed(VK_SPACE))
 	{

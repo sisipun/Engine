@@ -89,20 +89,20 @@ Renderer& Window::getRenderer() const noexcept
 
 Window::WindowClass::WindowClass() noexcept
 {
-	WNDCLASSEX wc = {};
-	wc.cbSize = sizeof(wc);
-	wc.style = CS_OWNDC;
-	wc.lpfnWndProc = handleMsgSetup;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = getInstance();
-	wc.hIcon = nullptr;
-	wc.hCursor = nullptr;
-	wc.hbrBackground = nullptr;
-	wc.lpszMenuName = nullptr;
-	wc.lpszClassName = getName();
-	wc.hIconSm = nullptr;
-	RegisterClassEx(&wc);
+	WNDCLASSEX windowClass = {};
+	windowClass.cbSize = sizeof(windowClass);
+	windowClass.style = CS_OWNDC;
+	windowClass.lpfnWndProc = handleMsgSetup;
+	windowClass.cbClsExtra = 0;
+	windowClass.cbWndExtra = 0;
+	windowClass.hInstance = getInstance();
+	windowClass.hIcon = nullptr;
+	windowClass.hCursor = nullptr;
+	windowClass.hbrBackground = nullptr;
+	windowClass.lpszMenuName = nullptr;
+	windowClass.lpszClassName = getName();
+	windowClass.hIconSm = nullptr;
+	RegisterClassEx(&windowClass);
 }
 
 Window::WindowClass::~WindowClass() noexcept
