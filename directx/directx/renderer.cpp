@@ -5,22 +5,22 @@
 
 Renderer::Renderer(HWND hWnd)
 {
-	DXGI_SWAP_CHAIN_DESC sd = {};
-	sd.BufferDesc.Width = 0;
-	sd.BufferDesc.Height = 0;
-	sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	sd.BufferDesc.RefreshRate.Numerator = 0;
-	sd.BufferDesc.RefreshRate.Denominator = 0;
-	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	sd.SampleDesc.Count = 1;
-	sd.SampleDesc.Quality = 0;
-	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	sd.BufferCount = 1;
-	sd.OutputWindow = hWnd;
-	sd.Windowed = TRUE;
-	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	sd.Flags = 0;
+	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+	swapChainDesc.BufferDesc.Width = 0;
+	swapChainDesc.BufferDesc.Height = 0;
+	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+	swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
+	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	swapChainDesc.SampleDesc.Count = 1;
+	swapChainDesc.SampleDesc.Quality = 0;
+	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapChainDesc.BufferCount = 1;
+	swapChainDesc.OutputWindow = hWnd;
+	swapChainDesc.Windowed = TRUE;
+	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	swapChainDesc.Flags = 0;
 
 	UINT swapCreateFlags = 0u;
 #ifndef NDEBUG
@@ -36,7 +36,7 @@ Renderer::Renderer(HWND hWnd)
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
-		&sd,
+		&swapChainDesc,
 		&swapChain,
 		&device,
 		nullptr,
@@ -84,15 +84,25 @@ void Renderer::drawTestTriangle()
 {
 	struct Vertex
 	{
-		float x;
-		float y;
+		struct
+		{
+			float x;
+			float y;
+		} pos;
+		struct
+		{
+			unsigned char r;
+			unsigned char g;
+			unsigned char b;
+			unsigned char a;
+		} color;
 	};
 
 	const Vertex vertices[] =
 	{
-		{0.0f, 0.5f},
-		{0.5f, -0.5f},
-		{-0.5f, -0.5f}
+		{0.0f, 0.5f, 255, 0, 0, 0},
+		{0.5f, -0.5f, 0, 255, 0, 0},
+		{-0.5f, -0.5f, 0, 0, 255, 0}
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
@@ -131,11 +141,12 @@ void Renderer::drawTestTriangle()
 	deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
 
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
-	const D3D11_INPUT_ELEMENT_DESC input_element_desc[] =
+	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[] =
 	{
-		{"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
-	device->CreateInputLayout(input_element_desc, (UINT)std::size(input_element_desc), blob->GetBufferPointer(), blob->GetBufferSize(), &inputLayout);
+	device->CreateInputLayout(inputElementDesc, (UINT)std::size(inputElementDesc), blob->GetBufferPointer(), blob->GetBufferSize(), &inputLayout);
 
 	deviceContext->IASetInputLayout(inputLayout.Get());
 	deviceContext->OMSetRenderTargets(1, renderTarget.GetAddressOf(), nullptr);
