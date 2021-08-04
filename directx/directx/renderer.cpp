@@ -100,26 +100,29 @@ void Renderer::drawTestTriangle()
 
 	const Vertex vertices[] =
 	{
-		{0.0f, 0.5f, 255, 0, 0, 0},
-		{0.5f, -0.5f, 0, 255, 0, 0},
-		{-0.5f, -0.5f, 0, 0, 255, 0}
+		{ 0.0f, 0.5f, 255, 0, 0, 0 },
+		{ 0.5f, -0.5f, 0, 255, 0, 0 },
+		{ -0.5f, -0.5f, 0, 0, 255, 0 },
+		{ -0.3f, 0.3f, 0, 255, 0, 0 },
+		{ 0.3f, 0.3f, 0, 0, 255, 0 },
+		{ 0.0f, -0.8f, 255, 0, 0, 0 },
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
 
-	D3D11_BUFFER_DESC bufferDesription = {};
-	bufferDesription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufferDesription.Usage = D3D11_USAGE_DEFAULT;
-	bufferDesription.CPUAccessFlags = 0;
-	bufferDesription.MiscFlags = 0;
-	bufferDesription.ByteWidth = sizeof(vertices);
-	bufferDesription.StructureByteStride = sizeof(Vertex);
+	D3D11_BUFFER_DESC vertexBufferDesription = {};
+	vertexBufferDesription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesription.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesription.CPUAccessFlags = 0;
+	vertexBufferDesription.MiscFlags = 0;
+	vertexBufferDesription.ByteWidth = sizeof(vertices);
+	vertexBufferDesription.StructureByteStride = sizeof(Vertex);
 
-	D3D11_SUBRESOURCE_DATA sourceData = {};
-	sourceData.pSysMem = vertices;
+	D3D11_SUBRESOURCE_DATA vertexSourceData = {};
+	vertexSourceData.pSysMem = vertices;
 
 	HRESULT hResult;
-	if (FAILED(hResult = device->CreateBuffer(&bufferDesription, &sourceData, &vertexBuffer)))
+	if (FAILED(hResult = device->CreateBuffer(&vertexBufferDesription, &vertexSourceData, &vertexBuffer)))
 	{
 		throw HrException(__LINE__, __FILE__, hResult);
 	}
@@ -127,6 +130,34 @@ void Renderer::drawTestTriangle()
 	const UINT stride = sizeof(Vertex);
 	const UINT offset = 0;
 	deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+
+	const unsigned short indices[] =
+	{
+		0,1,2,
+		0,2,3,
+		0,4,1,
+		2,1,5,
+	};
+
+	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+
+	D3D11_BUFFER_DESC indexBufferDesription = {};
+	indexBufferDesription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesription.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesription.CPUAccessFlags = 0;
+	indexBufferDesription.MiscFlags = 0;
+	indexBufferDesription.ByteWidth = sizeof(indices);
+	indexBufferDesription.StructureByteStride = sizeof(unsigned short);
+
+	D3D11_SUBRESOURCE_DATA indexSourceData = {};
+	indexSourceData.pSysMem = indices;
+
+	if (FAILED(hResult = device->CreateBuffer(&indexBufferDesription, &indexSourceData, &indexBuffer)))
+	{
+		throw HrException(__LINE__, __FILE__, hResult);
+	}
+
+	deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
 	Microsoft::WRL::ComPtr<ID3DBlob> blob;
 
@@ -165,7 +196,7 @@ void Renderer::drawTestTriangle()
 	infoManager.set();
 #endif
 
-	deviceContext->Draw((UINT)std::size(vertices), 0);
+	deviceContext->DrawIndexed((UINT)std::size(indices), 0, 0);
 
 #ifndef NDEBUG
 	{ auto v = infoManager.getMessages(); if (!v.empty()) { throw Renderer::InfoException(__LINE__, __FILE__, v); } }
