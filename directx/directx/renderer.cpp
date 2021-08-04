@@ -133,10 +133,10 @@ void Renderer::drawTestTriangle()
 
 	const unsigned short indices[] =
 	{
-		0,1,2,
-		0,2,3,
-		0,4,1,
-		2,1,5,
+		0, 1, 2,
+		0, 2, 3,
+		0, 4, 1,
+		2, 1, 5,
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
