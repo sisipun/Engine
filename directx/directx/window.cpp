@@ -78,7 +78,7 @@ std::optional<int> Window::processMessage() noexcept
 	return std::nullopt;
 }
 
-Renderer& Window::getRenderer() const noexcept
+Renderer& Window::getRenderer() const
 {
 	if (!renderer)
 	{

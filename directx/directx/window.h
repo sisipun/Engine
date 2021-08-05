@@ -34,7 +34,7 @@ public:
 	Window operator=(const Window&) = delete;
 	void setTitle(const std::string& title);
 	static std::optional<int> processMessage() noexcept;
-	Renderer& getRenderer() const noexcept;
+	Renderer& getRenderer() const;
 
 	Keyboard keyboard;
 	Mouse mouse;

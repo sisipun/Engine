@@ -80,7 +80,7 @@ void Renderer::clearBuffer(float red, float green, float blue) noexcept
 	deviceContext->ClearRenderTargetView(renderTarget.Get(), color);
 }
 
-void Renderer::drawTestTriangle()
+void Renderer::drawTestTriangle(float angle)
 {
 	struct Vertex
 	{
@@ -158,6 +158,39 @@ void Renderer::drawTestTriangle()
 	}
 
 	deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+
+	struct ConstantData
+	{
+		float transformation[4][4];
+	};
+	const ConstantData constantData = {
+		{
+			std::cos(angle), std::sin(angle), 0.0f, 0.0f,
+			-std::sin(angle), std::cos(angle), 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		}
+	};
+
+	Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
+
+	D3D11_BUFFER_DESC constantBufferDesription;
+	constantBufferDesription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constantBufferDesription.Usage = D3D11_USAGE_DYNAMIC;
+	constantBufferDesription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	constantBufferDesription.MiscFlags = 0;
+	constantBufferDesription.ByteWidth = sizeof(constantData);
+	constantBufferDesription.StructureByteStride = sizeof(ConstantData);
+
+	D3D11_SUBRESOURCE_DATA constantSourceData = {};
+	constantSourceData.pSysMem = &constantData;
+
+	if (FAILED(hResult = device->CreateBuffer(&constantBufferDesription, &constantSourceData, &constantBuffer)))
+	{
+		throw HrException(__LINE__, __FILE__, hResult);
+	}
+
+	deviceContext->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
 
 	Microsoft::WRL::ComPtr<ID3DBlob> blob;
 

@@ -43,7 +43,7 @@ public:
 	~Renderer() = default;
 	void endFrame();
 	void clearBuffer(float red, float green, float blue) noexcept;
-	void drawTestTriangle();
+	void drawTestTriangle(float angle);
 private:
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
