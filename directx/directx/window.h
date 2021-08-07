@@ -36,6 +36,16 @@ public:
 	static std::optional<int> processMessage() noexcept;
 	Renderer& getRenderer() const;
 
+	int getWidth()
+	{
+		return width;
+	}
+
+	int getHeight()
+	{
+		return height;
+	}
+
 	Keyboard keyboard;
 	Mouse mouse;
 

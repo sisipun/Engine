@@ -1,5 +1,7 @@
 #include <sstream>
+#include <cmath>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 
 #include "renderer.h"
 
@@ -80,7 +82,7 @@ void Renderer::clearBuffer(float red, float green, float blue) noexcept
 	deviceContext->ClearRenderTargetView(renderTarget.Get(), color);
 }
 
-void Renderer::drawTestTriangle(float angle)
+void Renderer::drawTestTriangle(float angle, float x, float y)
 {
 	struct Vertex
 	{
@@ -161,15 +163,14 @@ void Renderer::drawTestTriangle(float angle)
 
 	struct ConstantData
 	{
-		float transformation[4][4];
+		DirectX::XMMATRIX transform;
 	};
 	const ConstantData constantData = {
-		{
-			std::cos(angle), std::sin(angle), 0.0f, 0.0f,
-			-std::sin(angle), std::cos(angle), 0.0f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f
-		}
+		DirectX::XMMatrixTranspose(
+			DirectX::XMMatrixRotationZ(angle) *
+			DirectX::XMMatrixScaling(3.0f / 4.0f, 1.0f, 1.0f) * 
+			DirectX::XMMatrixTranslation(x, y, 0)
+		)
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
