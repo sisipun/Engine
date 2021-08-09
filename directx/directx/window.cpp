@@ -212,6 +212,7 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	{
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.onLeftReleased(point.x, point.y);
+		SetForegroundWindow(hWnd);
 
 		if (point.x < 0 || point.x >= width || point.y < 0 || point.y >= height)
 		{

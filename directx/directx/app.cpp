@@ -24,6 +24,11 @@ void App::processFrame()
 {
 	window.getRenderer().clearBuffer(sin(timer.peek()), cos(timer.peek()), 0.5f);
 	window.getRenderer().drawTestTriangle(
+		-timer.peek(),
+		0.0f,
+		0.0f
+	);
+	window.getRenderer().drawTestTriangle(
 		timer.peek(), 
 		window.mouse.getPositionX() / (window.getWidth() / 2.0f) - 1.0f,
 		-window.mouse.getPositionY() / (window.getHeight() / 2.0f) + 1.0f

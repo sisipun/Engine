@@ -57,6 +57,45 @@ Renderer::Renderer(HWND hWnd)
 	{
 		throw Renderer::HrException(__LINE__, __FILE__, hResult);
 	}
+
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
+	depthStencilDesc.DepthEnable = TRUE;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+	if (FAILED(hResult = device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState)))
+	{
+		throw Renderer::HrException(__LINE__, __FILE__, hResult);
+	}
+
+	deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
+	D3D11_TEXTURE2D_DESC depthStencilTextureDesc = {};
+	depthStencilTextureDesc.Width = 800;
+	depthStencilTextureDesc.Height = 600;
+	depthStencilTextureDesc.MipLevels = 1;
+	depthStencilTextureDesc.ArraySize = 1;
+	depthStencilTextureDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStencilTextureDesc.SampleDesc.Count = 1;
+	depthStencilTextureDesc.SampleDesc.Quality = 0;
+	depthStencilTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	if (FAILED(hResult = device->CreateTexture2D(&depthStencilTextureDesc, nullptr, &depthStencilTexture)))
+	{
+		throw Renderer::HrException(__LINE__, __FILE__, hResult);
+	}
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc = {};
+	depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
+	if (FAILED(hResult = device->CreateDepthStencilView(depthStencilTexture.Get(), &depthStencilViewDesc, &depthStencilView)))
+	{
+		throw Renderer::HrException(__LINE__, __FILE__, hResult);
+	}
+
+	deviceContext->OMSetRenderTargets(1, renderTarget.GetAddressOf(), depthStencilView.Get());
 }
 
 void Renderer::endFrame()
@@ -80,6 +119,7 @@ void Renderer::clearBuffer(float red, float green, float blue) noexcept
 {
 	const float color[] = { red, green, blue };
 	deviceContext->ClearRenderTargetView(renderTarget.Get(), color);
+	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void Renderer::drawTestTriangle(float angle, float x, float y)
@@ -90,6 +130,7 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 		{
 			float x;
 			float y;
+			float z;
 		} pos;
 		struct
 		{
@@ -102,12 +143,14 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 
 	const Vertex vertices[] =
 	{
-		{ 0.0f, 0.5f, 255, 0, 0, 0 },
-		{ 0.5f, -0.5f, 0, 255, 0, 0 },
-		{ -0.5f, -0.5f, 0, 0, 255, 0 },
-		{ -0.3f, 0.3f, 0, 255, 0, 0 },
-		{ 0.3f, 0.3f, 0, 0, 255, 0 },
-		{ 0.0f, -0.8f, 255, 0, 0, 0 },
+		{ -1.0f,-1.0f,-1.0f	 },
+		{ 1.0f,-1.0f,-1.0f	 },
+		{ -1.0f,1.0f,-1.0f	 },
+		{ 1.0f,1.0f,-1.0f	  },
+		{ -1.0f,-1.0f,1.0f	 },
+		{ 1.0f,-1.0f,1.0f	  },
+		{ -1.0f,1.0f,1.0f	 },
+		{ 1.0f,1.0f,1.0f	 },
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
@@ -135,10 +178,12 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 
 	const unsigned short indices[] =
 	{
-		0, 1, 2,
-		0, 2, 3,
-		0, 4, 1,
-		2, 1, 5,
+		0,2,1, 2,3,1,
+		1,3,5, 3,7,5,
+		2,6,3, 3,6,7,
+		4,5,7, 4,7,6,
+		0,4,2, 2,4,6,
+		0,1,4, 1,5,4
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
@@ -164,18 +209,34 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 	struct ConstantData
 	{
 		DirectX::XMMATRIX transform;
+		struct
+		{
+			float r;
+			float g;
+			float b;
+			float a;
+		} face_colors[6];
 	};
 	const ConstantData constantData = {
 		DirectX::XMMatrixTranspose(
 			DirectX::XMMatrixRotationZ(angle) *
-			DirectX::XMMatrixScaling(3.0f / 4.0f, 1.0f, 1.0f) * 
-			DirectX::XMMatrixTranslation(x, y, 0)
-		)
+			DirectX::XMMatrixRotationX(angle) *
+			DirectX::XMMatrixTranslation(x, y, 4.0f) *
+			DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.f)
+		),
+		{
+			{1.0f,0.0f,1.0f},
+			{1.0f,0.0f,0.0f},
+			{0.0f,1.0f,0.0f},
+			{0.0f,0.0f,1.0f},
+			{1.0f,1.0f,0.0f},
+			{0.0f,1.0f,1.0f},
+		}
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
 
-	D3D11_BUFFER_DESC constantBufferDesription;
+	D3D11_BUFFER_DESC constantBufferDesription = {};
 	constantBufferDesription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	constantBufferDesription.Usage = D3D11_USAGE_DYNAMIC;
 	constantBufferDesription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -192,6 +253,7 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 	}
 
 	deviceContext->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
+	deviceContext->PSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
 
 	Microsoft::WRL::ComPtr<ID3DBlob> blob;
 
@@ -208,13 +270,11 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
 	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[] =
 	{
-		{"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 	device->CreateInputLayout(inputElementDesc, (UINT)std::size(inputElementDesc), blob->GetBufferPointer(), blob->GetBufferSize(), &inputLayout);
 
 	deviceContext->IASetInputLayout(inputLayout.Get());
-	deviceContext->OMSetRenderTargets(1, renderTarget.GetAddressOf(), nullptr);
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	D3D11_VIEWPORT viewport;

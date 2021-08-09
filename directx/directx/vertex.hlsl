@@ -1,18 +1,10 @@
-struct  VSOut
-{
-	float3 color: Color;
-	float4 position: SV_Position;
-};
-
 cbuffer ConstantData
 {
 	matrix transform;
+	float4 face_colors[6];
 };
 
-VSOut main(float2 pos : Position, float3 color : Color)
+float4 main(float3 position : Position) : SV_Position
 {
-	VSOut vsOut;
-	vsOut.position = mul(float4(pos.x, pos.y, 0.0f, 1.0f), transform);
-	vsOut.color = color;
-	return vsOut;
+	return mul(float4(position, 1.0f), transform);
 }
