@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "win_api.h"
+#include "base_hr_exception.h"
 #include "base_exception.h"
 #include "keyboard.h"
 #include "mouse.h"
@@ -14,18 +15,17 @@
 class Window
 {
 public:
-	class Exception : public BaseException
+	class HrException : public BaseHrException
 	{
+		using BaseHrException::BaseHrException;
 	public:
-		Exception(int line, const char* file, HRESULT hResult) noexcept;
-		const char* what() const noexcept override;
 		virtual const char* getType() const noexcept override;
-		static std::string translateErrorCode(HRESULT hResult) noexcept;
-		HRESULT getErrorCode() const noexcept;
-		std::string getErrorString() const noexcept;
-
-	private:
-		HRESULT hResult;
+	};
+	class NoRendererException : public BaseException
+	{
+		using BaseException::BaseException;
+	public:
+		virtual const char* getType() const noexcept override;
 	};
 
 	Window(int x, int y, int width, int height, const char* name);
@@ -34,7 +34,17 @@ public:
 	Window operator=(const Window&) = delete;
 	void setTitle(const std::string& title);
 	static std::optional<int> processMessage() noexcept;
-	Renderer& getRenderer() const noexcept;
+	Renderer& getRenderer() const;
+
+	int getWidth()
+	{
+		return width;
+	}
+
+	int getHeight()
+	{
+		return height;
+	}
 
 	Keyboard keyboard;
 	Mouse mouse;
@@ -64,8 +74,5 @@ private:
 	HWND hWnd;
 	std::unique_ptr<Renderer> renderer;
 };
-
-#define WND_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, hr)
-#define WND_LAST_EXCEPT(hr) Window::Exception(__LINE__, __FILE__, GetLastError())
 
 #endif
