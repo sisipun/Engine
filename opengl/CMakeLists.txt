@@ -15,6 +15,8 @@ add_subdirectory(lib/glad/)
 add_subdirectory(lib/stbimage/)
 
 set(SOURCE_LIB
+    src/bindable.h
+    
     src/model/shader.h
     src/model/shader.cpp
 
@@ -42,9 +44,14 @@ set(SOURCE_LIB
     src/model/file_model.h
     src/model/file_model.cpp
 
+    src/util/camera_util.h
+    src/util/light_util.h
+    src/util/model_util.h
+    src/util/shader_util.h
+
     src/scene/scene.h
     src/scene/scene.cpp
-    src/scene/examples/backpack_scene.h
+    # src/scene/examples/backpack_scene.h
     src/scene/examples/base_box_scene.h
 
     src/renderer.h

@@ -3,16 +3,18 @@
 
 #include <glm/glm.hpp>
 
-#include "../model/shader.h"
+#include "../bindable.h"
 
-class Light
+class Light : public Bindable
 {
 public:
-    Light(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) : ambient(ambient), diffuse(diffuse), specular(specular)
+    Light(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) : ambient(ambient),
+                                                                      diffuse(diffuse),
+                                                                      specular(specular)
     {
     }
 
-    virtual void draw(Shader const &shader) const;
+    virtual void bind(const Shader &shader) const override;
 
 private:
     glm::vec3 ambient;

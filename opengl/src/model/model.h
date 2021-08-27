@@ -5,10 +5,10 @@
 
 #include <glm/glm.hpp>
 
-#include "shader.h"
+#include "../bindable.h"
 #include "mesh.h"
 
-class Model
+class Model : public Bindable
 {
 public:
     Model() : Model(std::vector<Mesh>())
@@ -23,9 +23,12 @@ public:
     {
     }
 
-    void draw(const Shader &shader) const;
+    void bind(const Shader &shader) const override;
+
+    void draw() const;
 
     glm::mat4 transform;
+
 protected:
     std::vector<Mesh> meshes;
 };

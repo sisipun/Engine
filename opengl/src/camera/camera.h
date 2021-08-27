@@ -3,9 +3,9 @@
 
 #include <glm/glm.hpp>
 
-#include "../model/shader.h"
+#include "../bindable.h"
 
-class Camera
+class Camera : public Bindable
 {
 public:
     Camera(glm::vec3 position,
@@ -28,7 +28,7 @@ public:
         updateCameraVectors();
     }
 
-    void draw(Shader const &shader) const;
+    void bind(Shader const &shader) const override;
 
     glm::mat4 getViewMatrix() const;
 

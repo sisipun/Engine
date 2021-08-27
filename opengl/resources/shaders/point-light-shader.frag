@@ -57,21 +57,21 @@ void main() {
    float attenuation = 1.0 / (light.constant + light.linear * lightDistance + light.quadratic * (lightDistance * lightDistance));  
 
    // ambient
-   vec3 ambient = light.ambient * materialAmbient * attenuation;
+   vec3 ambient = light.ambient * materialAmbient;
    
    // diffuse
    vec3 norm = normalize(fs_in.Normal);
    vec3 lightDir = normalize(lightToFragment);
 
    float diff = max(dot(norm, lightDir), 0.0f);
-   vec3 diffuse = diff * light.diffuse * materiaDiffuse * attenuation;
+   vec3 diffuse = diff * light.diffuse * materiaDiffuse;
 
    // specular
    vec3 viewDir = normalize(camera.position - fs_in.FragPos);
     
    vec3 halfway = normalize(viewDir + lightDir);
    float spec = pow(max(dot(norm, halfway), 0.0f), material.shiness);
-   vec3 specular = spec * light.specular * materialSpecular * attenuation * material.shinessStrength;
+   vec3 specular = spec * light.specular * materialSpecular * material.shinessStrength;
     
    // result
    vec3 color = ambient + diffuse + specular;

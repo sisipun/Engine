@@ -156,7 +156,7 @@ Mesh FileModel::processMesh(const aiMesh *mesh, const aiScene *scene)
     float shinessStrength;
     aiMaterial->Get(AI_MATKEY_SHININESS_STRENGTH, shinessStrength);
 
-    Material material(ambient, diffuse, specular, textures, shiness, shinessStrength);
+    Material material(ambient, diffuse, specular, textures, shiness, shinessStrength > 1.0f ? 1.0f : shinessStrength);
     return Mesh(vertices, indices, material);
 }
 

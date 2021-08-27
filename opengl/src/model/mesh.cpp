@@ -28,9 +28,13 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Mate
     glBindVertexArray(0);
 }
 
-void Mesh::draw(const Shader &shader) const
+void Mesh::bind(const Shader &shader) const
 {
-    material.draw(shader);
+    material.bind(shader);
+}
+
+void Mesh::draw() const
+{
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

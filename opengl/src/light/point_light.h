@@ -15,7 +15,7 @@ public:
     {
     }
 
-    void draw(Shader const &shader) const override;
+    void bind(Shader const &shader) const override;
 
     glm::vec3 getPosition() const
     {

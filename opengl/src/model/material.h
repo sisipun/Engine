@@ -5,7 +5,7 @@
 
 #include <glm/glm.hpp>
 
-#include "shader.h"
+#include "../bindable.h"
 
 struct Texture
 {
@@ -14,14 +14,25 @@ struct Texture
     std::string filePath;
 };
 
-class Material
+class Material : public Bindable
 {
 public:
-    Material(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, std::vector<Texture> textures, float shiness, float shinessStrength) : ambient(ambient), diffuse(diffuse), specular(specular), textures(textures), shiness(shiness), shinessStrength(shinessStrength)
+    Material(
+        glm::vec3 ambient,
+        glm::vec3 diffuse,
+        glm::vec3 specular,
+        std::vector<Texture> textures,
+        float shiness,
+        float shinessStrength) : ambient(ambient),
+                                 diffuse(diffuse),
+                                 specular(specular),
+                                 textures(textures),
+                                 shiness(shiness),
+                                 shinessStrength(shinessStrength)
     {
     }
 
-    void draw(const Shader &shader) const;
+    void bind(const Shader &shader) const override;
 
 private:
     glm::vec3 ambient;

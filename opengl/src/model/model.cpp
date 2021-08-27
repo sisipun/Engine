@@ -7,11 +7,19 @@
 
 #include "model.h"
 
-void Model::draw(const Shader& shader) const
+void Model::bind(const Shader &shader) const
 {
     shader.setMat4("model", transform);
     for (unsigned int i = 0; i < meshes.size(); i++)
     {
-        meshes[i].draw(shader);
+        meshes[i].bind(shader);
+    }
+}
+
+void Model::draw() const
+{
+    for (unsigned int i = 0; i < meshes.size(); i++)
+    {
+        meshes[i].draw();
     }
 }

@@ -12,13 +12,15 @@ public:
     {
     }
 
-    void draw(Shader const &shader) const override;
+    void bind(Shader const &shader) const override;
 
-    glm::vec3 getDirection() const {
+    glm::vec3 getDirection() const
+    {
         return direction;
     }
 
-    void setDirection(glm::vec3 direction) {
+    void setDirection(glm::vec3 direction)
+    {
         this->direction = direction;
     }
 

@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     bool quit = false;
 
     Renderer renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
-    BaseBoxScene scene = BaseBoxScene();
+    BackpackScene scene = BackpackScene();
 
     SDL_Event event;
     while (!quit)

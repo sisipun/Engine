@@ -2,7 +2,9 @@
 
 #include "material.h"
 
-void Material::draw(const Shader &shader) const {
+#include <iostream>
+
+void Material::bind(const Shader &shader) const {
     unsigned int diffuseNumber = 1;
     unsigned int specularNumber = 1;
     unsigned int normalNumber = 1;

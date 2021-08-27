@@ -5,25 +5,14 @@
 
 #include <SDL.h>
 
-#include "../light/point_light.h"
-#include "../camera/camera.h"
 #include "../model/model.h"
 #include "../model/shader.h"
+#include "../bindable.h"
 
 class Scene
 {
 public:
-    Scene(Model model, Camera camera, PointLight light, Shader shader) : Scene(std::vector<Model>{model},
-                                                                          camera,
-                                                                          light,
-                                                                          shader)
-    {
-    }
-
-    Scene(std::vector<Model> models, Camera camera, PointLight light, Shader shader) : models(models),
-                                                                                       camera(camera),
-                                                                                       light(light),
-                                                                                       shader(shader)
+    Scene(Shader shader) : shader(shader)
     {
         this->shader.load();
     }
@@ -32,11 +21,9 @@ public:
 
     virtual void update(SDL_Event event);
 
-    Camera camera;
-
 protected:
-    std::vector<Model> models;
-    PointLight light;
+    std::vector<Model*> models;
+    std::vector<Bindable*> bindables;
     Shader shader;
 };
 

@@ -52,7 +52,7 @@ void main() {
    
    // diffuse
    vec3 norm = normalize(fs_in.Normal);
-   vec3 lightDir = normalize(-light.direction);
+   vec3 lightDir = normalize(light.direction);
 
    float diff = max(dot(norm, lightDir), 0.0f);
    vec3 diffuse = diff * light.diffuse * materiaDiffuse;

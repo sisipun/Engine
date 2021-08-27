@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-void PointLight::draw(Shader const &shader) const {
-    Light::draw(shader);
+void PointLight::bind(Shader const &shader) const
+{
+    Light::bind(shader);
 
     shader.setVec3("light.position", position);
     shader.setFloat("light.constant", 1.0f);

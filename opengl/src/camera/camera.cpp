@@ -2,7 +2,7 @@
 
 #include "camera.h"
 
-void Camera::draw(Shader const &shader) const
+void Camera::bind(Shader const &shader) const
 {
     shader.setVec3("camera.position", position);
     shader.setMat4("view", glm::lookAt(position, position + front, up));
