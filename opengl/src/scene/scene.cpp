@@ -1,6 +1,8 @@
 #include "scene.h"
 
-#include <iostream>
+void Scene::update(SDL_Event event)
+{
+}
 
 void Scene::draw() const
 {

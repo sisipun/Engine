@@ -2,7 +2,7 @@
 
 #include "mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Material> materials) : vertices(vertices), indices(indices), materials(materials)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Material material) : vertices(vertices), indices(indices), material(material)
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -30,10 +30,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 
 void Mesh::draw(const Shader &shader) const
 {
-    for (unsigned int i = 0; i < materials.size(); i++) {
-        materials[i].draw(shader);
-    }
-
+    material.draw(shader);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

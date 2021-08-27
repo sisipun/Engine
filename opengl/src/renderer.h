@@ -14,13 +14,14 @@ public:
 
     ~Renderer();
 
-    void draw(const Scene &scene) const;
+    void render(const Scene &scene) const;
 
 private:
     int screenWidth;
     int screenHeight;
 
     SDL_GLContext context;
+    SDL_Event event;
     SDL_Window *window;
 };
 

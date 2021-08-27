@@ -18,7 +18,7 @@ struct Vertex
 class Mesh
 {
 public:
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Material> materials);
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Material material);
 
     void draw(const Shader &shader) const;
 
@@ -27,7 +27,7 @@ private:
 
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Material> materials;
+    Material material;
 };
 
 #endif

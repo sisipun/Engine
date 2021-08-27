@@ -1,7 +1,7 @@
 #version 330 core
 out vec4 FragColor;
 
-in GS_OUT {
+in VS_OUT {
    vec2 TextureCoord;
    vec3 Normal;
    vec3 FragPos;

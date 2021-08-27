@@ -7,7 +7,7 @@
 
 #include "model.h"
 
-void Model::draw(const Shader &shader) const
+void Model::draw(const Shader& shader) const
 {
     shader.setMat4("model", transform);
     for (unsigned int i = 0; i < meshes.size(); i++)

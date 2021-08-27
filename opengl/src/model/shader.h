@@ -10,7 +10,7 @@ class Shader
 public:
     unsigned int ID;
 
-    Shader(const std::string &vertexPath, const std::string &geometryPath, const std::string &fragmentPath) : vertexPath(vertexPath), geometryPath(geometryPath), fragmentPath(fragmentPath)
+    Shader(const std::string &vertexPath, const std::string &fragmentPath) : vertexPath(vertexPath), fragmentPath(fragmentPath)
     {
     }
 

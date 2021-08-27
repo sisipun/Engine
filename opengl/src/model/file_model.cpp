@@ -75,7 +75,6 @@ Mesh FileModel::processMesh(const aiMesh *mesh, const aiScene *scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Material> materials;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -122,42 +121,43 @@ Mesh FileModel::processMesh(const aiMesh *mesh, const aiScene *scene)
         }
     }
 
-    if (mesh->mMaterialIndex >= 0)
+    if (mesh->mMaterialIndex < 0)
     {
-        aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-
-        aiColor3D ambientColor;
-        material->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor);
-        glm::vec3 ambient = glm::vec3(ambientColor.r, ambientColor.g, ambientColor.b);
-
-        aiColor3D diffuseColor;
-        material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
-        glm::vec3 diffuse = glm::vec3(diffuseColor.r, diffuseColor.g, diffuseColor.b);
-
-        aiColor3D specularColor;
-        material->Get(AI_MATKEY_COLOR_SPECULAR, specularColor);
-        glm::vec3 specular = glm::vec3(specularColor.r, specularColor.g, specularColor.b);
-
-        std::vector<Texture> textures;
-        std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR, "texture_specular");
-        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-        std::vector<Texture> normalMaps = loadTextures(material, aiTextureType_HEIGHT, "texture_normal");
-        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-        std::vector<Texture> heightMaps = loadTextures(material, aiTextureType_AMBIENT, "texture_height");
-        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-
-        float shiness;
-        material->Get(AI_MATKEY_SHININESS, shiness);
-
-        float shinessStrength;
-        material->Get(AI_MATKEY_SHININESS_STRENGTH, shinessStrength);
-
-        materials.push_back(Material(ambient, diffuse, specular, textures, shiness, shinessStrength));
+        return Mesh(vertices, indices, Material(glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f), {}, 16.0f, 0.5f));
     }
 
-    return Mesh(vertices, indices, materials);
+    aiMaterial *aiMaterial = scene->mMaterials[mesh->mMaterialIndex];
+
+    aiColor3D ambientColor;
+    aiMaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor);
+    glm::vec3 ambient = glm::vec3(ambientColor.r, ambientColor.g, ambientColor.b);
+
+    aiColor3D diffuseColor;
+    aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor);
+    glm::vec3 diffuse = glm::vec3(diffuseColor.r, diffuseColor.g, diffuseColor.b);
+
+    aiColor3D specularColor;
+    aiMaterial->Get(AI_MATKEY_COLOR_SPECULAR, specularColor);
+    glm::vec3 specular = glm::vec3(specularColor.r, specularColor.g, specularColor.b);
+
+    std::vector<Texture> textures;
+    std::vector<Texture> diffuseMaps = loadTextures(aiMaterial, aiTextureType_DIFFUSE, "texture_diffuse");
+    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    std::vector<Texture> specularMaps = loadTextures(aiMaterial, aiTextureType_SPECULAR, "texture_specular");
+    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    std::vector<Texture> normalMaps = loadTextures(aiMaterial, aiTextureType_HEIGHT, "texture_normal");
+    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    std::vector<Texture> heightMaps = loadTextures(aiMaterial, aiTextureType_AMBIENT, "texture_height");
+    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+
+    float shiness;
+    aiMaterial->Get(AI_MATKEY_SHININESS, shiness);
+
+    float shinessStrength;
+    aiMaterial->Get(AI_MATKEY_SHININESS_STRENGTH, shinessStrength);
+
+    Material material(ambient, diffuse, specular, textures, shiness, shinessStrength);
+    return Mesh(vertices, indices, material);
 }
 
 std::vector<Texture> FileModel::loadTextures(const aiMaterial *material, const aiTextureType type, const std::string &typeName)
