@@ -11,40 +11,55 @@ find_package(GLM REQUIRED)
 find_package(ASSIMP REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${GLM_INCLUDE_DIR} ${assimp_INCLUDE_DIRS})
 
-add_subdirectory(glad/)
-add_subdirectory(stbimage/)
+add_subdirectory(lib/glad/)
+add_subdirectory(lib/stbimage/)
 
 set(SOURCE_LIB
-    shader.h
-    shader.cpp
+    src/bindable.h
+    
+    src/model/shader.h
+    src/model/shader.cpp
 
-    camera.h
-    camera.cpp
+    src/camera/camera.h
+    src/camera/camera.cpp
 
-    light.h
-    light.cpp
+    src/light/light.h
+    src/light/light.cpp
 
-    point_light.h
-    point_light.cpp
+    src/light/point_light.h
+    src/light/point_light.cpp
 
-    dir_light.h
-    dir_light.cpp
+    src/light/dir_light.h
+    src/light/dir_light.cpp
 
-    material.h
-    material.cpp
+    src/model/material.h
+    src/model/material.cpp
 
-    mesh.h
-    mesh.cpp
+    src/model/mesh.h
+    src/model/mesh.cpp
 
-    model.h
-    model.cpp
+    src/model/model.h
+    src/model/model.cpp
 
-    renderer.h
-    renderer.cpp
+    src/model/file_model.h
+    src/model/file_model.cpp
+
+    src/util/camera_util.h
+    src/util/light_util.h
+    src/util/model_util.h
+    src/util/shader_util.h
+
+    src/scene/scene.h
+    src/scene/scene.cpp
+    # src/scene/examples/backpack_scene.h
+    src/scene/examples/base_box_scene.h
+
+    src/renderer.h
+    src/renderer.cpp
 )
 
 add_library(Components STATIC ${SOURCE_LIB})
-add_executable(OpenGL main.cpp)
+add_executable(OpenGL src/main.cpp)
 
 target_link_libraries(Components GLAD STBIMAGE ${assimp_LIBRARIES} ${GLM_LIBRARIES}  ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
 target_link_libraries(OpenGL Components)
