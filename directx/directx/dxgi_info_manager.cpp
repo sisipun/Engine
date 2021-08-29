@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "base_hr_exception.h"
+#include "base_throw_macros.h"
 #include "dxgi_info_manager.h"
 
 DxgiInfoManager::DxgiInfoManager()
@@ -11,20 +12,17 @@ DxgiInfoManager::DxgiInfoManager()
 	const auto hModDxgiDebug = LoadLibraryEx("dxgidebug.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
 	if (hModDxgiDebug == nullptr)
 	{
-		throw BaseHrException::BaseHrException(__LINE__, __FILE__, GetLastError());
+		BASE_THROW_LAST_ERROR();
 	}
 
 	const auto DxgiGetDebugInterface = reinterpret_cast<DXGIGetDebugInterface>(reinterpret_cast<void*>(GetProcAddress(hModDxgiDebug, "DXGIGetDebugInterface")));
 	if (DxgiGetDebugInterface == nullptr)
 	{
-		throw BaseHrException::BaseHrException(__LINE__, __FILE__, GetLastError());
+		BASE_THROW_LAST_ERROR();
 	}
 
 	HRESULT hResult;
-	if (FAILED(hResult = DxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &dxgiInfoQueue)))
-	{
-		throw BaseHrException::BaseHrException(__LINE__, __FILE__, hResult);
-	}
+	BASE_THROW_NOINFO(hResult, DxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &dxgiInfoQueue));
 }
 
 void DxgiInfoManager::set() noexcept
@@ -40,17 +38,11 @@ std::vector<std::string> DxgiInfoManager::getMessages() const
 	{
 		HRESULT hResult;
 		SIZE_T messageLength;
-		if (FAILED(hResult = dxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, nullptr, &messageLength)))
-		{
-			throw BaseHrException::BaseHrException(__LINE__, __FILE__, hResult);
-		}
+		BASE_THROW_NOINFO(hResult, dxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, nullptr, &messageLength));
 		
 		auto bytes = std::make_unique<byte[]>(messageLength);
 		auto pMessage = reinterpret_cast<DXGI_INFO_QUEUE_MESSAGE*>(bytes.get());
-		if (FAILED(hResult = dxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, pMessage, &messageLength)))
-		{
-			throw BaseHrException::BaseHrException(__LINE__, __FILE__, hResult);
-		}
+		BASE_THROW_NOINFO(hResult, dxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, pMessage, &messageLength));
 		messages.emplace_back(pMessage->pDescription);
 	}
 	return messages;

@@ -178,12 +178,15 @@
     <ClInclude Include="app.h" />
     <ClInclude Include="base_exception.h" />
     <ClInclude Include="base_hr_exception.h" />
+    <ClInclude Include="base_throw_macros.h" />
     <ClInclude Include="dxgi_info_manager.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="renderer_throw_macros.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="window.h" />
+    <ClInclude Include="window_throw_macros.h" />
     <ClInclude Include="win_api.h" />
   </ItemGroup>
   <ItemGroup>

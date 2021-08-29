@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 
 #include "renderer.h"
+#include "renderer_throw_macros.h"
 
 Renderer::Renderer(HWND hWnd)
 {
@@ -30,7 +31,7 @@ Renderer::Renderer(HWND hWnd)
 #endif
 
 	HRESULT hResult;
-	if (FAILED(hResult = D3D11CreateDeviceAndSwapChain(
+	RENDERER_THROW_NOINFO(hResult, D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -43,31 +44,19 @@ Renderer::Renderer(HWND hWnd)
 		&device,
 		nullptr,
 		&deviceContext
-	)))
-	{
-		throw Renderer::HrException(__LINE__, __FILE__, hResult);
-	}
+	));
 
 	Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
-	if (FAILED(hResult = swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer)))
-	{
-		throw Renderer::HrException(__LINE__, __FILE__, hResult);
-	}
-	if (FAILED(hResult = device->CreateRenderTargetView(backBuffer.Get(), nullptr, &renderTarget)))
-	{
-		throw Renderer::HrException(__LINE__, __FILE__, hResult);
-	}
+	RENDERER_THROW_NOINFO(hResult, swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
+	RENDERER_THROW_NOINFO(hResult, device->CreateRenderTargetView(backBuffer.Get(), nullptr, &renderTarget));
 
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
 	depthStencilDesc.DepthEnable = TRUE;
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
-	if (FAILED(hResult = device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState)))
-	{
-		throw Renderer::HrException(__LINE__, __FILE__, hResult);
-	}
 
+	RENDERER_THROW_NOINFO(hResult, device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
 	deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
@@ -81,38 +70,21 @@ Renderer::Renderer(HWND hWnd)
 	depthStencilTextureDesc.SampleDesc.Quality = 0;
 	depthStencilTextureDesc.Usage = D3D11_USAGE_DEFAULT;
 	depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	if (FAILED(hResult = device->CreateTexture2D(&depthStencilTextureDesc, nullptr, &depthStencilTexture)))
-	{
-		throw Renderer::HrException(__LINE__, __FILE__, hResult);
-	}
+	RENDERER_THROW_NOINFO(hResult, device->CreateTexture2D(&depthStencilTextureDesc, nullptr, &depthStencilTexture));
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc = {};
 	depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
-	if (FAILED(hResult = device->CreateDepthStencilView(depthStencilTexture.Get(), &depthStencilViewDesc, &depthStencilView)))
-	{
-		throw Renderer::HrException(__LINE__, __FILE__, hResult);
-	}
+	RENDERER_THROW_NOINFO(hResult, device->CreateDepthStencilView(depthStencilTexture.Get(), &depthStencilViewDesc, &depthStencilView));
 
 	deviceContext->OMSetRenderTargets(1, renderTarget.GetAddressOf(), depthStencilView.Get());
 }
 
 void Renderer::endFrame()
 {
-#ifndef NDEBUG
-	infoManager.set();
-#endif
 	HRESULT hResult;
-	if (FAILED(hResult = swapChain->Present(1u, 0u)))
-	{
-		if (hResult == DXGI_ERROR_DEVICE_REMOVED)
-		{
-			throw Renderer::DeviceRemovedException(__LINE__, __FILE__, hResult);
-		}
-
-		throw Renderer::HrException(__LINE__, __FILE__, hResult);
-	}
+	RENDERER_THROW_NOINFO(hResult, swapChain->Present(1u, 0u));
 }
 
 void Renderer::clearBuffer(float red, float green, float blue) noexcept
@@ -167,10 +139,7 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 	vertexSourceData.pSysMem = vertices;
 
 	HRESULT hResult;
-	if (FAILED(hResult = device->CreateBuffer(&vertexBufferDesription, &vertexSourceData, &vertexBuffer)))
-	{
-		throw HrException(__LINE__, __FILE__, hResult);
-	}
+	RENDERER_THROW_NOINFO(hResult, device->CreateBuffer(&vertexBufferDesription, &vertexSourceData, &vertexBuffer));
 
 	const UINT stride = sizeof(Vertex);
 	const UINT offset = 0;
@@ -199,10 +168,7 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 	D3D11_SUBRESOURCE_DATA indexSourceData = {};
 	indexSourceData.pSysMem = indices;
 
-	if (FAILED(hResult = device->CreateBuffer(&indexBufferDesription, &indexSourceData, &indexBuffer)))
-	{
-		throw HrException(__LINE__, __FILE__, hResult);
-	}
+	RENDERER_THROW_NOINFO(hResult, device->CreateBuffer(&indexBufferDesription, &indexSourceData, &indexBuffer));
 
 	deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
@@ -247,10 +213,7 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 	D3D11_SUBRESOURCE_DATA constantSourceData = {};
 	constantSourceData.pSysMem = &constantData;
 
-	if (FAILED(hResult = device->CreateBuffer(&constantBufferDesription, &constantSourceData, &constantBuffer)))
-	{
-		throw HrException(__LINE__, __FILE__, hResult);
-	}
+	RENDERER_THROW_NOINFO(hResult, device->CreateBuffer(&constantBufferDesription, &constantSourceData, &constantBuffer));
 
 	deviceContext->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
 	deviceContext->PSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
@@ -286,15 +249,7 @@ void Renderer::drawTestTriangle(float angle, float x, float y)
 	viewport.TopLeftY = 0;
 	deviceContext->RSSetViewports(1, &viewport);
 
-#ifndef NDEBUG
-	infoManager.set();
-#endif
-
-	deviceContext->DrawIndexed((UINT)std::size(indices), 0, 0);
-
-#ifndef NDEBUG
-	{ auto v = infoManager.getMessages(); if (!v.empty()) { throw Renderer::InfoException(__LINE__, __FILE__, v); } }
-#endif
+	CHECK_INFO_MESSAGES(deviceContext->DrawIndexed((UINT)std::size(indices), 0, 0));
 }
 
 Renderer::InfoException::InfoException(int line, const char* file, std::vector<std::string> infoMessages) noexcept : BaseException(line, file)

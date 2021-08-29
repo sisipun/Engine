@@ -77,6 +77,15 @@
     <ClInclude Include="dxgi_info_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="renderer_throw_macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="window_throw_macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="base_throw_macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vertex.hlsl" />

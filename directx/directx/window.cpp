@@ -1,4 +1,5 @@
 #include "window.h"
+#include "window_throw_macros.h"
 
 Window::WindowClass Window::WindowClass::wndClass;
 
@@ -21,7 +22,7 @@ Window::Window(int x, int y, int width, int height, const char* name) : width(wi
 	wr.bottom = wr.top + height;
 	if (!AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE))
 	{
-		throw  Window::HrException(__LINE__, __FILE__, GetLastError());
+		WINDOW_THROW_LAST_ERROR();
 	}
 
 	hWnd = CreateWindow(
@@ -40,7 +41,7 @@ Window::Window(int x, int y, int width, int height, const char* name) : width(wi
 
 	if (hWnd == nullptr)
 	{
-		throw  Window::HrException(__LINE__, __FILE__, GetLastError());
+		WINDOW_THROW_LAST_ERROR();
 	}
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
@@ -57,7 +58,7 @@ void Window::setTitle(const std::string& title)
 {
 	if (!SetWindowText(hWnd, title.c_str()))
 	{
-		throw Window::HrException(__LINE__, __FILE__, GetLastError());
+		WINDOW_THROW_LAST_ERROR();
 	}
 }
 
@@ -82,7 +83,7 @@ Renderer& Window::getRenderer() const
 {
 	if (!renderer)
 	{
-		throw NoRendererException(__LINE__, __FILE__);
+		WINDOW_THROW_NO_RENDERER();
 	}
 	return *renderer;
 }
