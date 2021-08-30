@@ -3,7 +3,7 @@
 #include "scene/examples/base_box_scene.h"
 #include "scene/examples/monkey_scene.h"
 #include "scene/examples/backpack_scene.h"
-#include "renderer.h"
+#include "window.h"
 
 static const int SCREEN_WIDTH = 800;
 static const int SCREEN_HEIGHT = 600;
@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
 {
     bool quit = false;
 
-    Renderer renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
-    BackpackScene scene = BackpackScene();
+    Window window(SCREEN_WIDTH, SCREEN_HEIGHT);
+    BaseBoxScene scene = BaseBoxScene();
 
     SDL_Event event;
     while (!quit)
@@ -23,11 +23,13 @@ int main(int argc, char *argv[])
             if (event.type == SDL_QUIT)
             {
                 quit = true;
-            } else {
+            }
+            else
+            {
                 scene.update(event);
             }
         }
-        renderer.render(scene);
+        window.getRenderer().draw(scene);
     }
 
     return 0;

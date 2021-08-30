@@ -16,6 +16,7 @@ add_subdirectory(lib/stbimage/)
 
 set(SOURCE_LIB
     src/bindable.h
+    src/drawable.h
     
     src/model/shader.h
     src/model/shader.cpp
@@ -51,11 +52,15 @@ set(SOURCE_LIB
 
     src/scene/scene.h
     src/scene/scene.cpp
-    # src/scene/examples/backpack_scene.h
     src/scene/examples/base_box_scene.h
+    src/scene/examples/backpack_scene.h
+    src/scene/examples/monkey_scene.h
 
     src/renderer.h
     src/renderer.cpp
+
+    src/window.h
+    src/window.cpp
 )
 
 add_library(Components STATIC ${SOURCE_LIB})

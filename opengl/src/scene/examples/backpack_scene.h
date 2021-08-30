@@ -20,7 +20,7 @@ public:
         bindables.push_back(&this->light);
         bindables.push_back(&this->model);
 
-        models.push_back(&this->model);
+        drawables.push_back(&this->model);
     }
 
     void update(SDL_Event event) override

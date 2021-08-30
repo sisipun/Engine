@@ -3,9 +3,8 @@
 
 #include <vector>
 
-#include <glm/glm.hpp>
-
 #include "../bindable.h"
+#include "../drawable.h"
 #include "material.h"
 
 struct Vertex
@@ -15,14 +14,14 @@ struct Vertex
     glm::vec2 textureCoords;
 };
 
-class Mesh : public Bindable
+class Mesh : public Bindable, public Drawable
 {
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Material material);
 
     void bind(const Shader &shader) const override;
 
-    void draw() const;
+    void draw() const override;
 
 private:
     unsigned int VAO, VBO, EBO;

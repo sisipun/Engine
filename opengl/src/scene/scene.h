@@ -22,7 +22,7 @@ public:
     virtual void update(SDL_Event event);
 
 protected:
-    std::vector<Model*> models;
+    std::vector<Drawable*> drawables;
     std::vector<Bindable*> bindables;
     Shader shader;
 };
