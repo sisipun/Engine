@@ -6,9 +6,10 @@
 #include <glm/glm.hpp>
 
 #include "../bindable.h"
+#include "../drawable.h"
 #include "mesh.h"
 
-class Model : public Bindable
+class Model : public Bindable, public Drawable
 {
 public:
     Model() : Model(std::vector<Mesh>())
@@ -25,7 +26,7 @@ public:
 
     void bind(const Shader &shader) const override;
 
-    void draw() const;
+    void draw() const override;
 
     glm::mat4 transform;
 

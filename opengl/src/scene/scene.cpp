@@ -8,13 +8,13 @@ void Scene::draw() const
 {
     shader.use();
 
-    for (int i = 0; i < bindables.size(); i++)
+    for (Bindable* bindable:  bindables)
     {
-        bindables[i]->bind(shader);
+        bindable->bind(shader);
     }
 
-    for (int i = 0; i < models.size(); i++)
+    for (Drawable* drawable: drawables)
     {
-        models[i]->draw();
+        drawable->draw();
     }
 }

@@ -2,8 +2,6 @@
 
 #include "material.h"
 
-#include <iostream>
-
 void Material::bind(const Shader &shader) const {
     unsigned int diffuseNumber = 1;
     unsigned int specularNumber = 1;

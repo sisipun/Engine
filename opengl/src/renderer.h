@@ -10,18 +10,15 @@
 class Renderer
 {
 public:
-    Renderer(int screenWidth, int screeHeight);
-
+    Renderer(SDL_Window *window);
+    Renderer(const Renderer &renderer) = delete;
+    Renderer &operator=(const Renderer &renderer) = delete;
     ~Renderer();
 
-    void render(const Scene &scene) const;
+    void draw(const Scene &scene) const;
 
 private:
-    int screenWidth;
-    int screenHeight;
-
     SDL_GLContext context;
-    SDL_Event event;
     SDL_Window *window;
 };
 
