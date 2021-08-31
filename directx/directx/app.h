@@ -8,6 +8,7 @@ class App
 {
 public:
 	App();
+	~App();
 
 	int start();
 
@@ -16,6 +17,7 @@ private:
 
 	Window window;
 	Timer timer;
+	std::vector<std::unique_ptr<class Box>> boxes;
 };
 
 #endif 

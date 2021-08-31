@@ -166,12 +166,21 @@
     <ClCompile Include="app.cpp" />
     <ClCompile Include="base_exception.cpp" />
     <ClCompile Include="base_hr_exception.cpp" />
+    <ClCompile Include="box.cpp" />
+    <ClCompile Include="drawable.cpp" />
     <ClCompile Include="dxgi_info_manager.cpp" />
+    <ClCompile Include="index_buffer.cpp" />
+    <ClCompile Include="input_layout.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mouse.cpp" />
+    <ClCompile Include="pixel_shader.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="topology.cpp" />
+    <ClCompile Include="transform_cbuf.cpp" />
+    <ClCompile Include="vertex_buffer.cpp" />
+    <ClCompile Include="vertex_shader.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -179,12 +188,23 @@
     <ClInclude Include="base_exception.h" />
     <ClInclude Include="base_hr_exception.h" />
     <ClInclude Include="base_throw_macros.h" />
+    <ClInclude Include="bindable.h" />
+    <ClInclude Include="box.h" />
+    <ClInclude Include="constant_buffer.h" />
+    <ClInclude Include="drawable.h" />
     <ClInclude Include="dxgi_info_manager.h" />
+    <ClInclude Include="index_buffer.h" />
+    <ClInclude Include="input_layout.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="mouse.h" />
+    <ClInclude Include="pixel_shader.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_throw_macros.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="topology.h" />
+    <ClInclude Include="transform_cbuf.h" />
+    <ClInclude Include="vertex_buffer.h" />
+    <ClInclude Include="vertex_shader.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="window_throw_macros.h" />
     <ClInclude Include="win_api.h" />

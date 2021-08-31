@@ -3,7 +3,12 @@
 
 #include <vector>
 #include <string>
+#include <memory>
+#include <random>
+
 #include <d3d11.h>
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
 #include <wrl.h>
 
 #include "win_api.h"
@@ -41,18 +46,31 @@ public:
 	Renderer(const Renderer&) = delete;
 	Renderer& operator=(const Renderer&) = delete;
 	~Renderer() = default;
+
 	void endFrame();
 	void clearBuffer(float red, float green, float blue) noexcept;
-	void drawTestTriangle(float angle, float x, float y);
+	void drawIndexed(UINT count) const;
+
+	ID3D11Device* getDevice() const noexcept;
+	ID3D11DeviceContext* getContext() const noexcept;
+	DirectX::XMMATRIX getProjection() const noexcept;
+	void setProjection(DirectX::XMMATRIX projection) noexcept;
+
+#ifndef NDEBUG
+	DxgiInfoManager& getInfoManager() noexcept;
+#endif
+
 private:
+	DirectX::XMMATRIX projection;
+	Microsoft::WRL::ComPtr<ID3D11Device> device;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTarget;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
 #endif
-	Microsoft::WRL::ComPtr<ID3D11Device> device;
-	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTarget;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 };
 
 #endif

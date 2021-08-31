@@ -2,8 +2,25 @@
 #include <optional>
 
 #include "app.h"
+#include "box.h"
 
 App::App() : window(100, 100, 800, 600, "Basic window")
+{
+	std::mt19937 range(std::random_device{}());
+	std::uniform_real_distribution<float> radiusDist(6.0f, 20.0f);
+	std::uniform_real_distribution<float> anglesDist(0.0f, 3.1415f * 2.0f);
+	std::uniform_real_distribution<float> deltaAnglesDist(0.0f, 3.1415f * 0.3f);
+	std::uniform_real_distribution<float> deltaOrientationDist(0.0f, 3.1415f * 2.0f);
+
+	for (unsigned int i = 0; i < 80; i++)
+	{
+		boxes.push_back(std::make_unique<Box>(window.getRenderer(), range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist));
+	}
+
+	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5, 40.0f));
+}
+
+App::~App()
 {
 }
 
@@ -22,17 +39,13 @@ int App::start()
 
 void App::processFrame()
 {
-	window.getRenderer().clearBuffer(sin(timer.peek()), cos(timer.peek()), 0.5f);
-	window.getRenderer().drawTestTriangle(
-		-timer.peek(),
-		0.0f,
-		0.0f
-	);
-	window.getRenderer().drawTestTriangle(
-		timer.peek(), 
-		window.mouse.getPositionX() / (window.getWidth() / 2.0f) - 1.0f,
-		-window.mouse.getPositionY() / (window.getHeight() / 2.0f) + 1.0f
-	);
+	auto dt = timer.mark();
+	window.getRenderer().clearBuffer(0.07f, 0.0f, 0.12f);
+	for (auto& box : boxes)
+	{
+		box->update(dt);
+		box->draw(window.getRenderer());
+	}
 	window.getRenderer().endFrame();
 	if (window.keyboard.keyIsPressed(VK_SPACE))
 	{

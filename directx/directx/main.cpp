@@ -1,6 +1,8 @@
 #include "app.h"
 #include "base_exception.h"
 
+#include "constant_buffer.h"
+
 #include <sstream>
 
 int CALLBACK WinMain(

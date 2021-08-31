@@ -59,7 +59,7 @@ private:
 		WindowClass() noexcept;
 		~WindowClass();
 		WindowClass(const WindowClass&) = delete;
-		WindowClass operator=(const WindowClass&) = delete;
+		WindowClass& operator=(const WindowClass&) = delete;
 		static WindowClass wndClass;
 		static constexpr const char* wndClassName = "WindowClass";
 		HINSTANCE hInstance;

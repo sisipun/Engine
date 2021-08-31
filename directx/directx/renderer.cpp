@@ -43,7 +43,7 @@ Renderer::Renderer(HWND hWnd)
 		&swapChain,
 		&device,
 		nullptr,
-		&deviceContext
+		&context
 	));
 
 	Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
@@ -57,7 +57,7 @@ Renderer::Renderer(HWND hWnd)
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 
 	RENDERER_THROW_NOINFO(hResult, device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
-	deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
+	context->OMSetDepthStencilState(depthStencilState.Get(), 1);
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
 	D3D11_TEXTURE2D_DESC depthStencilTextureDesc = {};
@@ -78,7 +78,16 @@ Renderer::Renderer(HWND hWnd)
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 	RENDERER_THROW_NOINFO(hResult, device->CreateDepthStencilView(depthStencilTexture.Get(), &depthStencilViewDesc, &depthStencilView));
 
-	deviceContext->OMSetRenderTargets(1, renderTarget.GetAddressOf(), depthStencilView.Get());
+	context->OMSetRenderTargets(1, renderTarget.GetAddressOf(), depthStencilView.Get());
+
+	D3D11_VIEWPORT viewport;
+	viewport.Width = 800;
+	viewport.Height = 600;
+	viewport.MinDepth = 0;
+	viewport.MaxDepth = 1;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	context->RSSetViewports(1, &viewport);
 }
 
 void Renderer::endFrame()
@@ -90,166 +99,13 @@ void Renderer::endFrame()
 void Renderer::clearBuffer(float red, float green, float blue) noexcept
 {
 	const float color[] = { red, green, blue };
-	deviceContext->ClearRenderTargetView(renderTarget.Get(), color);
-	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	context->ClearRenderTargetView(renderTarget.Get(), color);
+	context->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void Renderer::drawTestTriangle(float angle, float x, float y)
+void Renderer::drawIndexed(UINT count) const
 {
-	struct Vertex
-	{
-		struct
-		{
-			float x;
-			float y;
-			float z;
-		} pos;
-		struct
-		{
-			unsigned char r;
-			unsigned char g;
-			unsigned char b;
-			unsigned char a;
-		} color;
-	};
-
-	const Vertex vertices[] =
-	{
-		{ -1.0f,-1.0f,-1.0f	 },
-		{ 1.0f,-1.0f,-1.0f	 },
-		{ -1.0f,1.0f,-1.0f	 },
-		{ 1.0f,1.0f,-1.0f	  },
-		{ -1.0f,-1.0f,1.0f	 },
-		{ 1.0f,-1.0f,1.0f	  },
-		{ -1.0f,1.0f,1.0f	 },
-		{ 1.0f,1.0f,1.0f	 },
-	};
-
-	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-
-	D3D11_BUFFER_DESC vertexBufferDesription = {};
-	vertexBufferDesription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesription.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesription.CPUAccessFlags = 0;
-	vertexBufferDesription.MiscFlags = 0;
-	vertexBufferDesription.ByteWidth = sizeof(vertices);
-	vertexBufferDesription.StructureByteStride = sizeof(Vertex);
-
-	D3D11_SUBRESOURCE_DATA vertexSourceData = {};
-	vertexSourceData.pSysMem = vertices;
-
-	HRESULT hResult;
-	RENDERER_THROW_NOINFO(hResult, device->CreateBuffer(&vertexBufferDesription, &vertexSourceData, &vertexBuffer));
-
-	const UINT stride = sizeof(Vertex);
-	const UINT offset = 0;
-	deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-
-	const unsigned short indices[] =
-	{
-		0,2,1, 2,3,1,
-		1,3,5, 3,7,5,
-		2,6,3, 3,6,7,
-		4,5,7, 4,7,6,
-		0,4,2, 2,4,6,
-		0,1,4, 1,5,4
-	};
-
-	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
-
-	D3D11_BUFFER_DESC indexBufferDesription = {};
-	indexBufferDesription.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesription.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesription.CPUAccessFlags = 0;
-	indexBufferDesription.MiscFlags = 0;
-	indexBufferDesription.ByteWidth = sizeof(indices);
-	indexBufferDesription.StructureByteStride = sizeof(unsigned short);
-
-	D3D11_SUBRESOURCE_DATA indexSourceData = {};
-	indexSourceData.pSysMem = indices;
-
-	RENDERER_THROW_NOINFO(hResult, device->CreateBuffer(&indexBufferDesription, &indexSourceData, &indexBuffer));
-
-	deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
-
-	struct ConstantData
-	{
-		DirectX::XMMATRIX transform;
-		struct
-		{
-			float r;
-			float g;
-			float b;
-			float a;
-		} face_colors[6];
-	};
-	const ConstantData constantData = {
-		DirectX::XMMatrixTranspose(
-			DirectX::XMMatrixRotationZ(angle) *
-			DirectX::XMMatrixRotationX(angle) *
-			DirectX::XMMatrixTranslation(x, y, 4.0f) *
-			DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.f)
-		),
-		{
-			{1.0f,0.0f,1.0f},
-			{1.0f,0.0f,0.0f},
-			{0.0f,1.0f,0.0f},
-			{0.0f,0.0f,1.0f},
-			{1.0f,1.0f,0.0f},
-			{0.0f,1.0f,1.0f},
-		}
-	};
-
-	Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
-
-	D3D11_BUFFER_DESC constantBufferDesription = {};
-	constantBufferDesription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	constantBufferDesription.Usage = D3D11_USAGE_DYNAMIC;
-	constantBufferDesription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	constantBufferDesription.MiscFlags = 0;
-	constantBufferDesription.ByteWidth = sizeof(constantData);
-	constantBufferDesription.StructureByteStride = sizeof(ConstantData);
-
-	D3D11_SUBRESOURCE_DATA constantSourceData = {};
-	constantSourceData.pSysMem = &constantData;
-
-	RENDERER_THROW_NOINFO(hResult, device->CreateBuffer(&constantBufferDesription, &constantSourceData, &constantBuffer));
-
-	deviceContext->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
-	deviceContext->PSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
-
-	Microsoft::WRL::ComPtr<ID3DBlob> blob;
-
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-	D3DReadFileToBlob(L"pixel.cso", &blob);
-	device->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &pixelShader);
-	deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
-
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-	D3DReadFileToBlob(L"vertex.cso", &blob);
-	device->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &vertexShader);
-	deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
-
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
-	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[] =
-	{
-		{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
-	device->CreateInputLayout(inputElementDesc, (UINT)std::size(inputElementDesc), blob->GetBufferPointer(), blob->GetBufferSize(), &inputLayout);
-
-	deviceContext->IASetInputLayout(inputLayout.Get());
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	D3D11_VIEWPORT viewport;
-	viewport.Width = 800;
-	viewport.Height = 600;
-	viewport.MinDepth = 0;
-	viewport.MaxDepth = 1;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	deviceContext->RSSetViewports(1, &viewport);
-
-	CHECK_INFO_MESSAGES(deviceContext->DrawIndexed((UINT)std::size(indices), 0, 0));
+	CHECK_INFO_MESSAGES(context->DrawIndexed(count, 0, 0));
 }
 
 Renderer::InfoException::InfoException(int line, const char* file, std::vector<std::string> infoMessages) noexcept : BaseException(line, file)
@@ -265,6 +121,32 @@ Renderer::InfoException::InfoException(int line, const char* file, std::vector<s
 	}
 }
 
+ID3D11Device* Renderer::getDevice() const noexcept
+{
+	return device.Get();
+}
+
+ID3D11DeviceContext* Renderer::getContext() const noexcept
+{
+	return context.Get();
+}
+
+DirectX::XMMATRIX Renderer::getProjection() const noexcept
+{
+	return projection;
+}
+
+void Renderer::setProjection(DirectX::XMMATRIX projection) noexcept
+{
+	this->projection = projection;
+}
+
+#ifndef NDEBUG
+DxgiInfoManager& Renderer::getInfoManager() noexcept
+{
+	return infoManager;
+}
+#endif
 
 const char* Renderer::InfoException::what() const noexcept
 {

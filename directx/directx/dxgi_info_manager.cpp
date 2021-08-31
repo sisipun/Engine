@@ -25,7 +25,7 @@ DxgiInfoManager::DxgiInfoManager()
 	BASE_THROW_NOINFO(hResult, DxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &dxgiInfoQueue));
 }
 
-void DxgiInfoManager::set() noexcept
+void DxgiInfoManager::set() const noexcept
 {
 	next = dxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
 }

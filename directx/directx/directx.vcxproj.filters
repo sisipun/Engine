@@ -13,6 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\drawable">
+      <UniqueIdentifier>{f1f054a3-5f32-4e32-8603-8cd91f5cd44c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\bindable">
+      <UniqueIdentifier>{87522ccf-3da1-46ff-8e18-7ccb0fb4b75b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\drawable">
+      <UniqueIdentifier>{efa5c2f0-daaa-48e0-b752-dd7cd8a53016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{ec81b98e-e9bb-4f09-9181-c8604f57ed8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\macros">
+      <UniqueIdentifier>{b31a41db-1e01-4ab8-b842-417c0c47a24f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\bindable">
+      <UniqueIdentifier>{7085bd2b-0c51-439d-8b0d-8dd0754c3c47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -44,6 +62,33 @@
     </ClCompile>
     <ClCompile Include="dxgi_info_manager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drawable.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="index_buffer.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="input_layout.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="pixel_shader.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex_shader.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="transform_cbuf.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="topology.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex_buffer.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="box.cpp">
+      <Filter>Source Files\drawable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,19 +122,56 @@
     <ClInclude Include="dxgi_info_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bindable.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_buffer.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
     <ClInclude Include="renderer_throw_macros.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\macros</Filter>
     </ClInclude>
     <ClInclude Include="window_throw_macros.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\macros</Filter>
     </ClInclude>
     <ClInclude Include="base_throw_macros.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\macros</Filter>
+    </ClInclude>
+    <ClInclude Include="drawable.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="index_buffer.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="input_layout.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="pixel_shader.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex_shader.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="transform_cbuf.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="topology.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex_buffer.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="box.h">
+      <Filter>Header Files\drawable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="vertex.hlsl" />
-    <FxCompile Include="pixel.hlsl" />
+    <FxCompile Include="pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="vertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

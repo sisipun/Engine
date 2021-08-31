@@ -83,7 +83,7 @@ Renderer& Window::getRenderer() const
 {
 	if (!renderer)
 	{
-		WINDOW_THROW_NO_RENDERER();
+		WINDOW_THROW_NO_RENDERER() ;
 	}
 	return *renderer;
 }

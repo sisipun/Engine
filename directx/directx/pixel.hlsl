@@ -1,6 +1,5 @@
 cbuffer ConstantData
 {
-	matrix transform;
 	float4 face_colors[6];
 };
 
