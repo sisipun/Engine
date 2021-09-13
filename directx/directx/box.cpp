@@ -28,76 +28,83 @@ Box::Box(
 	phi(anglesDist(range)),
 	chi(anglesDist(range))
 {
-	struct Vertex
+	if (!isStaticInitialized())
 	{
-		struct
+		struct Vertex
 		{
-			float x;
-			float y;
-			float z;
-		} pos;
-	};
+			struct
+			{
+				float x;
+				float y;
+				float z;
+			} pos;
+		};
 
-	const std::vector<Vertex> vertices = {
-		{ -1.0f,-1.0f,-1.0f },
-		{ 1.0f,-1.0f,-1.0f },
-		{ -1.0f,1.0f,-1.0f },
-		{ 1.0f,1.0f,-1.0f },
-		{ -1.0f,-1.0f,1.0f },
-		{ 1.0f,-1.0f,1.0f },
-		{ -1.0f,1.0f,1.0f },
-		{ 1.0f,1.0f,1.0f },
-	};
+		const std::vector<Vertex> vertices = {
+			{ -1.0f,-1.0f,-1.0f },
+			{ 1.0f,-1.0f,-1.0f },
+			{ -1.0f,1.0f,-1.0f },
+			{ 1.0f,1.0f,-1.0f },
+			{ -1.0f,-1.0f,1.0f },
+			{ 1.0f,-1.0f,1.0f },
+			{ -1.0f,1.0f,1.0f },
+			{ 1.0f,1.0f,1.0f },
+		};
 
-	addBind(std::make_unique<VertexBuffer>(renderer, vertices));
+		addStaticBind(std::make_unique<VertexBuffer>(renderer, vertices));
 
-	auto vertexShader = std::make_unique<VertexShader>(renderer, L"vertex.cso");
-	auto vertexShaderBytecode = vertexShader->getBytecode();
-	addBind(std::move(vertexShader));
+		auto vertexShader = std::make_unique<VertexShader>(renderer, L"vertex.cso");
+		auto vertexShaderBytecode = vertexShader->getBytecode();
+		addStaticBind(std::move(vertexShader));
 
-	addBind(std::make_unique<PixelShader>(renderer, L"pixel.cso"));
+		addStaticBind(std::make_unique<PixelShader>(renderer, L"pixel.cso"));
 
-	const std::vector<unsigned short> indices =
-	{
-		0,2,1, 2,3,1,
-		1,3,5, 3,7,5,
-		2,6,3, 3,6,7,
-		4,5,7, 4,7,6,
-		0,4,2, 2,4,6,
-		0,1,4, 1,5,4
-	};
-	addIndexBuffer(std::make_unique<IndexBuffer>(renderer, indices));
-
-	struct ConstantBuffer
-	{
-		struct
+		const std::vector<unsigned short> indices =
 		{
-			float r;
-			float g;
-			float b;
-			float a;
-		} face_colors[6];
-	};
-	const ConstantBuffer constantBuffer =
-	{
+			0,2,1, 2,3,1,
+			1,3,5, 3,7,5,
+			2,6,3, 3,6,7,
+			4,5,7, 4,7,6,
+			0,4,2, 2,4,6,
+			0,1,4, 1,5,4
+		};
+		addStaticIndexBuffer(std::make_unique<IndexBuffer>(renderer, indices));
+
+		struct ConstantBuffer
 		{
-			{ 1.0f, 0.0f, 1.0f },
-			{ 1.0f, 0.0f, 0.0f },
-			{ 0.0f, 1.0f, 0.0f },
-			{ 0.0f, 0.0f, 1.0f },
-			{ 1.0f, 1.0f, 0.0f },
-			{ 0.0f, 1.0f, 1.0f },
-		}
-	};
-	addBind(std::make_unique<PixelConstantBuffer<ConstantBuffer>>(renderer, constantBuffer));
+			struct
+			{
+				float r;
+				float g;
+				float b;
+				float a;
+			} face_colors[6];
+		};
+		const ConstantBuffer constantBuffer =
+		{
+			{
+				{ 1.0f, 0.0f, 1.0f },
+				{ 1.0f, 0.0f, 0.0f },
+				{ 0.0f, 1.0f, 0.0f },
+				{ 0.0f, 0.0f, 1.0f },
+				{ 1.0f, 1.0f, 0.0f },
+				{ 0.0f, 1.0f, 1.0f },
+			}
+		};
+		addStaticBind(std::make_unique<PixelConstantBuffer<ConstantBuffer>>(renderer, constantBuffer));
 
-	const std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc =
+		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc =
+		{
+			{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		};
+		addStaticBind(std::make_unique<InputLayout>(renderer, inputElementDesc, vertexShaderBytecode));
+
+		addStaticBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	}
+	else 
 	{
-		{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
-	addBind(std::make_unique<InputLayout>(renderer, inputElementDesc, vertexShaderBytecode));
-
-	addBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+		setIndexFromStatic();
+	}
 
 	addBind(std::make_unique<TransformCbuf>(renderer, *this));
 }

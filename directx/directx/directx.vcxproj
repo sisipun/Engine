@@ -192,6 +192,7 @@
     <ClInclude Include="box.h" />
     <ClInclude Include="constant_buffer.h" />
     <ClInclude Include="drawable.h" />
+    <ClInclude Include="drawable_base.h" />
     <ClInclude Include="dxgi_info_manager.h" />
     <ClInclude Include="index_buffer.h" />
     <ClInclude Include="input_layout.h" />

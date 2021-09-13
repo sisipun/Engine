@@ -14,7 +14,7 @@ public:
 	void bind(const Renderer& renderer) noexcept override;
 
 private:
-	VertexConstantBuffer<DirectX::XMMATRIX> vertexConstantBuffer;
+	static std::unique_ptr<VertexConstantBuffer<DirectX::XMMATRIX>> vertexConstantBuffer;
 	const Drawable& parent;
 };
 

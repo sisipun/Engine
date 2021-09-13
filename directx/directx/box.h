@@ -1,9 +1,9 @@
 #ifndef BOX_H
 #define BOX_H
 
-#include "drawable.h"
+#include "drawable_base.h"
 
-class Box : public Drawable
+class Box : public DrawableBase<Box>
 {
 public:
 	Box(

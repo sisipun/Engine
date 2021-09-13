@@ -7,6 +7,11 @@ void Drawable::draw(const Renderer& renderer) const
 		bind->bind(renderer);
 	}
 
+	for (auto& bind : getStaticBinds())
+	{
+		bind->bind(renderer);
+	}
+
 	renderer.drawIndexed(indexBuffer->getCount());
 }
 

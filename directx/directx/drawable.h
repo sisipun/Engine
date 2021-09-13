@@ -12,11 +12,13 @@ public:
 	virtual DirectX::XMMATRIX getTransform() const noexcept = 0;
 	void draw(const Renderer& renderer) const;
 	virtual void update(float dt) noexcept = 0;
+	virtual ~Drawable() = default;
+protected:
 	void addBind(std::unique_ptr<Bindable> bind) noexcept;
 	void addIndexBuffer(std::unique_ptr<class IndexBuffer> indexBuffer) noexcept;
-	virtual ~Drawable() = default;
-private:
 	const IndexBuffer* indexBuffer = nullptr;
+private:
+	virtual const std::vector<std::unique_ptr<Bindable>>& getStaticBinds() const noexcept = 0;
 	std::vector<std::unique_ptr<Bindable>> binds;
 };
 

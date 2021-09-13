@@ -164,6 +164,9 @@
     <ClInclude Include="box.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
+    <ClInclude Include="drawable_base.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pixel.hlsl">
