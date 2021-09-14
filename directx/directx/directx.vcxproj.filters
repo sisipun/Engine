@@ -31,6 +31,9 @@
     <Filter Include="Source Files\bindable">
       <UniqueIdentifier>{7085bd2b-0c51-439d-8b0d-8dd0754c3c47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\geometry">
+      <UniqueIdentifier>{4aa1c481-a7b8-4c97-8307-776b96bd661a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -88,6 +91,12 @@
       <Filter>Source Files\bindable</Filter>
     </ClCompile>
     <ClCompile Include="box.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="melon.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="pyramid.cpp">
       <Filter>Source Files\drawable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -167,12 +176,45 @@
     <ClInclude Include="drawable_base.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
+    <ClInclude Include="math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="indexed_triangle_list.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="cone.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="cube.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="plane.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="prism.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="melon.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="pyramid.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="pixel.hlsl">
+    <FxCompile Include="color_index_pixel.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="vertex.hlsl">
+    <FxCompile Include="color_index_vertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="color_blend_vertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="color_blend_pixel.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

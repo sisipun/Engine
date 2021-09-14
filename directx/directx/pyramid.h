@@ -1,18 +1,17 @@
-#ifndef BOX_H
-#define BOX_H
+#ifndef PYRAMID_H
+#define PYARMID_H
 
 #include "drawable_base.h"
 
-class Box : public DrawableBase<Box>
+class Pyramid : public DrawableBase<Pyramid>
 {
 public:
-	Box(const Renderer& renderer,
+	Pyramid(const Renderer& renderer,
 		std::mt19937& range,
 		std::uniform_real_distribution<float>& radiusDist,
 		std::uniform_real_distribution<float>& anglesDist,
 		std::uniform_real_distribution<float>& deltaAnglesDist,
-		std::uniform_real_distribution<float>& deltaOrientationDist,
-		std::uniform_real_distribution<float>& sizeDist);
+		std::uniform_real_distribution<float>& deltaOrientationDist);
 
 	void update(float dt) noexcept override;
 	DirectX::XMMATRIX getTransform() const noexcept override;
@@ -32,8 +31,6 @@ private:
 	float dtheta;
 	float dphi;
 	float dchi;
-
-	DirectX::XMFLOAT3X3 model;
 };
 
 #endif

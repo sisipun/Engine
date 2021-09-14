@@ -3,7 +3,7 @@
 
 #include "drawable.h"
 
-template<class T>
+template<typename T>
 class DrawableBase : public Drawable
 {
 protected:
@@ -44,7 +44,7 @@ private:
 	static std::vector<std::unique_ptr<Bindable>> staticBinds;
 };
 
-template<class T>
+template<typename T>
 std::vector<std::unique_ptr<Bindable>> DrawableBase<T>::staticBinds;
 
 #endif

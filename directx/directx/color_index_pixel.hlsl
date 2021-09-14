@@ -1,9 +1,9 @@
 cbuffer ConstantData
 {
-	float4 face_colors[6];
+	float4 face_colors[8];
 };
 
 float4 main(uint tid: SV_PrimitiveID) : SV_Target
 {
-	return face_colors[tid / 2];
+	return face_colors[(tid / 2) % 8];
 }
