@@ -8,6 +8,11 @@
 #include "pyramid.h"
 #include "math.h"
 
+#include "surface.h"
+#include "gdi_plus_manager.h"
+
+GDIPlusManager gdipm;
+
 App::App() : window(100, 100, 800, 600, "Basic window")
 {
 	class Factory
@@ -47,6 +52,8 @@ App::App() : window(100, 100, 800, 600, "Basic window")
 	Factory factory(window.getRenderer());
 	drawables.reserve(drawableCount);
 	std::generate_n(std::back_inserter(drawables), drawableCount, factory);
+
+	const auto s = Surface::fromFile("Images\\kappa50.png");
 
 	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5, 40.0f));
 }

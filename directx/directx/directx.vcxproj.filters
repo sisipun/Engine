@@ -99,6 +99,12 @@
     <ClCompile Include="pyramid.cpp">
       <Filter>Source Files\drawable</Filter>
     </ClCompile>
+    <ClCompile Include="surface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gdi_plus_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -202,6 +208,12 @@
     </ClInclude>
     <ClInclude Include="pyramid.h">
       <Filter>Header Files\drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="gdi_plus_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="surface.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

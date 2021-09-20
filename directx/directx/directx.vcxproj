@@ -169,6 +169,7 @@
     <ClCompile Include="box.cpp" />
     <ClCompile Include="drawable.cpp" />
     <ClCompile Include="dxgi_info_manager.cpp" />
+    <ClCompile Include="gdi_plus_manager.cpp" />
     <ClCompile Include="index_buffer.cpp" />
     <ClCompile Include="input_layout.cpp" />
     <ClCompile Include="keyboard.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="pixel_shader.cpp" />
     <ClCompile Include="pyramid.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="surface.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="topology.cpp" />
     <ClCompile Include="transform_cbuf.cpp" />
@@ -198,6 +200,7 @@
     <ClInclude Include="drawable.h" />
     <ClInclude Include="drawable_base.h" />
     <ClInclude Include="dxgi_info_manager.h" />
+    <ClInclude Include="gdi_plus_manager.h" />
     <ClInclude Include="indexed_triangle_list.h" />
     <ClInclude Include="index_buffer.h" />
     <ClInclude Include="input_layout.h" />
@@ -212,6 +215,7 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_throw_macros.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="surface.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="topology.h" />
     <ClInclude Include="transform_cbuf.h" />
