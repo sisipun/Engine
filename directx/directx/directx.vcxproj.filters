@@ -114,6 +114,9 @@
     <ClCompile Include="texture.cpp">
       <Filter>Source Files\bindable</Filter>
     </ClCompile>
+    <ClCompile Include="skinned_box.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -231,6 +234,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sheet.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="skinned_box.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
   </ItemGroup>

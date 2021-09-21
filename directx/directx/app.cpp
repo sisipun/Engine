@@ -7,6 +7,7 @@
 #include "melon.h"
 #include "pyramid.h"
 #include "sheet.h"
+#include "skinned_box.h"
 #include "math.h"
 #include "gdi_plus_manager.h"
 
@@ -33,6 +34,8 @@ App::App() : window(100, 100, 800, 600, "Basic window")
 				return std::make_unique<Melon>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, longDist, latDist);
 			case 3:
 				return std::make_unique<Sheet>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist);
+			case 4:
+				return std::make_unique<SkinnedBox>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist);
 			default:
 				return {};
 			}
@@ -47,7 +50,7 @@ App::App() : window(100, 100, 800, 600, "Basic window")
 		std::uniform_real_distribution<float> sizeDist{ 0.4f, 3.0f };
 		std::uniform_int_distribution<int> longDist{ 5, 20 };
 		std::uniform_int_distribution<int> latDist{ 10, 40 };
-		std::uniform_int_distribution<int> typeDist{ 0, 3 };
+		std::uniform_int_distribution<int> typeDist{ 0, 4 };
 	};
 
 	Factory factory(window.getRenderer());
