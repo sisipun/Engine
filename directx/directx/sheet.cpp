@@ -1,4 +1,4 @@
-#include "pyramid.h"
+#include "sheet.h"
 #include "constant_buffer.h"
 #include "index_buffer.h"
 #include "input_layout.h"
@@ -7,9 +7,14 @@
 #include "transform_cbuf.h"
 #include "vertex_buffer.h"
 #include "vertex_shader.h"
-#include "cone.h"
+#include "texture.h"
+#include "sampler.h"
+#include "surface.h"
+#include "plane.h"
 
-Pyramid::Pyramid(
+#include <sstream>
+
+Sheet::Sheet(
 	const Renderer& renderer,
 	std::mt19937& range,
 	std::uniform_real_distribution<float>& radiusDist,
@@ -35,40 +40,33 @@ Pyramid::Pyramid(
 			DirectX::XMFLOAT3 pos;
 			struct
 			{
-				unsigned char r;
-				unsigned char g;
-				unsigned char b;
-				unsigned char a;
-			} color;
+				float u;
+				float v;
+			} tex;
 		};
-		auto model = Cone::make<Vertex>(4);
+		auto model = Plane::make<Vertex>();
+		model.vertices[0].tex = { 0.0f, 0.0f };
+		model.vertices[1].tex = { 1.0f, 0.0f };
+		model.vertices[2].tex = { 0.0f, 1.0f };
+		model.vertices[3].tex = { 1.0f, 1.0f };
 
-		model.vertices[0].color = { 255, 255, 0 };
-		model.vertices[1].color = { 255, 255, 0 };
-		model.vertices[2].color = { 255, 255, 0 };
-		model.vertices[3].color = { 255, 255, 0 };
-		model.vertices[4].color = { 255, 255, 80 };
-		model.vertices[5].color = { 255, 10, 0 };
-
-		model.transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 0.7f));
-
+		addStaticBind(std::make_unique<Texture>(renderer, Surface::fromFile("Images\\kappa50.png")));
 		addStaticBind(std::make_unique<VertexBuffer>(renderer, model.vertices));
+		addStaticBind(std::make_unique<Sampler>(renderer));
 
-		auto vertexShader = std::make_unique<VertexShader>(renderer, L"color_blend_vertex.cso");
+		auto vertexShader = std::make_unique<VertexShader>(renderer, L"texture_vertex.cso");
 		auto vertexShaderBytecode = vertexShader->getBytecode();
 		addStaticBind(std::move(vertexShader));
-
-		addStaticBind(std::make_unique<PixelShader>(renderer, L"color_blend_pixel.cso"));
+		addStaticBind(std::make_unique<PixelShader>(renderer, L"texture_pixel.cso"));
 
 		addStaticIndexBuffer(std::make_unique<IndexBuffer>(renderer, model.indices));
 
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesription =
+		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDescription =
 		{
 			{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
-		addStaticBind(std::make_unique<InputLayout>(renderer, inputDesription, vertexShaderBytecode));
-
+		addStaticBind(std::make_unique<InputLayout>(renderer, inputDescription, vertexShaderBytecode));
 		addStaticBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	}
 	else
@@ -79,7 +77,7 @@ Pyramid::Pyramid(
 	addBind(std::make_unique<TransformCbuf>(renderer, *this));
 }
 
-void Pyramid::update(float dt) noexcept
+void Sheet::update(float dt) noexcept
 {
 	roll += droll * dt;
 	pitch += dpitch * dt;
@@ -89,7 +87,7 @@ void Pyramid::update(float dt) noexcept
 	chi += dchi * dt;
 }
 
-DirectX::XMMATRIX Pyramid::getTransform() const noexcept
+DirectX::XMMATRIX Sheet::getTransform() const noexcept
 {
 	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 		DirectX::XMMatrixTranslation(radius, 0.0f, 0.0f) *

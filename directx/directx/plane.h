@@ -1,6 +1,8 @@
 #ifndef PLANE_H
 #define PLANE_H
 
+#include <array>
+
 #include "indexed_triangle_list.h"
 #include "math.h"
 
@@ -8,17 +10,17 @@ class Plane
 {
 public:
 	template<typename V>
-	static IndexedTriangleList<V> make(int divistionsX, int divisionsY)
+	static IndexedTriangleList<V> make(int divisionsX, int divisionsY)
 	{
 		constexpr float width = 2.0f;
 		constexpr float height = 2.0f;
-		const int nVerticesX = divistionsX + 1;
+		const int nVerticesX = divisionsX + 1;
 		const int nVerticesY = divisionsY + 1;
 		std::vector<V> vertices(nVerticesX * nVerticesY);
 
 		const float sideX = width / 2.0f;
 		const float sideY = height / 2.0f;
-		const float divisionSizeX = width / float(divistionsX);
+		const float divisionSizeX = width / float(divisionsX);
 		const float divisionSizeY = height / float(divisionsY);
 		const auto bottomLeft = DirectX::XMVectorSet(-sideX, -sideY, 0.0f, 0.0f);
 
@@ -46,8 +48,7 @@ public:
 			{
 				for (size_t x = 0; x < divisionsX; x++)
 				{
-					const std::array<unsigned short, 4> indexArray =
-					{ vertexToIndex(x,y),vertexToIndex(x + 1,y),vertexToIndex(x,y + 1),vertexToIndex(x + 1,y + 1) };
+					const std::array<unsigned short, 4> indexArray = { vertexToIndex(x,y),vertexToIndex(x + 1,y),vertexToIndex(x,y + 1),vertexToIndex(x + 1,y + 1) };
 					indices.push_back(indexArray[0]);
 					indices.push_back(indexArray[2]);
 					indices.push_back(indexArray[1]);

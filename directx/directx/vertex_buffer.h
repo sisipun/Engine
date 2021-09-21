@@ -12,18 +12,18 @@ public:
 	{
 		HRESULT hResult;
 
-		D3D11_BUFFER_DESC vertexBufferDesription = {};
-		vertexBufferDesription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDesription.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesription.CPUAccessFlags = 0;
-		vertexBufferDesription.MiscFlags = 0;
-		vertexBufferDesription.ByteWidth = UINT(sizeof(V) * vertices.size());
-		vertexBufferDesription.StructureByteStride = sizeof(V);
+		D3D11_BUFFER_DESC description = {};
+		description.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		description.Usage = D3D11_USAGE_DEFAULT;
+		description.CPUAccessFlags = 0;
+		description.MiscFlags = 0;
+		description.ByteWidth = UINT(sizeof(V) * vertices.size());
+		description.StructureByteStride = sizeof(V);
 
-		D3D11_SUBRESOURCE_DATA vertexSourceData = {};
-		vertexSourceData.pSysMem = vertices.data();
+		D3D11_SUBRESOURCE_DATA data = {};
+		data.pSysMem = vertices.data();
 
-		RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreateBuffer(&vertexBufferDesription, &vertexSourceData, &vertexBuffer));
+		RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreateBuffer(&description, &data, &vertexBuffer));
 	}
 
 	void bind(const Renderer& renderer) noexcept override;

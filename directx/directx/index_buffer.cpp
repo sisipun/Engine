@@ -5,18 +5,18 @@ IndexBuffer::IndexBuffer(const Renderer& renderer, const std::vector<unsigned sh
 {
 	HRESULT hResult;
 
-	D3D11_BUFFER_DESC indexBufferDesription = {};
-	indexBufferDesription.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesription.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesription.CPUAccessFlags = 0;
-	indexBufferDesription.MiscFlags = 0;
-	indexBufferDesription.ByteWidth = UINT(count * sizeof(unsigned short));
-	indexBufferDesription.StructureByteStride = sizeof(unsigned short);
+	D3D11_BUFFER_DESC desription = {};
+	desription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	desription.Usage = D3D11_USAGE_DEFAULT;
+	desription.CPUAccessFlags = 0;
+	desription.MiscFlags = 0;
+	desription.ByteWidth = UINT(count * sizeof(unsigned short));
+	desription.StructureByteStride = sizeof(unsigned short);
 
-	D3D11_SUBRESOURCE_DATA indexSourceData = {};
-	indexSourceData.pSysMem = indices.data();
+	D3D11_SUBRESOURCE_DATA data = {};
+	data.pSysMem = indices.data();
 
-	RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreateBuffer(&indexBufferDesription, &indexSourceData, &indexBuffer));
+	RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreateBuffer(&desription, &data, &indexBuffer));
 }
 
 void IndexBuffer::bind(const Renderer& renderer) noexcept

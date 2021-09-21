@@ -11,40 +11,40 @@ public:
 	ConstantBuffer(const Renderer& renderer, const C& consts)
 	{
 		HRESULT hResult;
-		D3D11_BUFFER_DESC constantBufferDesription = {};
-		constantBufferDesription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		constantBufferDesription.Usage = D3D11_USAGE_DYNAMIC;
-		constantBufferDesription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		constantBufferDesription.MiscFlags = 0;
-		constantBufferDesription.ByteWidth = sizeof(consts);
-		constantBufferDesription.StructureByteStride = 0;
+		D3D11_BUFFER_DESC description = {};
+		description.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		description.Usage = D3D11_USAGE_DYNAMIC;
+		description.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		description.MiscFlags = 0;
+		description.ByteWidth = sizeof(consts);
+		description.StructureByteStride = 0;
 
-		D3D11_SUBRESOURCE_DATA constantSourceData = {};
-		constantSourceData.pSysMem = &consts;
+		D3D11_SUBRESOURCE_DATA data = {};
+		data.pSysMem = &consts;
 
-		RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreateBuffer(&constantBufferDesription, &constantSourceData, &constantBuffer));
+		RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreateBuffer(&description, &data, &constantBuffer));
 	}
 
 	ConstantBuffer(const Renderer& renderer)
 	{
 		HRESULT hResult;
-		D3D11_BUFFER_DESC constantBufferDesription = {};
-		constantBufferDesription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		constantBufferDesription.Usage = D3D11_USAGE_DYNAMIC;
-		constantBufferDesription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		constantBufferDesription.MiscFlags = 0;
-		constantBufferDesription.ByteWidth = sizeof(C);
-		constantBufferDesription.StructureByteStride = 0;
+		D3D11_BUFFER_DESC desription = {};
+		desription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		desription.Usage = D3D11_USAGE_DYNAMIC;
+		desription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		desription.MiscFlags = 0;
+		desription.ByteWidth = sizeof(C);
+		desription.StructureByteStride = 0;
 
-		RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreateBuffer(&constantBufferDesription, nullptr, &constantBuffer));
+		RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreateBuffer(&desription, nullptr, &constantBuffer));
 	}
 
 	void update(const Renderer& renderer, const C& consts)
 	{
 		HRESULT hResult;
-		D3D11_MAPPED_SUBRESOURCE mappedSubResource;
-		RENDERER_THROW_NOINFO(hResult, renderer.getContext()->Map(constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource));
-		memcpy(mappedSubResource.pData, &consts, sizeof(consts));
+		D3D11_MAPPED_SUBRESOURCE data;
+		RENDERER_THROW_NOINFO(hResult, renderer.getContext()->Map(constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &data));
+		memcpy(data.pData, &consts, sizeof(consts));
 		renderer.getContext()->Unmap(constantBuffer.Get(), 0);
 	}
 

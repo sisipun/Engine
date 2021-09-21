@@ -8,22 +8,22 @@
 
 Renderer::Renderer(HWND hWnd)
 {
-	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-	swapChainDesc.BufferDesc.Width = 0;
-	swapChainDesc.BufferDesc.Height = 0;
-	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-	swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
-	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	swapChainDesc.SampleDesc.Count = 1;
-	swapChainDesc.SampleDesc.Quality = 0;
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.BufferCount = 1;
-	swapChainDesc.OutputWindow = hWnd;
-	swapChainDesc.Windowed = TRUE;
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	swapChainDesc.Flags = 0;
+	DXGI_SWAP_CHAIN_DESC swapChainDescription = {};
+	swapChainDescription.BufferDesc.Width = 0;
+	swapChainDescription.BufferDesc.Height = 0;
+	swapChainDescription.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	swapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
+	swapChainDescription.BufferDesc.RefreshRate.Denominator = 0;
+	swapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	swapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	swapChainDescription.SampleDesc.Count = 1;
+	swapChainDescription.SampleDesc.Quality = 0;
+	swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapChainDescription.BufferCount = 1;
+	swapChainDescription.OutputWindow = hWnd;
+	swapChainDescription.Windowed = TRUE;
+	swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	swapChainDescription.Flags = 0;
 
 	UINT swapCreateFlags = 0u;
 #ifndef NDEBUG
@@ -39,7 +39,7 @@ Renderer::Renderer(HWND hWnd)
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
-		&swapChainDesc,
+		&swapChainDescription,
 		&swapChain,
 		&device,
 		nullptr,
@@ -50,33 +50,33 @@ Renderer::Renderer(HWND hWnd)
 	RENDERER_THROW_NOINFO(hResult, swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer));
 	RENDERER_THROW_NOINFO(hResult, device->CreateRenderTargetView(backBuffer.Get(), nullptr, &renderTarget));
 
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
-	depthStencilDesc.DepthEnable = TRUE;
-	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	D3D11_DEPTH_STENCIL_DESC depthStencilDescription = {};
+	depthStencilDescription.DepthEnable = TRUE;
+	depthStencilDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDescription.DepthFunc = D3D11_COMPARISON_LESS;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 
-	RENDERER_THROW_NOINFO(hResult, device->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
+	RENDERER_THROW_NOINFO(hResult, device->CreateDepthStencilState(&depthStencilDescription, &depthStencilState));
 	context->OMSetDepthStencilState(depthStencilState.Get(), 1);
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
-	D3D11_TEXTURE2D_DESC depthStencilTextureDesc = {};
-	depthStencilTextureDesc.Width = 800;
-	depthStencilTextureDesc.Height = 600;
-	depthStencilTextureDesc.MipLevels = 1;
-	depthStencilTextureDesc.ArraySize = 1;
-	depthStencilTextureDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	depthStencilTextureDesc.SampleDesc.Count = 1;
-	depthStencilTextureDesc.SampleDesc.Quality = 0;
-	depthStencilTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	RENDERER_THROW_NOINFO(hResult, device->CreateTexture2D(&depthStencilTextureDesc, nullptr, &depthStencilTexture));
+	D3D11_TEXTURE2D_DESC depthStencilTextureDescription = {};
+	depthStencilTextureDescription.Width = 800;
+	depthStencilTextureDescription.Height = 600;
+	depthStencilTextureDescription.MipLevels = 1;
+	depthStencilTextureDescription.ArraySize = 1;
+	depthStencilTextureDescription.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStencilTextureDescription.SampleDesc.Count = 1;
+	depthStencilTextureDescription.SampleDesc.Quality = 0;
+	depthStencilTextureDescription.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilTextureDescription.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	RENDERER_THROW_NOINFO(hResult, device->CreateTexture2D(&depthStencilTextureDescription, nullptr, &depthStencilTexture));
 
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc = {};
-	depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	depthStencilViewDesc.Texture2D.MipSlice = 0;
-	RENDERER_THROW_NOINFO(hResult, device->CreateDepthStencilView(depthStencilTexture.Get(), &depthStencilViewDesc, &depthStencilView));
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDescription = {};
+	depthStencilViewDescription.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStencilViewDescription.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDescription.Texture2D.MipSlice = 0;
+	RENDERER_THROW_NOINFO(hResult, device->CreateDepthStencilView(depthStencilTexture.Get(), &depthStencilViewDescription, &depthStencilView));
 
 	context->OMSetRenderTargets(1, renderTarget.GetAddressOf(), depthStencilView.Get());
 
@@ -142,7 +142,7 @@ void Renderer::setProjection(DirectX::XMMATRIX projection) noexcept
 }
 
 #ifndef NDEBUG
-DxgiInfoManager& Renderer::getInfoManager() noexcept
+DxgiInfoManager& Renderer::getInfoManager() const noexcept
 {
 	return infoManager;
 }

@@ -6,9 +6,8 @@
 #include "box.h"
 #include "melon.h"
 #include "pyramid.h"
+#include "sheet.h"
 #include "math.h"
-
-#include "surface.h"
 #include "gdi_plus_manager.h"
 
 GDIPlusManager gdipm;
@@ -18,7 +17,7 @@ App::App() : window(100, 100, 800, 600, "Basic window")
 	class Factory
 	{
 	public:
-		Factory(Renderer& renderer) : renderer(renderer)
+		Factory(const Renderer& renderer) : renderer(renderer)
 		{
 		}
 
@@ -32,6 +31,8 @@ App::App() : window(100, 100, 800, 600, "Basic window")
 				return std::make_unique<Box>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, sizeDist);
 			case 2:
 				return std::make_unique<Melon>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, longDist, latDist);
+			case 3:
+				return std::make_unique<Sheet>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist);
 			default:
 				return {};
 			}
@@ -46,14 +47,12 @@ App::App() : window(100, 100, 800, 600, "Basic window")
 		std::uniform_real_distribution<float> sizeDist{ 0.4f, 3.0f };
 		std::uniform_int_distribution<int> longDist{ 5, 20 };
 		std::uniform_int_distribution<int> latDist{ 10, 40 };
-		std::uniform_int_distribution<int> typeDist{ 0, 2 };
+		std::uniform_int_distribution<int> typeDist{ 0, 3 };
 	};
 
 	Factory factory(window.getRenderer());
 	drawables.reserve(drawableCount);
 	std::generate_n(std::back_inserter(drawables), drawableCount, factory);
-
-	const auto s = Surface::fromFile("Images\\kappa50.png");
 
 	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5, 40.0f));
 }
@@ -81,15 +80,11 @@ void App::processFrame()
 	window.getRenderer().clearBuffer(0.07f, 0.0f, 0.12f);
 	for (auto& drawable : drawables)
 	{
-		drawable->update(dt);
+		drawable->update(window.keyboard.keyIsPressed(VK_SPACE) ? 0.0f : dt);
 		drawable->draw(window.getRenderer());
 	}
 	window.getRenderer().endFrame();
-	if (window.keyboard.keyIsPressed(VK_SPACE))
-	{
-		MessageBox(nullptr, "Key pressed", "Pressed", MB_OK | MB_ICONEXCLAMATION);
-	}
-
+	
 	while (!window.mouse.isEmpty())
 	{
 		const auto e = *window.mouse.read();

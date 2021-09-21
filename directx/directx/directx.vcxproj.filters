@@ -99,11 +99,20 @@
     <ClCompile Include="pyramid.cpp">
       <Filter>Source Files\drawable</Filter>
     </ClCompile>
+    <ClCompile Include="gdi_plus_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sheet.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
     <ClCompile Include="surface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gdi_plus_manager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="sampler.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>Source Files\bindable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +224,15 @@
     <ClInclude Include="surface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sampler.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sheet.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="color_index_pixel.hlsl">
@@ -227,6 +245,12 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="color_blend_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="texture_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="texture_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

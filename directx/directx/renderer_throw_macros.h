@@ -7,7 +7,7 @@
 #define INFOMAN(renderer) DxgiInfoManager& infoManager = renderer.getInfoManager();
 #define CHECK_INFO_MESSAGES(call) infoManager.set(); call; { auto v = infoManager.getMessages(); if (!v.empty()) { throw Renderer::InfoException(__LINE__, __FILE__, v); } }
 #else
-#define INFOMAN(renderer) ;
+#define INFOMAN(renderer);
 #define CHECK_INFO_MESSAGES(call) call;
 #endif
 

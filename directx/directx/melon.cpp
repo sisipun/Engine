@@ -63,11 +63,11 @@ Melon::Melon(
 		};
 		addStaticBind(std::make_unique<PixelConstantBuffer<ConstantBuffer>>(renderer, constantBuffer));
 
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc =
+		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputDesription =
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
-		addStaticBind(std::make_unique<InputLayout>(renderer, inputElementDesc, vertexShaderBytecode));
+		addStaticBind(std::make_unique<InputLayout>(renderer, inputDesription, vertexShaderBytecode));
 
 		addStaticBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	}

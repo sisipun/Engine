@@ -12,10 +12,8 @@ using std::max;
 }
 #include <gdiplus.h>
 
-#pragma comment( lib,"gdiplus.lib" ) // TODO remove
-
-Surface::Surface(unsigned int width, unsigned int height, unsigned int pitch) noexcept :
-	buffer(std::make_unique<Color[]>(pitch* height)),
+Surface::Surface(unsigned int width, unsigned int height) noexcept :
+	buffer(std::make_unique<Color[]>(width* height)),
 	width(width),
 	height(height)
 {
@@ -30,14 +28,7 @@ Surface& Surface::operator=(Surface&& source) noexcept
 	return *this;
 }
 
-Surface::Surface(unsigned int width, unsigned int height) noexcept
-	:
-	Surface(width, height, width)
-{
-}
-
-Surface::Surface(Surface&& source) noexcept
-	:
+Surface::Surface(Surface&& source) noexcept :
 	buffer(std::move(source.buffer)),
 	width(source.width),
 	height(source.height)
@@ -92,8 +83,7 @@ Surface Surface::fromFile(const std::string& filename)
 {
 	unsigned int width = 0;
 	unsigned int height = 0;
-	unsigned int pitch = 0;
-	std::unique_ptr<Color[]> pBuffer = nullptr;
+	std::unique_ptr<Color[]> buffer;
 
 	wchar_t wideName[512];
 	mbstowcs_s(nullptr, wideName, filename.c_str(), _TRUNCATE);
@@ -107,7 +97,8 @@ Surface Surface::fromFile(const std::string& filename)
 	}
 
 	height = bitmap.GetHeight();
-	pBuffer = std::make_unique<Color[]>(width * height);
+	width = bitmap.GetWidth();
+	buffer = std::make_unique<Color[]>(width * height);
 
 	for (unsigned int y = 0; y < height; y++)
 	{
@@ -115,11 +106,11 @@ Surface Surface::fromFile(const std::string& filename)
 		{
 			Gdiplus::Color color;
 			bitmap.GetPixel(x, y, &color);
-			pBuffer[y * pitch + x] = color.GetValue();
+			buffer[y * width + x] = color.GetValue();
 		}
 	}
 
-	return Surface(width, height, std::move(pBuffer));
+	return Surface(width, height, std::move(buffer));
 }
 
 void Surface::save(const std::string& filename) const
@@ -186,8 +177,7 @@ void Surface::copy(const Surface& source) noexcept
 	memcpy(buffer.get(), source.buffer.get(), width * height * sizeof(Color));
 }
 
-Surface::Surface(unsigned int width, unsigned int height, std::unique_ptr<Color[]> bufferParam) noexcept
-	:
+Surface::Surface(unsigned int width, unsigned int height, std::unique_ptr<Color[]> bufferParam) noexcept :
 	width(width),
 	height(height),
 	buffer(std::move(bufferParam))

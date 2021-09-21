@@ -43,8 +43,8 @@ public:
 	};
 
 	Renderer(HWND hWnd);
-	Renderer(const Renderer&) = delete;
-	Renderer& operator=(const Renderer&) = delete;
+	Renderer(const Renderer& renderer) = delete;
+	Renderer& operator=(const Renderer& renderer) = delete;
 	~Renderer() = default;
 
 	void endFrame();
@@ -57,7 +57,7 @@ public:
 	void setProjection(DirectX::XMMATRIX projection) noexcept;
 
 #ifndef NDEBUG
-	DxgiInfoManager& getInfoManager() noexcept;
+	DxgiInfoManager& getInfoManager() const noexcept;
 #endif
 
 private:
@@ -69,7 +69,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 
 #ifndef NDEBUG
-	DxgiInfoManager infoManager;
+	mutable DxgiInfoManager infoManager;
 #endif
 };
 
