@@ -5,6 +5,8 @@
 
 #include "renderer.h"
 #include "renderer_throw_macros.h"
+#include "imgui/imgui_impl_dx11.h"
+#include "imgui/imgui_impl_win32.h"
 
 Renderer::Renderer(HWND hWnd)
 {
@@ -88,16 +90,31 @@ Renderer::Renderer(HWND hWnd)
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	context->RSSetViewports(1, &viewport);
+
+	ImGui_ImplDX11_Init(device.Get(), context.Get());
 }
 
 void Renderer::endFrame()
 {
+	if (imguiEnabled)
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
 	HRESULT hResult;
 	RENDERER_THROW_NOINFO(hResult, swapChain->Present(1u, 0u));
 }
 
-void Renderer::clearBuffer(float red, float green, float blue) noexcept
+void Renderer::beginFrame(float red, float green, float blue) noexcept
 {
+	if (imguiEnabled)
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+	}
+
 	const float color[] = { red, green, blue };
 	context->ClearRenderTargetView(renderTarget.Get(), color);
 	context->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -139,6 +156,21 @@ DirectX::XMMATRIX Renderer::getProjection() const noexcept
 void Renderer::setProjection(DirectX::XMMATRIX projection) noexcept
 {
 	this->projection = projection;
+}
+
+void Renderer::enableImgui() noexcept
+{
+	imguiEnabled = true;
+}
+
+void Renderer::disableImgui() noexcept
+{
+	imguiEnabled = false;
+}
+
+bool Renderer::isImguiEnabled() const noexcept
+{
+	return imguiEnabled;
 }
 
 #ifndef NDEBUG

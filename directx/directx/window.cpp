@@ -1,5 +1,6 @@
 #include "window.h"
 #include "window_throw_macros.h"
+#include "imgui/imgui_impl_win32.h"
 
 Window::WindowClass Window::WindowClass::wndClass;
 
@@ -46,11 +47,14 @@ Window::Window(int x, int y, int width, int height, const char* name) : width(wi
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 
+	ImGui_ImplWin32_Init(hWnd);
+
 	renderer = std::make_unique<Renderer>(hWnd);
 }
 
 Window::~Window()
 {
+	ImGui_ImplWin32_Shutdown();
 	DestroyWindow(hWnd);
 }
 
@@ -144,6 +148,11 @@ LRESULT CALLBACK Window::handleMsgProxy(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 
 LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+	{
+		return true;
+	}
+
 	switch (msg)
 	{
 	case WM_CLOSE:

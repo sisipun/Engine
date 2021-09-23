@@ -48,7 +48,7 @@ public:
 	~Renderer() = default;
 
 	void endFrame();
-	void clearBuffer(float red, float green, float blue) noexcept;
+	void beginFrame(float red, float green, float blue) noexcept;
 	void drawIndexed(UINT count) const;
 
 	ID3D11Device* getDevice() const noexcept;
@@ -56,11 +56,16 @@ public:
 	DirectX::XMMATRIX getProjection() const noexcept;
 	void setProjection(DirectX::XMMATRIX projection) noexcept;
 
+	void enableImgui() noexcept;
+	void disableImgui() noexcept;
+	bool isImguiEnabled() const noexcept;
+
 #ifndef NDEBUG
 	DxgiInfoManager& getInfoManager() const noexcept;
 #endif
 
 private:
+	bool imguiEnabled = true;
 	DirectX::XMMATRIX projection;
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;

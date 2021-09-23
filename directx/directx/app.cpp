@@ -10,6 +10,7 @@
 #include "skinned_box.h"
 #include "math.h"
 #include "gdi_plus_manager.h"
+#include "imgui/imgui.h"
 
 GDIPlusManager gdipm;
 
@@ -79,13 +80,21 @@ int App::start()
 
 void App::processFrame()
 {
-	auto dt = timer.mark();
-	window.getRenderer().clearBuffer(0.07f, 0.0f, 0.12f);
+	auto dt = timer.mark() * speed_factor;
+	window.getRenderer().beginFrame(0.07f, 0.0f, 0.12f);
 	for (auto& drawable : drawables)
 	{
 		drawable->update(window.keyboard.keyIsPressed(VK_SPACE) ? 0.0f : dt);
 		drawable->draw(window.getRenderer());
 	}
+
+	if (ImGui::Begin("Simulation Speed"))
+	{
+		ImGui::SliderFloat("Speed Factor", &speed_factor, 0.0f, 4.0f);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	}
+	ImGui::End();
+
 	window.getRenderer().endFrame();
 	
 	while (!window.mouse.isEmpty())
