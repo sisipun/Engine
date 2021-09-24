@@ -11,7 +11,7 @@ TransformCbuf::TransformCbuf(const Renderer& renderer, const Drawable& parent) :
 
 void TransformCbuf::bind(const Renderer& renderer) noexcept
 {
-	vertexConstantBuffer->update(renderer, DirectX::XMMatrixTranspose(parent.getTransform() * renderer.getProjection()));
+	vertexConstantBuffer->update(renderer, DirectX::XMMatrixTranspose(parent.getTransform() * renderer.getCamera() * renderer.getProjection()));
 	vertexConstantBuffer->bind(renderer);
 }
 

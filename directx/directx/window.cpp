@@ -153,6 +153,8 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		return true;
 	}
 
+	const auto &imGuiIo = ImGui::GetIO();
+
 	switch (msg)
 	{
 	case WM_CLOSE:
@@ -165,6 +167,10 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
+		if (imGuiIo.WantCaptureKeyboard)
+		{
+			break;
+		}
 		if (!(lParam & 0x40000000) || keyboard.autorepeatIsEnabled())
 		{
 			keyboard.onKeyPressed(wParam);
@@ -172,9 +178,17 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		break;
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
+		if (imGuiIo.WantCaptureKeyboard)
+		{
+			break;
+		}
 		keyboard.onKeyReleased(wParam);
 		break;
 	case WM_CHAR:
+		if (imGuiIo.WantCaptureKeyboard)
+		{
+			break;
+		}
 		keyboard.onChar(wParam);
 		break;
 
@@ -208,18 +222,30 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	}
 	case WM_LBUTTONDOWN:
 	{
+		if (imGuiIo.WantCaptureKeyboard)
+		{
+			break;
+		}
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.onLeftPressed(point.x, point.y);
 		break;
 	}
 	case WM_RBUTTONDOWN:
 	{
+		if (imGuiIo.WantCaptureKeyboard)
+		{
+			break;
+		}
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.onRightPressed(point.x, point.y);
 		break;
 	}
 	case WM_LBUTTONUP:
 	{
+		if (imGuiIo.WantCaptureKeyboard)
+		{
+			break;
+		}
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.onLeftReleased(point.x, point.y);
 		SetForegroundWindow(hWnd);
@@ -233,6 +259,10 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	}
 	case WM_RBUTTONUP:
 	{
+		if (imGuiIo.WantCaptureKeyboard)
+		{
+			break;
+		}
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.onRightReleased(point.x, point.y);
 

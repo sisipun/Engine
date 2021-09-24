@@ -167,6 +167,7 @@
     <ClCompile Include="base_exception.cpp" />
     <ClCompile Include="base_hr_exception.cpp" />
     <ClCompile Include="box.cpp" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="drawable.cpp" />
     <ClCompile Include="dxgi_info_manager.cpp" />
     <ClCompile Include="gdi_plus_manager.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="base_throw_macros.h" />
     <ClInclude Include="bindable.h" />
     <ClInclude Include="box.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="cone.h" />
     <ClInclude Include="constant_buffer.h" />
     <ClInclude Include="cube.h" />

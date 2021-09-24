@@ -45,7 +45,7 @@ public:
 	Renderer(HWND hWnd);
 	Renderer(const Renderer& renderer) = delete;
 	Renderer& operator=(const Renderer& renderer) = delete;
-	~Renderer() = default;
+	~Renderer();
 
 	void endFrame();
 	void beginFrame(float red, float green, float blue) noexcept;
@@ -53,8 +53,12 @@ public:
 
 	ID3D11Device* getDevice() const noexcept;
 	ID3D11DeviceContext* getContext() const noexcept;
+
+	DirectX::XMMATRIX getCamera() const noexcept;
+	void setCamera(DirectX::FXMMATRIX camera) noexcept;
+
 	DirectX::XMMATRIX getProjection() const noexcept;
-	void setProjection(DirectX::XMMATRIX projection) noexcept;
+	void setProjection(DirectX::FXMMATRIX projection) noexcept;
 
 	void enableImgui() noexcept;
 	void disableImgui() noexcept;
@@ -66,6 +70,7 @@ public:
 
 private:
 	bool imguiEnabled = true;
+	DirectX::XMMATRIX camera;
 	DirectX::XMMATRIX projection;
 	Microsoft::WRL::ComPtr<ID3D11Device> device;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;

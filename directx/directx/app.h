@@ -4,6 +4,7 @@
 #include "window.h"
 #include "timer.h"
 #include "imgui_manager.h"
+#include "camera.h"
 
 class App
 {
@@ -19,6 +20,7 @@ private:
 	ImguiManager imguiManager;
 	Window window;
 	Timer timer;
+	Camera camera;
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	float speed_factor = 1.0f;
 	static constexpr size_t drawableCount = 180;

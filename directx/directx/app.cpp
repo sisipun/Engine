@@ -82,6 +82,7 @@ void App::processFrame()
 {
 	auto dt = timer.mark() * speed_factor;
 	window.getRenderer().beginFrame(0.07f, 0.0f, 0.12f);
+	window.getRenderer().setCamera(camera.getMatrix());
 	for (auto& drawable : drawables)
 	{
 		drawable->update(window.keyboard.keyIsPressed(VK_SPACE) ? 0.0f : dt);
@@ -92,8 +93,11 @@ void App::processFrame()
 	{
 		ImGui::SliderFloat("Speed Factor", &speed_factor, 0.0f, 4.0f);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::Text("Status: %s", window.keyboard.keyIsPressed(VK_SPACE) ? "PAUSED" : "RUNNING");
 	}
 	ImGui::End();
+
+	camera.spawnControlWindow();
 
 	window.getRenderer().endFrame();
 	

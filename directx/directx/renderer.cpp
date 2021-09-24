@@ -94,6 +94,11 @@ Renderer::Renderer(HWND hWnd)
 	ImGui_ImplDX11_Init(device.Get(), context.Get());
 }
 
+Renderer::~Renderer()
+{
+	ImGui_ImplDX11_Shutdown();
+}
+
 void Renderer::endFrame()
 {
 	if (imguiEnabled)
@@ -148,12 +153,22 @@ ID3D11DeviceContext* Renderer::getContext() const noexcept
 	return context.Get();
 }
 
+DirectX::XMMATRIX Renderer::getCamera() const noexcept
+{
+	return camera;
+}
+
+void Renderer::setCamera(DirectX::FXMMATRIX camera) noexcept
+{
+	this->camera = camera;
+}
+
 DirectX::XMMATRIX Renderer::getProjection() const noexcept
 {
 	return projection;
 }
 
-void Renderer::setProjection(DirectX::XMMATRIX projection) noexcept
+void Renderer::setProjection(DirectX::FXMMATRIX projection) noexcept
 {
 	this->projection = projection;
 }
