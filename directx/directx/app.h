@@ -5,6 +5,7 @@
 #include "timer.h"
 #include "imgui_manager.h"
 #include "camera.h"
+#include "point_light.h"
 
 class App
 {
@@ -21,6 +22,7 @@ private:
 	Window window;
 	Timer timer;
 	Camera camera;
+	PointLight light;
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	float speed_factor = 1.0f;
 	static constexpr size_t drawableCount = 180;

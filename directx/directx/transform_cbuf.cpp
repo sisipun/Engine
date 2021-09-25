@@ -5,14 +5,19 @@ TransformCbuf::TransformCbuf(const Renderer& renderer, const Drawable& parent) :
 {
 	if (!vertexConstantBuffer) 
 	{
-		vertexConstantBuffer = std::make_unique<VertexConstantBuffer<DirectX::XMMATRIX>>(renderer);
+		vertexConstantBuffer = std::make_unique<VertexConstantBuffer<Transforms>>(renderer);
 	}
 }
 
 void TransformCbuf::bind(const Renderer& renderer) noexcept
 {
-	vertexConstantBuffer->update(renderer, DirectX::XMMatrixTranspose(parent.getTransform() * renderer.getCamera() * renderer.getProjection()));
+	const Transforms transforms = {
+		DirectX::XMMatrixTranspose(parent.getTransform()),
+		DirectX::XMMatrixTranspose(renderer.getCamera()),
+		DirectX::XMMatrixTranspose(renderer.getProjection())
+	};
+	vertexConstantBuffer->update(renderer, transforms);
 	vertexConstantBuffer->bind(renderer);
 }
 
-std::unique_ptr<VertexConstantBuffer<DirectX::XMMATRIX>> TransformCbuf::vertexConstantBuffer;
+std::unique_ptr<VertexConstantBuffer<TransformCbuf::Transforms>> TransformCbuf::vertexConstantBuffer;

@@ -96,9 +96,6 @@
     <ClCompile Include="box.cpp">
       <Filter>Source Files\drawable</Filter>
     </ClCompile>
-    <ClCompile Include="melon.cpp">
-      <Filter>Source Files\drawable</Filter>
-    </ClCompile>
     <ClCompile Include="pyramid.cpp">
       <Filter>Source Files\drawable</Filter>
     </ClCompile>
@@ -142,6 +139,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="solid_sphere.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="point_light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -242,9 +245,6 @@
     <ClInclude Include="sphere.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="melon.h">
-      <Filter>Header Files\drawable</Filter>
-    </ClInclude>
     <ClInclude Include="pyramid.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
@@ -256,9 +256,6 @@
     </ClInclude>
     <ClInclude Include="sampler.h">
       <Filter>Header Files\bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="texture.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sheet.h">
       <Filter>Header Files\drawable</Filter>
@@ -296,14 +293,17 @@
     <ClInclude Include="camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="solid_sphere.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="point_light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="color_index_pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="color_index_vertex.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
     <FxCompile Include="color_blend_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
@@ -314,6 +314,18 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="texture_vertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="phong_vertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="phong_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="solid_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="solid_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

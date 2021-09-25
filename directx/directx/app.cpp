@@ -4,7 +4,6 @@
 
 #include "app.h"
 #include "box.h"
-#include "melon.h"
 #include "pyramid.h"
 #include "sheet.h"
 #include "skinned_box.h"
@@ -14,7 +13,7 @@
 
 GDIPlusManager gdipm;
 
-App::App() : window(100, 100, 800, 600, "Basic window")
+App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRenderer())
 {
 	class Factory
 	{
@@ -25,21 +24,7 @@ App::App() : window(100, 100, 800, 600, "Basic window")
 
 		std::unique_ptr<Drawable> operator()()
 		{
-			switch (typeDist(range))
-			{
-			case 0:
-				return std::make_unique<Pyramid>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist);
-			case 1:
-				return std::make_unique<Box>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, sizeDist);
-			case 2:
-				return std::make_unique<Melon>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, longDist, latDist);
-			case 3:
-				return std::make_unique<Sheet>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist);
-			case 4:
-				return std::make_unique<SkinnedBox>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist);
-			default:
-				return {};
-			}
+			return std::make_unique<Box>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, sizeDist);
 		}
 	private:
 		const Renderer& renderer;
@@ -49,9 +34,6 @@ App::App() : window(100, 100, 800, 600, "Basic window")
 		std::uniform_real_distribution<float> deltaAnglesDist{ 0.0f, PI * 0.08f };
 		std::uniform_real_distribution<float> deltaOrientationDist{ 0.0f, PI * 0.5f };
 		std::uniform_real_distribution<float> sizeDist{ 0.4f, 3.0f };
-		std::uniform_int_distribution<int> longDist{ 5, 20 };
-		std::uniform_int_distribution<int> latDist{ 10, 40 };
-		std::uniform_int_distribution<int> typeDist{ 0, 4 };
 	};
 
 	Factory factory(window.getRenderer());
@@ -83,11 +65,16 @@ void App::processFrame()
 	auto dt = timer.mark() * speed_factor;
 	window.getRenderer().beginFrame(0.07f, 0.0f, 0.12f);
 	window.getRenderer().setCamera(camera.getMatrix());
+
+	light.update(window.getRenderer());
+
 	for (auto& drawable : drawables)
 	{
 		drawable->update(window.keyboard.keyIsPressed(VK_SPACE) ? 0.0f : dt);
 		drawable->draw(window.getRenderer());
 	}
+
+	light.draw(window.getRenderer());
 
 	if (ImGui::Begin("Simulation Speed"))
 	{
@@ -98,6 +85,7 @@ void App::processFrame()
 	ImGui::End();
 
 	camera.spawnControlWindow();
+	light.spawnControlWindow();
 
 	window.getRenderer().endFrame();
 	

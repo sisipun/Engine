@@ -14,7 +14,13 @@ public:
 	void bind(const Renderer& renderer) noexcept override;
 
 private:
-	static std::unique_ptr<VertexConstantBuffer<DirectX::XMMATRIX>> vertexConstantBuffer;
+	struct Transforms
+	{
+		DirectX::XMMATRIX model;
+		DirectX::XMMATRIX view;
+		DirectX::XMMATRIX projection;
+	};
+	static std::unique_ptr<VertexConstantBuffer<Transforms>> vertexConstantBuffer;
 	const Drawable& parent;
 };
 
