@@ -9,7 +9,7 @@
 class TransformCbuf : public Bindable
 {
 public:
-	TransformCbuf(const Renderer& renderer, const Drawable& parent);
+	TransformCbuf(const Renderer& renderer, const Drawable& parent, UINT slot = 0);
 
 	void bind(const Renderer& renderer) noexcept override;
 

@@ -17,7 +17,8 @@ Box::Box(
 	std::uniform_real_distribution<float>& anglesDist,
 	std::uniform_real_distribution<float>& deltaAnglesDist,
 	std::uniform_real_distribution<float>& deltaOrientationDist,
-	std::uniform_real_distribution<float>& sizeDist
+	std::uniform_real_distribution<float>& sizeDist,
+	DirectX::XMFLOAT3 materialColor
 ) :
 	radius(radiusDist(range)),
 	droll(deltaOrientationDist(range)),
@@ -66,6 +67,14 @@ Box::Box(
 	}
 
 	addBind(std::make_unique<TransformCbuf>(renderer, *this));
+
+	struct ConstantData
+	{
+		DirectX::XMFLOAT3 materialColor;
+		float padding;
+	} constData;
+	constData.materialColor = materialColor;
+	addBind(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData, 1));
 
 	DirectX::XMStoreFloat3x3(
 		&model,

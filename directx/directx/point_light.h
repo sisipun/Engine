@@ -16,11 +16,16 @@ public:
 private:
 	struct ConstantData
 	{
-		DirectX::XMFLOAT3 lightPos;
-		float padding;
+		alignas(16) DirectX::XMFLOAT3 lightPos;
+		alignas(16) DirectX::XMFLOAT3 ambientLight;
+		alignas(16) DirectX::XMFLOAT3 diffuseColor;
+		float diffuseIntensity;
+		float attConst;
+		float attLinear;
+		float attQuadratic;
 	};
 
-	DirectX::XMFLOAT3 pos = { 0.0f, 0.0f, 0.0f };
+	ConstantData constData;
 	mutable SolidSphere mesh;
 	mutable PixelConstantBuffer<ConstantData> constantBuffer;
 };

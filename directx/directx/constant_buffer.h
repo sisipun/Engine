@@ -8,7 +8,7 @@ template<typename C>
 class ConstantBuffer : public Bindable
 {
 public:
-	ConstantBuffer(const Renderer& renderer, const C& consts)
+	ConstantBuffer(const Renderer& renderer, const C& consts, UINT slot = 0): slot(slot)
 	{
 		HRESULT hResult;
 		D3D11_BUFFER_DESC description = {};
@@ -25,7 +25,7 @@ public:
 		RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreateBuffer(&description, &data, &constantBuffer));
 	}
 
-	ConstantBuffer(const Renderer& renderer)
+	ConstantBuffer(const Renderer& renderer, UINT slot = 0): slot(slot)
 	{
 		HRESULT hResult;
 		D3D11_BUFFER_DESC desription = {};
@@ -50,18 +50,20 @@ public:
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
+	UINT slot;
 };
 
 template<typename C>
 class VertexConstantBuffer : public ConstantBuffer<C>
 {
 	using ConstantBuffer<C>::constantBuffer;
+	using ConstantBuffer<C>::slot;
 public:
 	using ConstantBuffer<C>::ConstantBuffer;
 
 	void bind(const Renderer& renderer) noexcept
 	{
-		renderer.getContext()->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
+		renderer.getContext()->VSSetConstantBuffers(slot, 1, constantBuffer.GetAddressOf());
 	}
 };
 
@@ -69,12 +71,13 @@ template<typename C>
 class PixelConstantBuffer : public ConstantBuffer<C>
 {
 	using ConstantBuffer<C>::constantBuffer;
+	using ConstantBuffer<C>::slot;
 public:
 	using ConstantBuffer<C>::ConstantBuffer;
 
 	void bind(const Renderer& renderer) noexcept
 	{
-		renderer.getContext()->PSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
+		renderer.getContext()->PSSetConstantBuffers(slot, 1, constantBuffer.GetAddressOf());
 	}
 };
 

@@ -24,7 +24,8 @@ App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRendere
 
 		std::unique_ptr<Drawable> operator()()
 		{
-			return std::make_unique<Box>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, sizeDist);
+			const DirectX::XMFLOAT3 materialColor = { colorDist(range), colorDist(range), colorDist(range) };
+			return std::make_unique<Box>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, sizeDist, materialColor);
 		}
 	private:
 		const Renderer& renderer;
@@ -34,6 +35,7 @@ App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRendere
 		std::uniform_real_distribution<float> deltaAnglesDist{ 0.0f, PI * 0.08f };
 		std::uniform_real_distribution<float> deltaOrientationDist{ 0.0f, PI * 0.5f };
 		std::uniform_real_distribution<float> sizeDist{ 0.4f, 3.0f };
+		std::uniform_real_distribution<float> colorDist{ 0.0f, 1.0f };
 	};
 
 	Factory factory(window.getRenderer());

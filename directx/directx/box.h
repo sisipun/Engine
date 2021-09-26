@@ -12,7 +12,8 @@ public:
 		std::uniform_real_distribution<float>& anglesDist,
 		std::uniform_real_distribution<float>& deltaAnglesDist,
 		std::uniform_real_distribution<float>& deltaOrientationDist,
-		std::uniform_real_distribution<float>& sizeDist);
+		std::uniform_real_distribution<float>& sizeDist,
+		DirectX::XMFLOAT3 materialColor);
 
 	void update(float dt) noexcept override;
 	DirectX::XMMATRIX getTransform() const noexcept override;

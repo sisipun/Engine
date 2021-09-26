@@ -1,11 +1,11 @@
 #include "transform_cbuf.h"
 
 
-TransformCbuf::TransformCbuf(const Renderer& renderer, const Drawable& parent) : parent(parent)
+TransformCbuf::TransformCbuf(const Renderer& renderer, const Drawable& parent, UINT slot) : parent(parent)
 {
 	if (!vertexConstantBuffer) 
 	{
-		vertexConstantBuffer = std::make_unique<VertexConstantBuffer<Transforms>>(renderer);
+		vertexConstantBuffer = std::make_unique<VertexConstantBuffer<Transforms>>(renderer, slot);
 	}
 }
 

@@ -1,15 +1,18 @@
-cbuffer ConstantData
+cbuffer LightConstantData
 {
 	float3 lightPos;
+    float3 ambientLight;
+    float3 diffuseColor;
+    float diffuseIntensity;
+    float attConst;
+    float attLinear;
+    float attQuadratic;
 };
 
-static const float3 materailColor = { 0.7f, 0.7f, 0.9f };
-static const float3 ambientLight = { 0.05f, 0.05f, 0.05f };
-static const float3 diffuseColor = { 1.0f, 1.0f, 1.0f };
-static const float diffuseIntensity = 1.0f;
-static const float attConst = 1.0f;
-static const float attLinear = 0.045f;
-static const float attQuadratic = 0.0075f;
+cbuffer ConstantData
+{
+    float3 materialColor;
+};
 
 float4 main(float3 pos: Position, float3 norm: Normal) : SV_Target
 {
@@ -21,5 +24,5 @@ float4 main(float3 pos: Position, float3 norm: Normal) : SV_Target
 	
 	const float3 diffuseLight = diffuseColor * diffuseIntensity * att * max(0.0f, dot(lightDirNorm, norm));
 	
-	return float4(saturate(ambientLight + diffuseLight), 1.0f);
+    return float4(saturate((ambientLight + diffuseLight) * materialColor), 1.0f);
 }
