@@ -19,17 +19,7 @@ Box::Box(
 	std::uniform_real_distribution<float>& deltaOrientationDist,
 	std::uniform_real_distribution<float>& sizeDist,
 	DirectX::XMFLOAT3 materialColor
-) :
-	radius(radiusDist(range)),
-	droll(deltaOrientationDist(range)),
-	dpitch(deltaOrientationDist(range)),
-	dyaw(deltaOrientationDist(range)),
-	dtheta(deltaAnglesDist(range)),
-	dphi(deltaAnglesDist(range)),
-	dchi(deltaAnglesDist(range)),
-	theta(anglesDist(range)),
-	phi(anglesDist(range)),
-	chi(anglesDist(range))
+) : DefaultDrawableBase(range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist)
 {
 	if (!isStaticInitialized())
 	{
@@ -84,20 +74,7 @@ Box::Box(
 	);
 }
 
-void Box::update(float dt) noexcept
-{
-	roll += droll * dt;
-	pitch += dpitch * dt;
-	yaw += dyaw * dt;
-	theta += dtheta * dt;
-	phi += dphi * dt;
-	chi += dchi * dt;
-}
-
 DirectX::XMMATRIX Box::getTransform() const noexcept
 {
-	return DirectX::XMLoadFloat3x3(&model) *
-		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		DirectX::XMMatrixTranslation(radius, 0.0f, 0.0f) *
-		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi);
+	return DirectX::XMLoadFloat3x3(&model) * DefaultDrawableBase::getTransform();
 }

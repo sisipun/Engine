@@ -296,6 +296,9 @@
     <ClInclude Include="point_light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="default_drawable_base.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="color_blend_vertex.hlsl">
