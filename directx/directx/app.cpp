@@ -5,7 +5,6 @@
 #include "app.h"
 #include "box.h"
 #include "pyramid.h"
-#include "sheet.h"
 #include "skinned_box.h"
 #include "math.h"
 #include "gdi_plus_manager.h"
@@ -13,7 +12,7 @@
 
 GDIPlusManager gdipm;
 
-App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRenderer())
+App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRenderer()), camera(window.getRenderer())
 {
 	class Factory
 	{
@@ -68,6 +67,7 @@ void App::processFrame()
 	window.getRenderer().beginFrame(0.07f, 0.0f, 0.12f);
 	window.getRenderer().setCamera(camera.getMatrix());
 
+	camera.update(window.getRenderer());
 	light.update(window.getRenderer());
 
 	for (auto& drawable : drawables)

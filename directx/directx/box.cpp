@@ -70,11 +70,13 @@ Box::Box(
 
 	struct ConstantData
 	{
-		DirectX::XMFLOAT3 materialColor;
-		float padding;
+		alignas(16) DirectX::XMFLOAT3 materialColor;
+		float specularIntensity = 0.6f;
+		float specularPower = 30.0f;
+		float padding[2];
 	} constData;
 	constData.materialColor = materialColor;
-	addBind(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData, 1));
+	addBind(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData, 2));
 
 	DirectX::XMStoreFloat3x3(
 		&model,

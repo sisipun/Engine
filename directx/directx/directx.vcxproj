@@ -188,7 +188,6 @@
     <ClCompile Include="pyramid.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="sampler.cpp" />
-    <ClCompile Include="sheet.cpp" />
     <ClCompile Include="skinned_box.cpp" />
     <ClCompile Include="solid_sphere.cpp" />
     <ClCompile Include="surface.cpp" />
@@ -238,7 +237,6 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_throw_macros.h" />
     <ClInclude Include="sampler.h" />
-    <ClInclude Include="sheet.h" />
     <ClInclude Include="skinned_box.h" />
     <ClInclude Include="solid_sphere.h" />
     <ClInclude Include="sphere.h" />

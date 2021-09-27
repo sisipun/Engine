@@ -9,20 +9,32 @@ cbuffer LightConstantData
     float attQuadratic;
 };
 
+cbuffer CameraConstantData
+{
+    float3 cameraPos;
+};
+
 cbuffer ConstantData
 {
     float3 materialColor;
+    float specularIntensity;
+    float specularPower;
 };
 
-float4 main(float3 pos: Position, float3 norm: Normal) : SV_Target
+float4 main(float3 worldPos: Position, float3 norm: Normal) : SV_Target
 {
-	const float3 lightDir = lightPos - pos;
-	const float lightDist = length(lightDir);
-	const float3 lightDirNorm = lightDir / lightDist;
+    const float3 lightToPos = lightPos - worldPos;
+    const float lightDist = length(lightToPos);
+    const float3 lightDir = lightToPos / lightDist;
 	
 	const float att = 1 / (attConst + attLinear * lightDist + attQuadratic * lightDist * lightDist);
 	
-	const float3 diffuseLight = diffuseColor * diffuseIntensity * att * max(0.0f, dot(lightDirNorm, norm));
-	
-    return float4(saturate((ambientLight + diffuseLight) * materialColor), 1.0f);
+    const float3 diffuseLight = diffuseColor * diffuseIntensity * att * max(0.0f, dot(lightDir, normalize(norm)));
+    
+    const float3 viewDir = normalize(cameraPos - worldPos);
+    const float3 halfway = normalize(viewDir + lightDir);
+    const float3 reflection = 2.0f * norm * dot(lightDir, norm) - lightDir;
+    const float3 specularLight = att * specularIntensity * pow(max(0.0f, dot(halfway, normalize(norm))), specularPower);
+    
+    return float4(saturate((ambientLight + diffuseLight + specularLight) * materialColor), 1.0f);
 }
