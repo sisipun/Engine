@@ -4,6 +4,7 @@
 
 #include "app.h"
 #include "box.h"
+#include "cylinder.h"
 #include "pyramid.h"
 #include "skinned_box.h"
 #include "math.h"
@@ -23,18 +24,28 @@ App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRendere
 
 		std::unique_ptr<Drawable> operator()()
 		{
-			const DirectX::XMFLOAT3 materialColor = { colorDist(range), colorDist(range), colorDist(range) };
-			return std::make_unique<Box>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, sizeDist, materialColor);
+			switch (typeDist(range))
+			{
+			case 0:
+				const DirectX::XMFLOAT3 materialColor = { colorDist(range), colorDist(range), colorDist(range) };
+				return std::make_unique<Box>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, sizeDist, materialColor);
+			case 1:
+				return std::make_unique<Cylinder>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, tesselationDist);
+			default:
+				return {};
+			}
 		}
 	private:
 		const Renderer& renderer;
 		std::mt19937 range{ std::random_device{}() };
+		std::uniform_int_distribution<int> typeDist{ 0, 1 };
 		std::uniform_real_distribution<float> radiusDist{ 6.0f, 20.0f };
 		std::uniform_real_distribution<float> anglesDist{ 0.0f, PI * 2.0f };
 		std::uniform_real_distribution<float> deltaAnglesDist{ 0.0f, PI * 0.08f };
 		std::uniform_real_distribution<float> deltaOrientationDist{ 0.0f, PI * 0.5f };
 		std::uniform_real_distribution<float> sizeDist{ 0.4f, 3.0f };
 		std::uniform_real_distribution<float> colorDist{ 0.0f, 1.0f };
+		std::uniform_real_distribution<float> tesselationDist{ 3, 30 };
 	};
 
 	Factory factory(window.getRenderer());

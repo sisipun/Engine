@@ -144,6 +144,9 @@
     <ClCompile Include="point_light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cylinder.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -299,6 +302,9 @@
     <ClInclude Include="default_drawable_base.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
+    <ClInclude Include="cylinder.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="color_blend_vertex.hlsl">
@@ -323,6 +329,9 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="solid_vertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="indexed_phong_pixel.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

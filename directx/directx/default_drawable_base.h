@@ -8,6 +8,7 @@ class DefaultDrawableBase : public DrawableBase<T>
 {
 public:
 	DefaultDrawableBase(
+		const Renderer& renderer,
 		std::mt19937& range,
 		std::uniform_real_distribution<float>& radiusDist,
 		std::uniform_real_distribution<float>& anglesDist,

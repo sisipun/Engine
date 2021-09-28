@@ -1,4 +1,4 @@
-#include "box.h"
+#include "cylinder.h"
 #include "constant_buffer.h"
 #include "index_buffer.h"
 #include "input_layout.h"
@@ -7,18 +7,16 @@
 #include "transform_cbuf.h"
 #include "vertex_buffer.h"
 #include "vertex_shader.h"
-#include "cube.h"
+#include "prism.h"
 
-
-Box::Box(
+Cylinder::Cylinder(
 	const Renderer& renderer,
 	std::mt19937& range,
 	std::uniform_real_distribution<float>& radiusDist,
 	std::uniform_real_distribution<float>& anglesDist,
 	std::uniform_real_distribution<float>& deltaAnglesDist,
 	std::uniform_real_distribution<float>& deltaOrientationDist,
-	std::uniform_real_distribution<float>& sizeDist,
-	DirectX::XMFLOAT3 materialColor
+	std::uniform_real_distribution<float>& tesselationDist
 ) : DefaultDrawableBase(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist)
 {
 	if (!isStaticInitialized())
@@ -29,8 +27,7 @@ Box::Box(
 			DirectX::XMFLOAT3 norm;
 		};
 
-		auto model = Cube::makeIndependent<Vertex>();
-		model.setNormalsIndependentFlat();
+		auto model = Prism::makeTesselatedIndependentCapNormals<Vertex>(tesselationDist(range));
 
 		addStaticBind(std::make_unique<VertexBuffer>(renderer, model.vertices));
 
@@ -38,7 +35,7 @@ Box::Box(
 		auto vertexShaderBytecode = vertexShader->getBytecode();
 		addStaticBind(std::move(vertexShader));
 
-		addStaticBind(std::make_unique<PixelShader>(renderer, L"phong_pixel.cso"));
+		addStaticBind(std::make_unique<PixelShader>(renderer, L"indexed_phong_pixel.cso"));
 
 		addStaticIndexBuffer(std::make_unique<IndexBuffer>(renderer, model.indices));
 
@@ -50,6 +47,21 @@ Box::Box(
 		addStaticBind(std::make_unique<InputLayout>(renderer, inputElementDesc, vertexShaderBytecode));
 
 		addStaticBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+
+		struct ConstantData
+		{
+			DirectX::XMFLOAT3A colors[6] = {
+				{1.0f,0.0f,0.0f},
+				{0.0f,1.0f,0.0f},
+				{0.0f,0.0f,1.0f},
+				{1.0f,1.0f,0.0f},
+				{1.0f,0.0f,1.0f},
+				{0.0f,1.0f,1.0f},
+			};
+			float specularIntensity = 0.6f;
+			float specularPower = 30.0f;
+		} constData;
+		addStaticBind(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData, 2));
 	}
 	else
 	{
@@ -57,24 +69,4 @@ Box::Box(
 	}
 
 	addBind(std::make_unique<TransformCbuf>(renderer, *this));
-
-	struct ConstantData
-	{
-		DirectX::XMFLOAT3 materialColor;
-		float specularIntensity = 0.6f;
-		float specularPower = 30.0f;
-		float padding[3];
-	} constData;
-	constData.materialColor = materialColor;
-	addBind(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData, 2));
-
-	DirectX::XMStoreFloat3x3(
-		&model,
-		DirectX::XMMatrixScaling(1.0f, 1.0f, sizeDist(range))
-	);
-}
-
-DirectX::XMMATRIX Box::getTransform() const noexcept
-{
-	return DirectX::XMLoadFloat3x3(&model) * DefaultDrawableBase::getTransform();
 }
