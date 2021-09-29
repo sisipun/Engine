@@ -69,8 +69,8 @@ public:
 		return { std::move(vertices), std::move(indices) };
 	}
 
-	template<class V>
-	static IndexedTriangleList<V> makeTesselatedIndependentCapNormals(int longDiv)
+	template<typename V>
+	static IndexedTriangleList<V> makeTesselatedIndependentCapNormals(int longDiv) noexcept
 	{
 		assert(longDiv >= 3);
 		const auto base = DirectX::XMVectorSet(1.0f, 0.0f, -1.0f, 0.0f);

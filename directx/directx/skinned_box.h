@@ -1,9 +1,9 @@
 #ifndef SKINNED_BOX
 #define SKINNED_BOX
 
-#include "drawable_base.h"
+#include "default_drawable_base.h"
 
-class SkinnedBox : public DrawableBase<SkinnedBox>
+class SkinnedBox : public DefaultDrawableBase<SkinnedBox>
 {
 public:
 	SkinnedBox(const Renderer& renderer,
@@ -12,23 +12,6 @@ public:
 		std::uniform_real_distribution<float>& anglesDist,
 		std::uniform_real_distribution<float>& deltaAnglesDist,
 		std::uniform_real_distribution<float>& deltaOrientationDist);
-	void update(float dt) noexcept override;
-	DirectX::XMMATRIX getTransform() const noexcept override;
-private:
-	float radius;
-	float roll = 0.0f;
-	float pitch = 0.0f;
-	float yaw = 0.0f;
-	float theta;
-	float phi;
-	float chi;
-
-	float droll;
-	float dpitch;
-	float dyaw;
-	float dtheta;
-	float dphi;
-	float dchi;
 };
 
 #endif

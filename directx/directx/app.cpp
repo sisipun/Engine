@@ -31,6 +31,10 @@ App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRendere
 				return std::make_unique<Box>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, sizeDist, materialColor);
 			case 1:
 				return std::make_unique<Cylinder>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, tesselationDist);
+			case 2:
+				return std::make_unique<Pyramid>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, tesselationDist);
+			case 3:
+				return std::make_unique<SkinnedBox>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist);
 			default:
 				return {};
 			}
@@ -38,7 +42,7 @@ App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRendere
 	private:
 		const Renderer& renderer;
 		std::mt19937 range{ std::random_device{}() };
-		std::uniform_int_distribution<int> typeDist{ 0, 1 };
+		std::uniform_int_distribution<int> typeDist{ 0, 3 };
 		std::uniform_real_distribution<float> radiusDist{ 6.0f, 20.0f };
 		std::uniform_real_distribution<float> anglesDist{ 0.0f, PI * 2.0f };
 		std::uniform_real_distribution<float> deltaAnglesDist{ 0.0f, PI * 0.08f };

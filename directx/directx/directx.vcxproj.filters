@@ -307,18 +307,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="color_blend_vertex.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="color_blend_pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="texture_pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="texture_vertex.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
     <FxCompile Include="phong_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
@@ -332,6 +320,18 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="indexed_phong_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="blended_phong_vertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="blended_phong_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="textured_phong_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="textured_phong_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

@@ -8,7 +8,7 @@ class Sphere
 {
 public:
 	template<typename V>
-	static IndexedTriangleList<V> make(int latDiv, int longDiv)
+	static IndexedTriangleList<V> make(int latDiv, int longDiv) noexcept
 	{
 		constexpr float radius = 1.0f;
 		const auto base = DirectX::XMVectorSet(0.0f, 0.0f, radius, 0.0f);
@@ -88,7 +88,7 @@ public:
 	}
 
 	template<typename V>
-	static IndexedTriangleList<V> make()
+	static IndexedTriangleList<V> make() noexcept
 	{
 		return make<V>(12, 24);
 	}

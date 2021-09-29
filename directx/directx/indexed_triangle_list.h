@@ -13,7 +13,7 @@ public:
 	{
 	}
 
-	void transform(DirectX::FXMMATRIX matrix)
+	void transform(DirectX::FXMMATRIX matrix) noexcept
 	{
 		for (auto& vertex : vertices)
 		{

@@ -10,7 +10,7 @@ class Plane
 {
 public:
 	template<typename V>
-	static IndexedTriangleList<V> make(int divisionsX, int divisionsY)
+	static IndexedTriangleList<V> make(int divisionsX, int divisionsY) noexcept
 	{
 		constexpr float width = 2.0f;
 		constexpr float height = 2.0f;
@@ -63,7 +63,7 @@ public:
 	}
 
 	template<typename V>
-	static IndexedTriangleList<V> make()
+	static IndexedTriangleList<V> make() noexcept
 	{
 		return make<V>(1, 1);
 	}
