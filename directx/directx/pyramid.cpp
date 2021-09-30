@@ -11,6 +11,7 @@
 #include "vertex_shader.h"
 #include "cone.h"
 
+
 Pyramid::Pyramid(
 	const Renderer& renderer,
 	std::mt19937& range,

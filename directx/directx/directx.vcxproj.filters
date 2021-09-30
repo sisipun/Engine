@@ -147,6 +147,9 @@
     <ClCompile Include="cylinder.cpp">
       <Filter>Source Files\drawable</Filter>
     </ClCompile>
+    <ClCompile Include="suzanne.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -303,6 +306,9 @@
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
     <ClInclude Include="cylinder.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="suzanne.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
   </ItemGroup>
