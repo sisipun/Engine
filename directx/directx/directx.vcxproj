@@ -263,6 +263,7 @@
     <ClInclude Include="topology.h" />
     <ClInclude Include="transform_cbuf.h" />
     <ClInclude Include="vertex_buffer.h" />
+    <ClInclude Include="vertex_layout.h" />
     <ClInclude Include="vertex_shader.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="window_throw_macros.h" />

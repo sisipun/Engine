@@ -311,6 +311,9 @@
     <ClInclude Include="suzanne.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
+    <ClInclude Include="vertex_layout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="phong_vertex.hlsl">

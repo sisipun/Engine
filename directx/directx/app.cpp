@@ -11,8 +11,37 @@
 #include "math.h"
 #include "gdi_plus_manager.h"
 #include "imgui/imgui.h"
+#include "vertex_layout.h"
 
 GDIPlusManager gdipm;
+
+void test()
+{
+	VertexBuffer vb(std::move(
+		VertexLayout{}
+		.append<VertexLayout::POSITION3D>()
+		.append<VertexLayout::NORMAL>()
+		.append<VertexLayout::TEXTURE2D>()
+	));
+	vb.emplaceBack(
+		DirectX::XMFLOAT3{ 1.0f,1.0f,5.0f },
+		DirectX::XMFLOAT3{ 2.0f,1.0f,4.0f },
+		DirectX::XMFLOAT2{ 6.0f,9.0f }
+	);
+	vb.emplaceBack(
+		DirectX::XMFLOAT3{ 6.0f,9.0f,6.0f },
+		DirectX::XMFLOAT3{ 9.0f,6.0f,9.0f },
+		DirectX::XMFLOAT2{ 4.2f,0.0f }
+	);
+	auto pos = vb[0].attr<VertexLayout::POSITION3D>();
+	auto nor = vb[0].attr<VertexLayout::NORMAL>();
+	auto tex = vb[1].attr<VertexLayout::TEXTURE2D>();
+	vb.back().attr<VertexLayout::POSITION3D>().z = 420.0f;
+	pos = vb.back().attr<VertexLayout::POSITION3D>();
+
+	const auto& cvb = vb;
+	pos = cvb[1].attr<VertexLayout::POSITION3D>();
+}
 
 App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRenderer()), camera(window.getRenderer())
 {
