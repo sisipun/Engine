@@ -27,6 +27,65 @@ public:
 		RGBA_COLOR
 	};
 
+	template<ElementType T>
+	struct Map;
+
+	template<>
+	struct Map<POSITION2D>
+	{
+		using SysType = DirectX::XMFLOAT2;
+		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
+		static constexpr const char* semantic = "Position";
+	};
+
+	template<>
+	struct Map<POSITION3D>
+	{
+		using SysType = DirectX::XMFLOAT3;
+		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+		static constexpr const char* semantic = "Position";
+	};
+
+	template<>
+	struct Map<TEXTURE2D>
+	{
+		using SysType = DirectX::XMFLOAT2;
+		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
+		static constexpr const char* semantic = "TexCoord";
+	};
+
+	template<>
+	struct Map<NORMAL>
+	{
+		using SysType = DirectX::XMFLOAT3;
+		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+		static constexpr const char* semantic = "Normal";
+	};
+
+	template<>
+	struct Map<FLOAT3_COLOR>
+	{
+		using SysType = DirectX::XMFLOAT3;
+		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+		static constexpr const char* semantic = "Color";
+	};
+
+	template<>
+	struct Map<FLOAT4_COLOR>
+	{
+		using SysType = DirectX::XMFLOAT4;
+		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		static constexpr const char* semantic = "Color";
+	};
+
+	template<>
+	struct Map<RGBA_COLOR>
+	{
+		using SysType = RGBAColor;
+		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+		static constexpr const char* semantic = "Color";
+	};
+
 	class Element
 	{
 	public:
@@ -54,19 +113,19 @@ public:
 			switch (type)
 			{
 			case POSITION2D:
-				return sizeof(DirectX::XMFLOAT2);
+				return sizeof(Map<POSITION2D>::SysType);
 			case POSITION3D:
-				return sizeof(DirectX::XMFLOAT3);
+				return sizeof(Map<POSITION3D>::SysType);
 			case TEXTURE2D:
-				return sizeof(DirectX::XMFLOAT2);
+				return sizeof(Map<TEXTURE2D>::SysType);
 			case NORMAL:
-				return sizeof(DirectX::XMFLOAT3);
+				return sizeof(Map<NORMAL>::SysType);
 			case FLOAT3_COLOR:
-				return sizeof(DirectX::XMFLOAT3);
+				return sizeof(Map<FLOAT3_COLOR>::SysType);
 			case FLOAT4_COLOR:
-				return sizeof(DirectX::XMFLOAT4);
+				return sizeof(Map<FLOAT4_COLOR>::SysType);
 			case RGBA_COLOR:
-				return sizeof(RGBAColor);
+				return sizeof(Map<RGBA_COLOR>::SysType);
 			}
 
 			return 0;
@@ -77,7 +136,36 @@ public:
 			return type;
 		}
 
+		D3D11_INPUT_ELEMENT_DESC getDesc() const noexcept
+		{
+			switch (type)
+			{
+			case POSITION2D:
+				return generateDesc<POSITION2D>(getOffset());
+			case POSITION3D:
+				return generateDesc<POSITION3D>(getOffset());
+			case TEXTURE2D:
+				return generateDesc<TEXTURE2D>(getOffset());
+			case NORMAL:
+				return generateDesc<NORMAL>(getOffset());
+			case FLOAT3_COLOR:
+				return generateDesc<FLOAT3_COLOR>(getOffset());
+			case FLOAT4_COLOR:
+				return generateDesc<FLOAT4_COLOR>(getOffset());
+			case RGBA_COLOR:
+				return generateDesc<RGBA_COLOR>(getOffset());
+			}
+
+			return { "INVALID", 0, DXGI_FORMAT_UNKNOWN, 0, (UINT)offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+		}
+
 	private:
+		template<ElementType T>
+		static constexpr D3D11_INPUT_ELEMENT_DESC generateDesc(size_t offset) noexcept
+		{
+			return { Map<T>::semantic, 0, Map<T>::dxgiFormat, 0, (UINT)offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+		}
+
 		ElementType type;
 		size_t offset;
 	};
@@ -101,10 +189,9 @@ public:
 		return elements[i];
 	}
 
-	template<ElementType T>
-	VertexLayout& append() noexcept
+	VertexLayout& append(ElementType type) noexcept
 	{
-		elements.emplace_back(T, size());
+		elements.emplace_back(type, size());
 		return *this;
 	}
 
@@ -118,51 +205,30 @@ public:
 		return elements.size();
 	}
 
+	std::vector<D3D11_INPUT_ELEMENT_DESC> getDescLayout() const noexcept
+	{
+		std::vector<D3D11_INPUT_ELEMENT_DESC> descriptions;
+		descriptions.reserve(getElementsCount());
+		for (const auto& element : elements)
+		{
+			descriptions.push_back(element.getDesc());
+		}
+		return descriptions;
+	}
+
 private:
 	std::vector<Element> elements;
 };
 
 class Vertex
 {
-	friend class VertexBuffer;
+	friend class VertexBufferData;
 public:
 	template<VertexLayout::ElementType T>
 	auto& attr() noexcept
 	{
-		const auto& element = layout.resolve<T>();
-		auto attribute = data + element.getOffset();
-		if constexpr (T == VertexLayout::POSITION2D)
-		{
-			return *reinterpret_cast<DirectX::XMFLOAT2*>(attribute);
-		}
-		else if constexpr (T == VertexLayout::POSITION3D)
-		{
-			return *reinterpret_cast<DirectX::XMFLOAT3*>(attribute);
-		}
-		else if constexpr (T == VertexLayout::TEXTURE2D)
-		{
-			return *reinterpret_cast<DirectX::XMFLOAT2*>(attribute);
-		}
-		else if constexpr (T == VertexLayout::NORMAL)
-		{
-			return *reinterpret_cast<DirectX::XMFLOAT3*>(attribute);
-		}
-		else if constexpr (T == VertexLayout::FLOAT3_COLOR)
-		{
-			return *reinterpret_cast<DirectX::XMFLOAT3*>(attribute);
-		}
-		else if constexpr (T == VertexLayout::FLOAT4_COLOR)
-		{
-			return *reinterpret_cast<DirectX::XMFLOAT4*>(attribute);
-		}
-		else if constexpr (T == VertexLayout::RGBA_COLOR)
-		{
-			return *reinterpret_cast<RGBAColor*>(attribute);
-		}
-		else
-		{
-			return *reinterpret_cast<char*>(attribute);
-		}
+		auto attribute = data + layout.resolve<T>().getOffset();
+		return *reinterpret_cast<typename VertexLayout::Map<T>::SysType*>(attribute);
 	}
 
 	template<typename T>
@@ -173,30 +239,30 @@ public:
 		switch (element.getType())
 		{
 		case VertexLayout::POSITION2D:
-			setAttribute<DirectX::XMFLOAT2>(attribute, std::forward<T>(value));
+			setAttribute<VertexLayout::POSITION2D>(attribute, std::forward<T>(value));
 			break;
 		case VertexLayout::POSITION3D:
-			setAttribute<DirectX::XMFLOAT3>(attribute, std::forward<T>(value));
+			setAttribute<VertexLayout::POSITION3D>(attribute, std::forward<T>(value));
 			break;
 		case VertexLayout::TEXTURE2D:
-			setAttribute<DirectX::XMFLOAT2>(attribute, std::forward<T>(value));
+			setAttribute<VertexLayout::TEXTURE2D>(attribute, std::forward<T>(value));
 			break;
 		case VertexLayout::NORMAL:
-			setAttribute<DirectX::XMFLOAT3>(attribute, std::forward<T>(value));
+			setAttribute<VertexLayout::NORMAL>(attribute, std::forward<T>(value));
 			break;
 		case VertexLayout::FLOAT3_COLOR:
-			setAttribute<DirectX::XMFLOAT3>(attribute, std::forward<T>(value));
+			setAttribute<VertexLayout::FLOAT3_COLOR>(attribute, std::forward<T>(value));
 			break;
 		case VertexLayout::FLOAT4_COLOR:
-			setAttribute<DirectX::XMFLOAT4>(attribute, std::forward<T>(value));
+			setAttribute<VertexLayout::FLOAT4_COLOR>(attribute, std::forward<T>(value));
 			break;
 		case VertexLayout::RGBA_COLOR:
-			setAttribute<RGBAColor>(attribute, std::forward<T>(value));
+			setAttribute<VertexLayout::RGBA_COLOR>(attribute, std::forward<T>(value));
 			break;
 		}
 	}
 protected:
-	Vertex(char* data, const VertexLayout layout) noexcept : data(data), layout(layout)
+	Vertex(char* data, const VertexLayout& layout) noexcept : data(data), layout(layout)
 	{
 	}
 
@@ -208,9 +274,10 @@ private:
 		setAttributeByIndex(i + 1, std::forward<Rest>(rest)...);
 	}
 
-	template<typename Dest, typename Src>
+	template<VertexLayout::ElementType DestElementType, typename Src>
 	void setAttribute(char* attribute, Src&& val) noexcept
 	{
+		using Dest = typename VertexLayout::Map<DestElementType>::SysType;
 		if constexpr (std::is_assignable<Dest, Src>::value)
 		{
 			*reinterpret_cast<Dest*>(attribute) = val;
@@ -238,11 +305,16 @@ private:
 	Vertex vertex;
 };
 
-class VertexBuffer
+class VertexBufferData
 {
 public:
-	VertexBuffer(VertexLayout layout) noexcept : layout(std::move(layout))
+	VertexBufferData(VertexLayout layout) noexcept : layout(std::move(layout))
 	{
+	}
+
+	const char* getData() const noexcept
+	{
+		return buffer.data();
 	}
 
 	const VertexLayout& getLayout() const noexcept
@@ -253,6 +325,11 @@ public:
 	size_t size() const noexcept
 	{
 		return buffer.size() / layout.size();
+	}
+
+	size_t sizeBytes() const noexcept
+	{
+		return buffer.size();
 	}
 
 	template<typename ...Params>
@@ -279,17 +356,17 @@ public:
 
 	ConstVertex back() const noexcept
 	{
-		return const_cast<VertexBuffer*>(this)->back();
+		return const_cast<VertexBufferData*>(this)->back();
 	}
 
 	ConstVertex front() const noexcept
 	{
-		return const_cast<VertexBuffer*>(this)->front();
+		return const_cast<VertexBufferData*>(this)->front();
 	}
 
 	ConstVertex operator[](size_t i) const noexcept
 	{
-		return const_cast<VertexBuffer&>(*this)[i];
+		return const_cast<VertexBufferData&>(*this)[i];
 	}
 
 private:

@@ -11,6 +11,7 @@
 #include "transform_cbuf.h"
 #include "vertex_buffer.h"
 #include "vertex_shader.h"
+#include "vertex_layout.h"
 
 
 Suzanne::Suzanne(
@@ -26,24 +27,17 @@ Suzanne::Suzanne(
 {
 	if (!isStaticInitialized())
 	{
-		struct Vertex
-		{
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMFLOAT3 norm;
-		};
-
+		VertexBufferData vertexBufferData(std::move(VertexLayout().append(VertexLayout::POSITION3D).append(VertexLayout::NORMAL)));
 		Assimp::Importer importer;
 		const auto model = importer.ReadFile("models\\suzanne.obj", aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
 		const auto mesh = model->mMeshes[0];
 
-		std::vector<Vertex> vertices;
-		vertices.reserve(mesh->mNumVertices);
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
-			vertices.push_back({
-				{ mesh->mVertices[i].x * scale, mesh->mVertices[i].y * scale, mesh->mVertices[i].z * scale },
+			vertexBufferData.emplaceBack(
+				DirectX::XMFLOAT3{ mesh->mVertices[i].x * scale, mesh->mVertices[i].y * scale, mesh->mVertices[i].z * scale },
 				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh->mNormals[i])
-			});
+			);
 		}
 
 		std::vector<unsigned short> indices;
@@ -56,7 +50,7 @@ Suzanne::Suzanne(
 			indices.push_back(face.mIndices[2]);
 		}
 
-		addStaticBind(std::make_unique<VertexBuffer>(renderer, vertices));
+		addStaticBind(std::make_unique<VertexBuffer>(renderer, vertexBufferData));
 
 		auto vertexShader = std::make_unique<VertexShader>(renderer, L"phong_vertex.cso");
 		auto vertexShaderBytecode = vertexShader->getBytecode();
@@ -66,12 +60,7 @@ Suzanne::Suzanne(
 
 		addStaticIndexBuffer(std::make_unique<IndexBuffer>(renderer, indices));
 
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc =
-		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		};
-		addStaticBind(std::make_unique<InputLayout>(renderer, inputElementDesc, vertexShaderBytecode));
+		addStaticBind(std::make_unique<InputLayout>(renderer, vertexBufferData.getLayout().getDescLayout(), vertexShaderBytecode));
 
 		addStaticBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
