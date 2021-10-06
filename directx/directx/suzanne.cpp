@@ -11,7 +11,7 @@
 #include "transform_cbuf.h"
 #include "vertex_buffer.h"
 #include "vertex_shader.h"
-#include "vertex_layout.h"
+#include "vertex.h"
 
 
 Suzanne::Suzanne(

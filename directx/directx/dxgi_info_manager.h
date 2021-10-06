@@ -1,5 +1,5 @@
-#ifndef DXGI_INFO_MANAGER
-#define DXGI_INFO_MANAGER
+#ifndef DXGI_INFO_MANAGER_H
+#define DXGI_INFO_MANAGER_H
 
 #include <string>
 #include <vector>

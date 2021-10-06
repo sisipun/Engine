@@ -1,5 +1,5 @@
-#ifndef IMGUI_MANAGER
-#define IMGUI_MANAGER
+#ifndef IMGUI_MANAGER_H
+#define IMGUI_MANAGER_H
 
 class ImguiManager
 {

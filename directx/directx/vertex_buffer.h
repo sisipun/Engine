@@ -3,7 +3,7 @@
 
 #include "bindable.h"
 #include "renderer_throw_macros.h"
-#include "vertex_layout.h"
+#include "vertex.h"
 
 class VertexBuffer : public Bindable
 {

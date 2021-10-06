@@ -1,5 +1,5 @@
-#ifndef RENDERER_THROW_MACROS
-#define RENDERER_THROW_MACROS
+#ifndef RENDERER_THROW_MACROS_H
+#define RENDERER_THROW_MACROS_H
 
 #define RENDERER_THROW_NOINFO(hResult, call) if (FAILED(hResult = call)) { if (hResult == DXGI_ERROR_DEVICE_REMOVED) { throw Renderer::DeviceRemovedException(__LINE__, __FILE__, hResult); } else { throw Renderer::HrException(__LINE__, __FILE__, hResult); }}
 

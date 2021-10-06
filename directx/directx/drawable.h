@@ -11,7 +11,7 @@ public:
 	Drawable(const Drawable& drawable) = delete;
 	virtual DirectX::XMMATRIX getTransform() const noexcept = 0;
 	void draw(const Renderer& renderer) const;
-	virtual void update(float dt) noexcept = 0;
+	virtual void update(float dt) noexcept {};
 	virtual ~Drawable() = default;
 protected:
 	void addBind(std::unique_ptr<Bindable> bind) noexcept;

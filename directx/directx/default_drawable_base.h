@@ -1,5 +1,5 @@
-#ifndef DEFAULT_DRAWABLE_BASE
-#define DEFAULT_DRAWABLE_BASE
+#ifndef DEFAULT_DRAWABLE_BASE_H
+#define DEFAULT_DRAWABLE_BASE_H
 
 #include "drawable_base.h"
 
@@ -28,7 +28,7 @@ public:
 	{
 	}
 
-	void DefaultDrawableBase::update(float dt) noexcept override
+	void update(float dt) noexcept override
 	{
 		roll += droll * dt;
 		pitch += dpitch * dt;
@@ -38,7 +38,7 @@ public:
 		chi += dchi * dt;
 	}
 
-	DirectX::XMMATRIX DefaultDrawableBase::getTransform() const noexcept override
+	DirectX::XMMATRIX getTransform() const noexcept override
 	{
 		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 			DirectX::XMMatrixTranslation(radius, 0.0f, 0.0f) *

@@ -1,5 +1,5 @@
-#ifndef GDI_MANAGER
-#define GDI_MANAGER
+#ifndef GDI_MANAGER_H
+#define GDI_MANAGER_H
 
 #include "win_api.h"
 

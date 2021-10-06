@@ -93,12 +93,6 @@
     <ClCompile Include="vertex_buffer.cpp">
       <Filter>Source Files\bindable</Filter>
     </ClCompile>
-    <ClCompile Include="box.cpp">
-      <Filter>Source Files\drawable</Filter>
-    </ClCompile>
-    <ClCompile Include="pyramid.cpp">
-      <Filter>Source Files\drawable</Filter>
-    </ClCompile>
     <ClCompile Include="gdi_plus_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -110,9 +104,6 @@
     </ClCompile>
     <ClCompile Include="texture.cpp">
       <Filter>Source Files\bindable</Filter>
-    </ClCompile>
-    <ClCompile Include="skinned_box.cpp">
-      <Filter>Source Files\drawable</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
@@ -138,17 +129,20 @@
     <ClCompile Include="camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="solid_sphere.cpp">
-      <Filter>Source Files\drawable</Filter>
-    </ClCompile>
     <ClCompile Include="point_light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cylinder.cpp">
-      <Filter>Source Files\drawable</Filter>
-    </ClCompile>
     <ClCompile Include="suzanne.cpp">
       <Filter>Source Files\drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="solid_sphere.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,9 +215,6 @@
     <ClInclude Include="vertex_buffer.h">
       <Filter>Header Files\bindable</Filter>
     </ClInclude>
-    <ClInclude Include="box.h">
-      <Filter>Header Files\drawable</Filter>
-    </ClInclude>
     <ClInclude Include="drawable_base.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
@@ -248,9 +239,6 @@
     <ClInclude Include="sphere.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="pyramid.h">
-      <Filter>Header Files\drawable</Filter>
-    </ClInclude>
     <ClInclude Include="gdi_plus_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -259,9 +247,6 @@
     </ClInclude>
     <ClInclude Include="sampler.h">
       <Filter>Header Files\bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="skinned_box.h">
-      <Filter>Header Files\drawable</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imconfig.h">
       <Filter>imgui</Filter>
@@ -296,22 +281,25 @@
     <ClInclude Include="texture.h">
       <Filter>Header Files\bindable</Filter>
     </ClInclude>
-    <ClInclude Include="solid_sphere.h">
-      <Filter>Header Files\drawable</Filter>
-    </ClInclude>
     <ClInclude Include="point_light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="default_drawable_base.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
-    <ClInclude Include="cylinder.h">
-      <Filter>Header Files\drawable</Filter>
-    </ClInclude>
     <ClInclude Include="suzanne.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
-    <ClInclude Include="vertex_layout.h">
+    <ClInclude Include="vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="solid_sphere.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -326,21 +314,6 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="solid_vertex.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="indexed_phong_pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="blended_phong_vertex.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="blended_phong_pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="textured_phong_pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="textured_phong_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

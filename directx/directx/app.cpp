@@ -2,65 +2,17 @@
 #include <optional>
 #include <algorithm>
 
+#include "imgui/imgui.h"
 #include "app.h"
-#include "box.h"
-#include "cylinder.h"
-#include "pyramid.h"
-#include "skinned_box.h"
 #include "suzanne.h"
 #include "math.h"
 #include "gdi_plus_manager.h"
-#include "imgui/imgui.h"
-#include "vertex_layout.h"
+#include "vertex.h"
 
 GDIPlusManager gdipm;
 
 App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRenderer()), camera(window.getRenderer())
 {
-	class Factory
-	{
-	public:
-		Factory(const Renderer& renderer) : renderer(renderer)
-		{
-		}
-
-		std::unique_ptr<Drawable> operator()()
-		{
-			const DirectX::XMFLOAT3 materialColor = { colorDist(range), colorDist(range), colorDist(range) };
-
-			switch (typeDist(range))
-			{
-			case 0:
-				return std::make_unique<Box>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, sizeDist, materialColor);
-			case 1:
-				return std::make_unique<Cylinder>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, tesselationDist);
-			case 2:
-				return std::make_unique<Pyramid>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, tesselationDist);
-			case 3:
-				return std::make_unique<SkinnedBox>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist);
-			case 4:
-				return std::make_unique<Suzanne>(renderer, range, radiusDist, anglesDist, deltaAnglesDist, deltaOrientationDist, materialColor, 1.5f);
-			default:
-				return {};
-			}
-		}
-	private:
-		const Renderer& renderer;
-		std::mt19937 range{ std::random_device{}() };
-		std::uniform_int_distribution<int> typeDist{ 0, 4 };
-		std::uniform_real_distribution<float> radiusDist{ 6.0f, 20.0f };
-		std::uniform_real_distribution<float> anglesDist{ 0.0f, PI * 2.0f };
-		std::uniform_real_distribution<float> deltaAnglesDist{ 0.0f, PI * 0.08f };
-		std::uniform_real_distribution<float> deltaOrientationDist{ 0.0f, PI * 0.5f };
-		std::uniform_real_distribution<float> sizeDist{ 0.4f, 3.0f };
-		std::uniform_real_distribution<float> colorDist{ 0.0f, 1.0f };
-		std::uniform_real_distribution<float> tesselationDist{ 3, 30 };
-	};
-
-	Factory factory(window.getRenderer());
-	drawables.reserve(drawableCount);
-	std::generate_n(std::back_inserter(drawables), drawableCount, factory);
-
 	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5, 40.0f));
 }
 
@@ -89,12 +41,10 @@ void App::processFrame()
 
 	camera.update(window.getRenderer());
 	light.update(window.getRenderer());
-
-	for (auto& drawable : drawables)
-	{
-		drawable->update(window.keyboard.keyIsPressed(VK_SPACE) ? 0.0f : dt);
-		drawable->draw(window.getRenderer());
-	}
+	
+	const auto transform = DirectX::XMMatrixRotationRollPitchYaw(position.pitch, position.yaw, position.roll) *
+		DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+	nano.draw(window.getRenderer(), transform);
 
 	light.draw(window.getRenderer());
 
@@ -108,6 +58,7 @@ void App::processFrame()
 
 	camera.spawnControlWindow();
 	light.spawnControlWindow();
+	showModelWindow();
 
 	window.getRenderer().endFrame();
 	
@@ -121,4 +72,21 @@ void App::processFrame()
 			window.setTitle(oss.str());
 		}
 	}
+}
+
+void App::showModelWindow()
+{
+	if (ImGui::Begin("Model"))
+	{
+		ImGui::Text("Orientation");
+		ImGui::SliderAngle("Roll", &position.roll, -180.0f, 180.0f);
+		ImGui::SliderAngle("Pitch", &position.pitch, -180.0f, 180.0f);
+		ImGui::SliderAngle("Yaw", &position.yaw, -180.0f, 180.0f);
+
+		ImGui::Text("Position");
+		ImGui::SliderFloat("X", &position.x, -20.0f, 20.0f);
+		ImGui::SliderFloat("Y", &position.y, -20.0f, 20.0f);
+		ImGui::SliderFloat("Z", &position.z, -20.0f, 20.0f);
+	}
+	ImGui::End();
 }

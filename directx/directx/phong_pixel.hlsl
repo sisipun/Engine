@@ -36,5 +36,7 @@ float4 main(float3 worldPos: Position, float3 norm: Normal) : SV_Target
     const float3 reflection = 2.0f * norm * dot(lightDir, norm) - lightDir;
     const float3 specularLight = att * specularIntensity * pow(max(0.0f, dot(halfway, normalize(norm))), specularPower);
     
-    return float4(saturate((ambientLight + diffuseLight + specularLight) * materialColor), 1.0f);
+    float3 colorBase = (ambientLight + diffuseLight + specularLight) * materialColor;
+    float4 color = float4(saturate(colorBase), 1.0f);
+    return color;
 }

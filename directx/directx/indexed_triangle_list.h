@@ -1,5 +1,5 @@
-#ifndef INDEXED_TRIANGLE_LIST
-#define INDEXED_TRIANGLE_LIST
+#ifndef INDEXED_TRIANGLE_LIST_H
+#define INDEXED_TRIANGLE_LIST_H
 
 #include <vector>
 #include <DirectXMath.h>
