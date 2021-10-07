@@ -18,7 +18,6 @@ public:
 
 private:
 	void processFrame();
-	void showModelWindow();
 
 	ImguiManager imguiManager;
 	Window window;
@@ -27,15 +26,6 @@ private:
 	PointLight light;
 	float speed_factor = 1.0f;
 	Model nano{ window.getRenderer(), "models\\nanosuit.obj" };
-	struct
-	{
-		float roll = 0.0f;
-		float pitch = 0.0f;
-		float yaw = 0.0f;
-		float x = 0.0f;
-		float y = 0.0f;
-		float z = 0.0f;
-	} position;
 };
 
 #endif 

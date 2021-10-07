@@ -42,9 +42,7 @@ void App::processFrame()
 	camera.update(window.getRenderer());
 	light.update(window.getRenderer());
 	
-	const auto transform = DirectX::XMMatrixRotationRollPitchYaw(position.pitch, position.yaw, position.roll) *
-		DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-	nano.draw(window.getRenderer(), transform);
+	nano.draw(window.getRenderer());
 
 	light.draw(window.getRenderer());
 
@@ -58,7 +56,7 @@ void App::processFrame()
 
 	camera.spawnControlWindow();
 	light.spawnControlWindow();
-	showModelWindow();
+	nano.spawnControlWindow();
 
 	window.getRenderer().endFrame();
 	
@@ -72,21 +70,4 @@ void App::processFrame()
 			window.setTitle(oss.str());
 		}
 	}
-}
-
-void App::showModelWindow()
-{
-	if (ImGui::Begin("Model"))
-	{
-		ImGui::Text("Orientation");
-		ImGui::SliderAngle("Roll", &position.roll, -180.0f, 180.0f);
-		ImGui::SliderAngle("Pitch", &position.pitch, -180.0f, 180.0f);
-		ImGui::SliderAngle("Yaw", &position.yaw, -180.0f, 180.0f);
-
-		ImGui::Text("Position");
-		ImGui::SliderFloat("X", &position.x, -20.0f, 20.0f);
-		ImGui::SliderFloat("Y", &position.y, -20.0f, 20.0f);
-		ImGui::SliderFloat("Z", &position.z, -20.0f, 20.0f);
-	}
-	ImGui::End();
 }
