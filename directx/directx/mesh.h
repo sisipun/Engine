@@ -41,7 +41,17 @@ private:
 class Model
 {
 public:
-	Model(const Renderer& renderer, const std::string fileName) noexcept;
+	class LoadException : public BaseException
+	{
+	public:
+		LoadException(int line, const char* file, std::string note) noexcept;
+		const char* what() const noexcept override;
+		const char* getType() const noexcept override;
+		const std::string& getErrorNote() const noexcept;
+	private:
+		std::string note;
+	};
+	Model(const Renderer& renderer, const std::string fileName);
 	~Model() noexcept;
 
 	void draw(const Renderer& renderer) const noexcept;

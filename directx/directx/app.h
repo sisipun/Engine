@@ -25,7 +25,7 @@ private:
 	Camera camera;
 	PointLight light;
 	float speed_factor = 1.0f;
-	Model nano{ window.getRenderer(), "models\\nanosuit.obj" };
+	Model nano{ window.getRenderer(), "models\\nano_hierarchy.gltf" };
 };
 
 #endif 

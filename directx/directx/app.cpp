@@ -11,7 +11,7 @@
 
 GDIPlusManager gdipm;
 
-App::App() : window(100, 100, 800, 600, "Basic window"), light(window.getRenderer()), camera(window.getRenderer())
+App::App() : window(100, 100, 1280, 720, "Basic window"), light(window.getRenderer()), camera(window.getRenderer())
 {
 	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5, 40.0f));
 }

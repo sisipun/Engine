@@ -1,5 +1,6 @@
 #include <optional>
 #include <unordered_map>
+#include <sstream>
 
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
@@ -84,7 +85,7 @@ void Node::spawnControlTree(int& nodeIndex, std::optional<int>& selectedIndex, N
 		| ((children.size() == 0) ? ImGuiTreeNodeFlags_Leaf : 0);
 
 	bool expanded = ImGui::TreeNodeEx((void*)(intptr_t)currentNodeIndex, nodeFlags, name.c_str());
-	
+
 	if (ImGui::IsItemClicked())
 	{
 		selectedIndex = currentNodeIndex;
@@ -162,10 +163,41 @@ private:
 	std::unordered_map<int, TransformParameters> transforms;
 };
 
-Model::Model(const Renderer& renderer, const std::string fileName) noexcept : controlWindow(std::make_unique<ModelControlWindow>())
+Model::LoadException::LoadException(int line, const char* file, std::string note) noexcept : BaseException(line, file), note(std::move(note))
+{
+}
+
+const char* Model::LoadException::what() const noexcept
+{
+	std::ostringstream oss;
+	oss << BaseException::what() << std::endl << "[Note] " << getErrorNote();
+	whatBuffer = oss.str();
+	return whatBuffer.c_str();
+}
+
+const char* Model::LoadException::getType() const noexcept
+{
+	return "Model Load Exception";
+}
+
+const std::string& Model::LoadException::getErrorNote() const noexcept
+{
+	return note;
+}
+
+Model::Model(const Renderer& renderer, const std::string fileName) : controlWindow(std::make_unique<ModelControlWindow>())
 {
 	Assimp::Importer importer;
-	const auto model = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+	const auto model = importer.ReadFile(fileName, aiProcess_Triangulate
+		| aiProcess_JoinIdenticalVertices
+		| aiProcess_ConvertToLeftHanded
+		| aiProcess_GenNormals);
+
+	if (model == nullptr)
+	{
+		throw Model::LoadException(__LINE__, __FILE__, importer.GetErrorString());
+	}
+
 	for (size_t i = 0; i < model->mNumMeshes; i++)
 	{
 		meshes.push_back(parseMesh(renderer, *model->mMeshes[i]));

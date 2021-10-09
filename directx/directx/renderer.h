@@ -25,7 +25,7 @@ public:
 		InfoException(int line, const char* file, std::vector<std::string> infoMessages) noexcept;
 		const char* what() const noexcept override;
 		const char* getType() const noexcept override;
-		std::string getErrorInfo() const noexcept;
+		const std::string& getErrorInfo() const noexcept;
 	private:
 		std::string info;
 	};
@@ -42,7 +42,7 @@ public:
 		const char* getType() const noexcept override;
 	};
 
-	Renderer(HWND hWnd);
+	Renderer(HWND hWnd, int width, int height);
 	Renderer(const Renderer& renderer) = delete;
 	Renderer& operator=(const Renderer& renderer) = delete;
 	~Renderer();

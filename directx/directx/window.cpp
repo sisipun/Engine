@@ -49,7 +49,7 @@ Window::Window(int x, int y, int width, int height, const char* name) : width(wi
 
 	ImGui_ImplWin32_Init(hWnd);
 
-	renderer = std::make_unique<Renderer>(hWnd);
+	renderer = std::make_unique<Renderer>(hWnd, width, height);
 }
 
 Window::~Window()

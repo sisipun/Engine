@@ -8,11 +8,11 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
 
-Renderer::Renderer(HWND hWnd)
+Renderer::Renderer(HWND hWnd, int width, int height)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDescription = {};
-	swapChainDescription.BufferDesc.Width = 0;
-	swapChainDescription.BufferDesc.Height = 0;
+	swapChainDescription.BufferDesc.Width = width;
+	swapChainDescription.BufferDesc.Height = height;
 	swapChainDescription.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	swapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
 	swapChainDescription.BufferDesc.RefreshRate.Denominator = 0;
@@ -63,8 +63,8 @@ Renderer::Renderer(HWND hWnd)
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
 	D3D11_TEXTURE2D_DESC depthStencilTextureDescription = {};
-	depthStencilTextureDescription.Width = 800;
-	depthStencilTextureDescription.Height = 600;
+	depthStencilTextureDescription.Width = width;
+	depthStencilTextureDescription.Height = height;
 	depthStencilTextureDescription.MipLevels = 1;
 	depthStencilTextureDescription.ArraySize = 1;
 	depthStencilTextureDescription.Format = DXGI_FORMAT_D32_FLOAT;
@@ -83,8 +83,8 @@ Renderer::Renderer(HWND hWnd)
 	context->OMSetRenderTargets(1, renderTarget.GetAddressOf(), depthStencilView.Get());
 
 	D3D11_VIEWPORT viewport;
-	viewport.Width = 800;
-	viewport.Height = 600;
+	viewport.Width = width;
+	viewport.Height = height;
 	viewport.MinDepth = 0;
 	viewport.MaxDepth = 1;
 	viewport.TopLeftX = 0;
@@ -209,7 +209,7 @@ const char* Renderer::InfoException::getType() const noexcept
 	return "Renderer Info Exception";
 }
 
-std::string Renderer::InfoException::getErrorInfo() const noexcept
+const std::string& Renderer::InfoException::getErrorInfo() const noexcept
 {
 	return info;
 }
