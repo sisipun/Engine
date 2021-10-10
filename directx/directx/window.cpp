@@ -66,6 +66,22 @@ void Window::setTitle(const std::string& title)
 	}
 }
 
+void Window::enableCursor() noexcept
+{
+	cursorEnabled = true;
+	showCursor();
+	enableImGuiCursor();
+	freeCursor();
+}
+
+void Window::disableCursor() noexcept
+{
+	cursorEnabled = false;
+	hideCursor();
+	disableImGuiCursor();
+	confineCursor();
+}
+
 std::optional<int> Window::processMessage() noexcept
 {
 	MSG message;
@@ -125,6 +141,40 @@ HINSTANCE Window::WindowClass::getInstance() noexcept
 	return wndClass.hInstance;
 }
 
+void Window::confineCursor() noexcept
+{
+	RECT rect;
+	GetClientRect(hWnd, &rect);
+	MapWindowPoints(hWnd, nullptr, reinterpret_cast<POINT*>(&rect), 2);
+	ClipCursor(&rect);
+}
+
+void Window::freeCursor() noexcept
+{
+	ClipCursor(nullptr);
+}
+
+void Window::showCursor() noexcept
+{
+	while (ShowCursor(TRUE) < 0);
+}
+
+void Window::hideCursor() noexcept
+{
+	while (ShowCursor(FALSE) >= 0);
+}
+
+void Window::enableImGuiCursor() noexcept
+{
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+}
+
+void Window::disableImGuiCursor() noexcept
+{
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+}
+
+
 LRESULT CALLBACK Window::handleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
 	if (msg == WM_NCCREATE)
@@ -163,7 +213,20 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_KILLFOCUS:
 		keyboard.clearState();
 		break;
-
+	case WM_ACTIVATE:
+		if (!cursorEnabled) 
+		{
+			if (wParam & (WA_ACTIVE | WA_CLICKACTIVE))
+			{
+				confineCursor();
+				hideCursor();
+			}
+			else 
+			{
+				freeCursor();
+				showCursor();
+			}
+		}
 
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
@@ -196,6 +259,20 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_MOUSEMOVE:
 	{
 		const POINTS point = MAKEPOINTS(lParam);
+		if (!cursorEnabled)
+		{
+			if (!mouse.isInWindow())
+			{
+				SetCapture(hWnd);
+				mouse.onMouseEnter();
+				hideCursor();
+			}
+			break;
+		}
+		if (imGuiIo.WantCaptureKeyboard)
+		{
+			break;
+		}
 		if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height)
 		{
 			mouse.onMouseMove(point.x, point.y);
@@ -209,7 +286,6 @@ LRESULT Window::handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		{
 			if (wParam & (MK_LBUTTON | MK_RBUTTON))
 			{
-
 				mouse.onMouseMove(point.x, point.y);
 			}
 			else

@@ -4,7 +4,6 @@
 
 #include "imgui/imgui.h"
 #include "app.h"
-#include "suzanne.h"
 #include "math.h"
 #include "gdi_plus_manager.h"
 #include "vertex.h"
@@ -14,6 +13,7 @@ GDIPlusManager gdipm;
 App::App() : window(100, 100, 1280, 720, "Basic window"), light(window.getRenderer()), camera(window.getRenderer())
 {
 	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5, 40.0f));
+	window.disableCursor();
 }
 
 App::~App()

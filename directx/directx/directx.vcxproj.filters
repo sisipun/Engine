@@ -132,9 +132,6 @@
     <ClCompile Include="point_light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="suzanne.cpp">
-      <Filter>Source Files\drawable</Filter>
-    </ClCompile>
     <ClCompile Include="solid_sphere.cpp">
       <Filter>Source Files\drawable</Filter>
     </ClCompile>
@@ -224,18 +221,6 @@
     <ClInclude Include="indexed_triangle_list.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="cone.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="cube.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="plane.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="prism.h">
-      <Filter>Header Files\geometry</Filter>
-    </ClInclude>
     <ClInclude Include="sphere.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
@@ -283,12 +268,6 @@
     </ClInclude>
     <ClInclude Include="point_light.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="default_drawable_base.h">
-      <Filter>Header Files\drawable</Filter>
-    </ClInclude>
-    <ClInclude Include="suzanne.h">
-      <Filter>Header Files\drawable</Filter>
     </ClInclude>
     <ClInclude Include="vertex.h">
       <Filter>Header Files</Filter>

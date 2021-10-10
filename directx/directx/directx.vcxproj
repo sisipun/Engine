@@ -201,7 +201,6 @@
     <ClCompile Include="sampler.cpp" />
     <ClCompile Include="solid_sphere.cpp" />
     <ClCompile Include="surface.cpp" />
-    <ClCompile Include="suzanne.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="topology.cpp" />
@@ -219,10 +218,7 @@
     <ClInclude Include="bindable.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
-    <ClInclude Include="cone.h" />
     <ClInclude Include="constant_buffer.h" />
-    <ClInclude Include="cube.h" />
-    <ClInclude Include="default_drawable_base.h" />
     <ClInclude Include="drawable.h" />
     <ClInclude Include="drawable_base.h" />
     <ClInclude Include="dxgi_info_manager.h" />
@@ -244,16 +240,13 @@
     <ClInclude Include="mesh.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="pixel_shader.h" />
-    <ClInclude Include="plane.h" />
     <ClInclude Include="point_light.h" />
-    <ClInclude Include="prism.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_throw_macros.h" />
     <ClInclude Include="sampler.h" />
     <ClInclude Include="solid_sphere.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="surface.h" />
-    <ClInclude Include="suzanne.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="topology.h" />
