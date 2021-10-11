@@ -11,6 +11,8 @@ public:
 	DirectX::XMMATRIX getMatrix() const noexcept;
 	void spawnControlWindow() noexcept;
 	void reset() noexcept;
+	void rotate(float dx, float dy) noexcept;
+	void translate(DirectX::XMFLOAT3 translation) noexcept;
 	void update(const Renderer& renderer) const noexcept;
 private:
 	struct ConstantData
@@ -18,13 +20,12 @@ private:
 		alignas(16) DirectX::XMFLOAT3 cameraPos;
 	};
 
-	float roll = 0.0f;
-	float pitch = 0.0f;
-	float yaw = 0.0f;
-	float theta = 0.0f;
-	float phi = 0.0f;
-	ConstantData constData;
+	DirectX::XMFLOAT3 position;
+	float pitch;
+	float yaw;
 	mutable PixelConstantBuffer<ConstantData> constantBuffer;
+
+	static constexpr float sensitivity = 0.002f;
 };
 
 #endif

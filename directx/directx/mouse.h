@@ -8,6 +8,11 @@ class Mouse
 {
 	friend class Window;
 public:
+	struct RawDelta
+	{
+		int x, y;
+	};
+
 	class Event
 	{
 	public:
@@ -110,12 +115,17 @@ public:
 	}
 
 	std::optional<Mouse::Event> read() noexcept;
+	std::optional<RawDelta> readRawDelta() noexcept;
 	void clear() noexcept;
+	void enableRaw() noexcept;
+	void disableRaw() noexcept;
+	bool isRawEnabled() const noexcept;
 
 private:
 	void onMouseMove(int x, int y) noexcept;
 	void onMouseLeave() noexcept;
 	void onMouseEnter() noexcept;
+	void onRawDelta(int dx, int dy) noexcept;
 	void onLeftPressed(int x, int y) noexcept;
 	void onLeftReleased(int x, int y) noexcept;
 	void onRightPressed(int x, int y) noexcept;
@@ -123,6 +133,7 @@ private:
 	void onWheelUp(int x, int y) noexcept;
 	void onWheelDown(int x, int y) noexcept;
 	void trimBuffer() noexcept;
+	void trimRawInputBuffer() noexcept;
 	void onWheelDelta(int x, int y, int delta) noexcept;
 
 	static constexpr unsigned int bufferSize = 16u;
@@ -131,8 +142,10 @@ private:
 	bool leftPressed = false;
 	bool rightPressed = false;
 	bool inWindow = false;
+	bool rawEnabled = false;
 	int wheelDeltaCarry = 0;
 	std::queue<Event> buffer;
+	std::queue<RawDelta> rawDeltaBuffer;
 };
 
 #endif

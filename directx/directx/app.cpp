@@ -13,7 +13,6 @@ GDIPlusManager gdipm;
 App::App() : window(100, 100, 1280, 720, "Basic window"), light(window.getRenderer()), camera(window.getRenderer())
 {
 	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5, 40.0f));
-	window.disableCursor();
 }
 
 App::~App()
@@ -41,25 +40,76 @@ void App::processFrame()
 
 	camera.update(window.getRenderer());
 	light.update(window.getRenderer());
-	
+
 	nano.draw(window.getRenderer());
-
 	light.draw(window.getRenderer());
-
-	if (ImGui::Begin("Simulation Speed"))
-	{
-		ImGui::SliderFloat("Speed Factor", &speed_factor, 0.0f, 4.0f);
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::Text("Status: %s", window.keyboard.keyIsPressed(VK_SPACE) ? "PAUSED" : "RUNNING");
-	}
-	ImGui::End();
 
 	camera.spawnControlWindow();
 	light.spawnControlWindow();
 	nano.spawnControlWindow();
 
 	window.getRenderer().endFrame();
-	
+
+	while (const auto event = window.keyboard.readKey())
+	{
+		if (!event->isPress())
+		{
+			continue;
+		}
+
+		switch (event->getCode())
+		{
+		case VK_ESCAPE:
+			if (window.isCursorEnabled())
+			{
+				window.disableCursor();
+				window.mouse.enableRaw();
+			}
+			else
+			{
+				window.enableCursor();
+				window.mouse.disableRaw();
+			}
+			break;
+		}
+	}
+
+	if (!window.isCursorEnabled())
+	{
+		if (window.keyboard.keyIsPressed('W'))
+		{
+			camera.translate({ 0.0f, 0.0f, dt * travelSpeed });
+		}
+		if (window.keyboard.keyIsPressed('A'))
+		{
+			camera.translate({ -dt * travelSpeed, 0.0f, 0.0f });
+		}
+		if (window.keyboard.keyIsPressed('S'))
+		{
+			camera.translate({ 0.0f, 0.0f, -dt * travelSpeed });
+		}
+		if (window.keyboard.keyIsPressed('D'))
+		{
+			camera.translate({ dt * travelSpeed, 0.0f, 0.0f });
+		}
+		if (window.keyboard.keyIsPressed('R'))
+		{
+			camera.translate({ 0.0f, dt * travelSpeed, 0.0f });
+		}
+		if (window.keyboard.keyIsPressed('F'))
+		{
+			camera.translate({ 0.0f, -dt * travelSpeed, 0.0f });
+		}
+	}
+
+	while (const auto delta = window.mouse.readRawDelta())
+	{
+		if (!window.isCursorEnabled())
+		{
+			camera.rotate((float) delta->x, (float) delta->y);
+		}
+	}
+
 	while (!window.mouse.isEmpty())
 	{
 		const auto e = *window.mouse.read();
@@ -67,7 +117,7 @@ void App::processFrame()
 		{
 			std::ostringstream oss;
 			oss << "Mouse position : (" << e.getPositionX() << ", " << e.getPositionY() << ")";
-			window.setTitle(oss.str());
+			//window.setTitle(oss.str());
 		}
 	}
 }

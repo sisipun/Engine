@@ -1,5 +1,6 @@
-#include "camera.h"
 #include "imgui/imgui.h"
+#include "camera.h"
+#include "math.h"
 
 Camera::Camera(const Renderer& renderer) : constantBuffer(renderer, 1)
 {
@@ -7,16 +8,12 @@ Camera::Camera(const Renderer& renderer) : constantBuffer(renderer, 1)
 }
 
 DirectX::XMMATRIX Camera::getMatrix() const noexcept {
-	const auto position = DirectX::XMVector3Transform(
-		DirectX::XMVectorSet(constData.cameraPos.x, constData.cameraPos.y, constData.cameraPos.z, 0.0f),
-		DirectX::XMMatrixRotationRollPitchYaw(phi, -theta, 0.0f)
-	);
+	const DirectX::XMVECTOR forwardBaseVector = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	const auto lookVector = DirectX::XMVector3Transform(forwardBaseVector, DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f));
 
-	return DirectX::XMMatrixLookAtLH(
-		position,
-		DirectX::XMVectorZero(),
-		DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-	) * DirectX::XMMatrixRotationRollPitchYaw(pitch, -yaw, roll);
+	const auto cameraPosition = DirectX::XMLoadFloat3(&position);
+	const auto cameraTarget = DirectX::operator+(cameraPosition, lookVector);
+	return DirectX::XMMatrixLookAtLH(cameraPosition, cameraTarget, DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 }
 
 void Camera::spawnControlWindow() noexcept
@@ -24,12 +21,11 @@ void Camera::spawnControlWindow() noexcept
 	if (ImGui::Begin("Camera"))
 	{
 		ImGui::Text("Position");
-		ImGui::SliderFloat("Radius", &constData.cameraPos.z, -0.1f, -80.0f, "%.1f");
-		ImGui::SliderAngle("Theta", &theta, -180.0f, 180.0f);
-		ImGui::SliderAngle("Phi", &phi, -89.0f, 89.0f);
+		ImGui::SliderFloat("X", &position.x, -80.0f, 80.0f, "%.1f");
+		ImGui::SliderFloat("Y", &position.y, -80.0f, 80.0f, "%.1f");
+		ImGui::SliderFloat("Z", &position.z, -80.0f, 80.0f, "%.1f");
 		ImGui::Text("Oritentattion");
-		ImGui::SliderAngle("Roll", &roll, -180.0f, 180.0f);
-		ImGui::SliderAngle("Pitch", &pitch, -180.0f, 180.0f);
+		ImGui::SliderAngle("Pitch", &pitch, 0.95 * -90.0f, 0.95 * 90.0f);
 		ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f);
 		if (ImGui::Button("Reset"))
 		{
@@ -41,16 +37,32 @@ void Camera::spawnControlWindow() noexcept
 
 void Camera::reset() noexcept
 {
-	constData.cameraPos = { 0.0f,0.0f,-20.0f };
-	theta = 0.0f;
-	phi = 0.0f;
+	position = { 0.0f,7.5f,-18.0f };
 	pitch = 0.0f;
 	yaw = 0.0f;
-	roll = 0.0f;
+}
+
+void Camera::rotate(float dx, float dy) noexcept
+{
+	yaw = wrap_angle(yaw + dx * sensitivity);
+	pitch = std::clamp(pitch + dy * sensitivity, 0.95f * -PI / 2.0f, 0.95f * PI / 2.0f);
+}
+
+void Camera::translate(DirectX::XMFLOAT3 translation) noexcept
+{
+	DirectX::XMStoreFloat3(&translation, DirectX::XMVector3Transform(
+		DirectX::XMLoadFloat3(&translation),
+		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0)
+	));
+	position = {
+		position.x + translation.x,
+		position.y + translation.y,
+		position.z + translation.z
+	};
 }
 
 void Camera::update(const Renderer& renderer) const noexcept
 {
-	constantBuffer.update(renderer, constData);
+	constantBuffer.update(renderer, { position });
 	constantBuffer.bind(renderer);
 }

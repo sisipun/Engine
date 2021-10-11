@@ -26,6 +26,8 @@ private:
 	PointLight light;
 	float speed_factor = 1.0f;
 	Model nano{ window.getRenderer(), "models\\nano_hierarchy.gltf" };
+
+	static constexpr float travelSpeed = 6.0f;
 };
 
 #endif 

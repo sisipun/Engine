@@ -48,6 +48,11 @@ public:
 		return height;
 	}
 
+	bool isCursorEnabled()
+	{
+		return cursorEnabled;
+	}
+
 	Keyboard keyboard;
 	Mouse mouse;
 
@@ -77,11 +82,12 @@ private:
 	static LRESULT WINAPI handleMsgProxy(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	LRESULT WINAPI handleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
-	bool cursorEnabled = false;
+	bool cursorEnabled = true;
 	int width;
 	int height;
 	HWND hWnd;
 	std::unique_ptr<Renderer> renderer;
+	std::vector<BYTE> rawBuffer;
 };
 
 #endif
