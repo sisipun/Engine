@@ -20,17 +20,18 @@ private:
 class Node
 {
 	friend class Model;
-	friend class ModelControlWindow;
 public:
-	Node(const std::string& name, std::vector<Mesh*> meshes, const DirectX::XMMATRIX& transform) noexcept;
+	Node(int id, const std::string& name, std::vector<Mesh*> meshes, const DirectX::XMMATRIX& transform) noexcept;
 
 	void draw(const Renderer& renderer, DirectX::FXMMATRIX accumulatedTransform) const noexcept;
 	void setAppliedTransform(DirectX::FXMMATRIX transform) noexcept;
+	void spawnControlTree(Node*& selectedNode) const noexcept;
+	int getId() const noexcept;
 
 private:
 	void addChild(std::unique_ptr<Node> child) noexcept;
-	void spawnControlTree(int& nodeIndex, std::optional<int>& selectedIndex, Node*& selectedNode) const noexcept;
 
+	int id;
 	std::string name;
 	std::vector<std::unique_ptr<Node>> children;
 	std::vector<Mesh*> meshes;
@@ -59,7 +60,7 @@ public:
 
 private:
 	std::unique_ptr<Mesh> parseMesh(const Renderer& renderer, const aiMesh& mesh) const noexcept;
-	std::unique_ptr<Node> parseNode(const aiNode& node) const noexcept;
+	std::unique_ptr<Node> parseNode(int &nextId, const aiNode& node) const noexcept;
 
 private:
 	std::unique_ptr<Node> root;
