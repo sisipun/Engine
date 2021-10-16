@@ -16,12 +16,14 @@ cbuffer CameraConstantData
 
 cbuffer ConstantData
 {
-    float3 materialColor;
     float specularIntensity;
     float specularPower;
 };
 
-float4 main(float3 worldPos: Position, float3 norm: Normal) : SV_Target
+Texture2D tex;
+SamplerState smplr;
+
+float4 main(float3 worldPos : Position, float3 norm : Normal, float2 texCoord : Texcoord) : SV_Target
 {
     const float3 lightToPos = lightPos - worldPos;
     const float lightDist = length(lightToPos);
@@ -36,7 +38,7 @@ float4 main(float3 worldPos: Position, float3 norm: Normal) : SV_Target
     const float3 reflection = 2.0f * norm * dot(lightDir, norm) - lightDir;
     const float3 specularLight = att * specularIntensity * pow(max(0.0f, dot(halfway, normalize(norm))), specularPower);
     
-    float3 colorBase = (ambientLight + diffuseLight + specularLight) * materialColor;
+    float3 colorBase = (ambientLight + diffuseLight + specularLight) * tex.Sample(smplr, texCoord);
     float4 color = float4(saturate(colorBase), 1.0f);
     return color;
 }

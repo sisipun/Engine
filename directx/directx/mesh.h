@@ -59,7 +59,7 @@ public:
 	void spawnControlWindow() noexcept;
 
 private:
-	std::unique_ptr<Mesh> parseMesh(const Renderer& renderer, const aiMesh& mesh) const noexcept;
+	std::unique_ptr<Mesh> parseMesh(const Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* materials) const noexcept;
 	std::unique_ptr<Node> parseNode(int &nextId, const aiNode& node) const noexcept;
 
 private:
