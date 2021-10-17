@@ -2,7 +2,7 @@
 #include "camera.h"
 #include "math.h"
 
-Camera::Camera(const Renderer& renderer) : constantBuffer(renderer, 1)
+Camera::Camera(const Renderer& renderer) : constantBuffer(renderer, 2)
 {
 	reset();
 }

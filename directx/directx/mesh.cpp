@@ -302,7 +302,7 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 			float padding[2];
 		} constData;
 		constData.specularPower = shininess;
-		bindables.push_back(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData, 2));
+		bindables.push_back(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData));
 	}
 
 	bindables.push_back(std::make_unique<InputLayout>(renderer, vertexBufferData.getLayout().getDescLayout(), vertexShaderBytecode));

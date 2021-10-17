@@ -1,4 +1,4 @@
-cbuffer ConstantData
+cbuffer ConstantData : register(b0)
 {
 	matrix model;
 	matrix view;

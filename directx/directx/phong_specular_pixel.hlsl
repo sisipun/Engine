@@ -1,4 +1,4 @@
-cbuffer LightConstantData
+cbuffer LightConstantData : register(b1)
 {
     float3 lightPos;
     float3 ambientColor;
@@ -9,7 +9,7 @@ cbuffer LightConstantData
     float attQuadratic;
 };
 
-cbuffer CameraConstantData
+cbuffer CameraConstantData : register(b2)
 {
     float3 cameraPos;
 };
@@ -33,12 +33,14 @@ float4 main(float3 worldPos : Position, float3 norm : Normal, float2 texCoord : 
     const float3 diffuseLight = diffuseColor * light * att * max(0.0f, dot(lightDir, normalize(norm)));
     
     const float3 viewDir = normalize(cameraPos - worldPos);
-    const float3 halfway = normalize(viewDir + lightDir);
+    const float3 reflectDir = reflect(-lightDir, norm);
+    //const float3 halfway = normalize(viewDir + lightDir);
+    //pow(max(0.0f, dot(halfway, normalize(norm))), specularPower)
     
     const float4 specularSample = specularTex.Sample(smplr, texCoord);
     const float3 specularColor = specularSample.rgb;
     const float specularPower = pow(2.0f, specularSample.a * 13.0f);
-    const float3 specularLight = specularColor * light * att * pow(max(0.0f, dot(halfway, normalize(norm))), specularPower);
+    const float3 specularLight = specularColor * light * att * pow(max(0.0f, dot(viewDir, reflectDir)), specularPower);
     
-    return float4(saturate(ambientLight + diffuseLight + specularLight), 1.0f);
+    return float4(saturate(diffuseLight + specularLight), 1.0f);
 }

@@ -1,4 +1,10 @@
-cbuffer LightConstantData
+cbuffer ConstantData : register(b0)
+{
+    float specularIntensity;
+    float specularPower;
+};
+
+cbuffer LightConstantData : register(b1)
 {
     float3 lightPos;
     float3 ambientColor;
@@ -9,15 +15,9 @@ cbuffer LightConstantData
     float attQuadratic;
 };
 
-cbuffer CameraConstantData
+cbuffer CameraConstantData : register(b2)
 {
     float3 cameraPos;
-};
-
-cbuffer ConstantData
-{
-    float specularIntensity;
-    float specularPower;
 };
 
 Texture2D diffuseTex;
@@ -38,9 +38,11 @@ float4 main(float3 worldPos : Position, float3 norm : Normal, float2 texCoord : 
     const float3 diffuseLight = diffuseColor * light * att * max(0.0f, dot(lightDir, normalize(norm)));
     
     const float3 viewDir = normalize(cameraPos - worldPos);
-    const float3 halfway = normalize(viewDir + lightDir);
+    const float3 reflectDir = reflect(-lightDir, norm);
+    //const float3 halfway = normalize(viewDir + lightDir);
+    //pow(max(0.0f, dot(halfway, normalize(norm))), specularPower)
     
-    const float3 specularLight = specularIntensity * light * att * pow(max(0.0f, dot(halfway, normalize(norm))), specularPower);
+    const float3 specularLight = specularIntensity * light * att * pow(max(0.0f, dot(viewDir, reflectDir)), specularPower);
     
     return float4(saturate(ambientLight + diffuseLight + specularLight), 1.0f);
 }

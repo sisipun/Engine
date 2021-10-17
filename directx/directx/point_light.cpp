@@ -1,7 +1,7 @@
 #include "point_light.h"
 #include "imgui/imgui.h"
 
-PointLight::PointLight(const Renderer& renderer, float radius) : mesh(renderer, radius), constantBuffer(renderer)
+PointLight::PointLight(const Renderer& renderer, float radius) : mesh(renderer, radius), constantBuffer(renderer, 1)
 {
 	reset();
 }
