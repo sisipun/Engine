@@ -16,9 +16,9 @@ void PointLight::spawnControlWindow() noexcept
 		ImGui::SliderFloat("Z", &constData.lightPos.z, -60.0f, 60.0f, "%.1f");
 
 		ImGui::Text("Intensity/Color");
-		ImGui::SliderFloat("Intensity", &constData.diffuseIntensity, 0.01f, 2.0f, "%.2f", 2);
-		ImGui::ColorEdit3("Ambient Light", &constData.ambientLight.x);
-		ImGui::ColorEdit3("Diffuse Color", &constData.diffuseColor.x);
+		ImGui::SliderFloat("Intensity", &constData.lightIntensity, 0.01f, 2.0f, "%.2f", 2);
+		ImGui::ColorEdit3("Ambient Light", &constData.ambientColor.x);
+		ImGui::ColorEdit3("Diffuse Color", &constData.lightColor.x);
 
 		ImGui::Text("Attenuation");
 		ImGui::SliderFloat("Constant", &constData.attConst, 0.05f, 10.0f, "%.2f", 4);

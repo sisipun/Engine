@@ -17,9 +17,9 @@ private:
 	struct ConstantData
 	{
 		alignas(16) DirectX::XMFLOAT3 lightPos;
-		alignas(16) DirectX::XMFLOAT3 ambientLight;
-		alignas(16) DirectX::XMFLOAT3 diffuseColor;
-		float diffuseIntensity;
+		alignas(16) DirectX::XMFLOAT3 ambientColor;
+		alignas(16) DirectX::XMFLOAT3 lightColor;
+		float lightIntensity;
 		float attConst;
 		float attLinear;
 		float attQuadratic;
