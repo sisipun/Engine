@@ -1,7 +1,7 @@
 #include "texture.h"
 #include "renderer_throw_macros.h"
 
-Texture::Texture(const Renderer& renderer, const Surface& surface)
+Texture::Texture(const Renderer& renderer, const Surface& surface, unsigned int slot) : slot(slot)
 {
 	HRESULT hResult;
 
@@ -35,5 +35,5 @@ Texture::Texture(const Renderer& renderer, const Surface& surface)
 
 void Texture::bind(const Renderer& renderer) noexcept
 {
-	renderer.getContext()->PSSetShaderResources(0, 1, textureView.GetAddressOf());
+	renderer.getContext()->PSSetShaderResources(slot, 1, textureView.GetAddressOf());
 }

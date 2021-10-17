@@ -258,12 +258,27 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 
 	std::vector<std::unique_ptr<Bindable>> bindables;
 
+	bool hasSpecularMap = false;
+	float shininess = 35.0f;
 	if (mesh.mMaterialIndex >= 0)
 	{
 		auto& material = *materials[mesh.mMaterialIndex];
+		const auto base = std::string("Models\\nano_textured\\");
 		aiString textureFileName;
-		material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName);
-		bindables.push_back(std::make_unique<Texture>(renderer, Surface::fromFile(std::string("Models\\nano_textured\\") + textureFileName.C_Str())));
+
+		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName) == aiReturn_SUCCESS) {
+			bindables.push_back(std::make_unique<Texture>(renderer, Surface::fromFile(base + textureFileName.C_Str())));
+		}
+
+		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureFileName) == aiReturn_SUCCESS) {
+			bindables.push_back(std::make_unique<Texture>(renderer, Surface::fromFile(base + textureFileName.C_Str()), 1));
+			hasSpecularMap = true;
+		} 
+		else
+		{
+			material.Get(AI_MATKEY_SHININESS, shininess);
+		}
+
 		bindables.push_back(std::make_unique<Sampler>(renderer));
 	}
 
@@ -272,19 +287,25 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 
 	auto vertexShader = std::make_unique<VertexShader>(renderer, L"phong_vertex.cso");
 	auto vertexShaderBytecode = vertexShader->getBytecode();
-
 	bindables.push_back(std::move(vertexShader));
-	bindables.push_back(std::make_unique<PixelShader>(renderer, L"phong_pixel.cso"));
+	
+	if (hasSpecularMap) {
+		bindables.push_back(std::make_unique<PixelShader>(renderer, L"phong_specular_pixel.cso"));
+	}
+	else 
+	{
+		bindables.push_back(std::make_unique<PixelShader>(renderer, L"phong_pixel.cso"));
+		struct ConstantData
+		{
+			float specularIntensity = 0.8f;
+			float specularPower;
+			float padding[2];
+		} constData;
+		constData.specularPower = shininess;
+		bindables.push_back(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData, 2));
+	}
 
 	bindables.push_back(std::make_unique<InputLayout>(renderer, vertexBufferData.getLayout().getDescLayout(), vertexShaderBytecode));
-
-	struct ConstantData
-	{
-		float specularIntensity = 0.6f;
-		float specularPower = 30.0f;
-		float padding[2];
-	} constData;
-	bindables.push_back(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData, 2));
 
 	return std::make_unique<Mesh>(renderer, std::move(bindables));
 }
