@@ -1,12 +1,12 @@
 #include "pixel_shader.h"
 #include "renderer_throw_macros.h"
 
-PixelShader::PixelShader(const Renderer& renderer, const std::wstring& path)
+PixelShader::PixelShader(const Renderer& renderer, const std::string& path)
 {
 	HRESULT hResult;
 	Microsoft::WRL::ComPtr<ID3DBlob> blob;
 
-	RENDERER_THROW_NOINFO(hResult, D3DReadFileToBlob(path.c_str(), &blob));
+	RENDERER_THROW_NOINFO(hResult, D3DReadFileToBlob(std::wstring(path.begin(), path.end()).c_str(), &blob));
 	RENDERER_THROW_NOINFO(hResult, renderer.getDevice()->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &pixelShader));
 }
 

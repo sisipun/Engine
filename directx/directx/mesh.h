@@ -3,12 +3,12 @@
 
 #include <assimp/scene.h>
 
-#include "drawable_base.h"
+#include "drawable.h"
 
-class Mesh : public DrawableBase<Mesh>
+class Mesh : public Drawable
 {
 public:
-	Mesh(const Renderer& renderer, std::vector<std::unique_ptr<Bindable>> bindables) noexcept;
+	Mesh(const Renderer& renderer, std::vector<std::shared_ptr<Bindable>> bindables) noexcept;
 
 	void draw(const Renderer& renderer, DirectX::FXMMATRIX accumulatedTransform) const noexcept;
 	DirectX::XMMATRIX getTransform() const noexcept override;

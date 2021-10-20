@@ -22,27 +22,16 @@
 #include "sampler.h"
 
 
-Mesh::Mesh(const Renderer& renderer, std::vector<std::unique_ptr<Bindable>> bindables) noexcept
+Mesh::Mesh(const Renderer& renderer, std::vector<std::shared_ptr<Bindable>> bindables) noexcept
 {
-	if (!isStaticInitialized())
-	{
-		addStaticBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-	}
+	addBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	for (auto& bindable : bindables)
 	{
-		if (auto indexBuffer = dynamic_cast<IndexBuffer*>(bindable.get()))
-		{
-			addIndexBuffer(std::unique_ptr<IndexBuffer>(indexBuffer));
-			bindable.release();
-		}
-		else
-		{
-			addBind(std::move(bindable));
-		}
+		addBind(std::move(bindable));
 	}
 
-	addBind(std::make_unique<TransformCbuf>(renderer, *this));
+	addBind(std::make_shared<TransformCbuf>(renderer, *this));
 }
 
 void Mesh::draw(const Renderer& renderer, DirectX::FXMMATRIX accumulatedTransform) const noexcept
@@ -256,7 +245,7 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 		indices.push_back(face.mIndices[2]);
 	}
 
-	std::vector<std::unique_ptr<Bindable>> bindables;
+	std::vector<std::shared_ptr<Bindable>> bindables;
 
 	bool hasSpecularMap = false;
 	float shininess = 35.0f;
@@ -267,11 +256,11 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 		aiString textureFileName;
 
 		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(std::make_unique<Texture>(renderer, Surface::fromFile(base + textureFileName.C_Str())));
+			bindables.push_back(std::make_shared<Texture>(renderer, Surface::fromFile(base + textureFileName.C_Str())));
 		}
 
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(std::make_unique<Texture>(renderer, Surface::fromFile(base + textureFileName.C_Str()), 1));
+			bindables.push_back(std::make_shared<Texture>(renderer, Surface::fromFile(base + textureFileName.C_Str()), 1));
 			hasSpecularMap = true;
 		} 
 		else
@@ -279,22 +268,22 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 			material.Get(AI_MATKEY_SHININESS, shininess);
 		}
 
-		bindables.push_back(std::make_unique<Sampler>(renderer));
+		bindables.push_back(std::make_shared<Sampler>(renderer));
 	}
 
-	bindables.push_back(std::make_unique<VertexBuffer>(renderer, vertexBufferData));
-	bindables.push_back(std::make_unique<IndexBuffer>(renderer, indices));
+	bindables.push_back(std::make_shared<VertexBuffer>(renderer, vertexBufferData));
+	bindables.push_back(std::make_shared<IndexBuffer>(renderer, indices));
 
-	auto vertexShader = std::make_unique<VertexShader>(renderer, L"phong_vertex.cso");
+	auto vertexShader = std::make_shared<VertexShader>(renderer, "phong_vertex.cso");
 	auto vertexShaderBytecode = vertexShader->getBytecode();
 	bindables.push_back(std::move(vertexShader));
 	
 	if (hasSpecularMap) {
-		bindables.push_back(std::make_unique<PixelShader>(renderer, L"phong_specular_pixel.cso"));
+		bindables.push_back(std::make_shared<PixelShader>(renderer, "phong_specular_pixel.cso"));
 	}
 	else 
 	{
-		bindables.push_back(std::make_unique<PixelShader>(renderer, L"phong_pixel.cso"));
+		bindables.push_back(std::make_shared<PixelShader>(renderer, "phong_pixel.cso"));
 		struct ConstantData
 		{
 			float specularIntensity = 0.8f;
@@ -302,10 +291,10 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 			float padding[2];
 		} constData;
 		constData.specularPower = shininess;
-		bindables.push_back(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData));
+		bindables.push_back(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));
 	}
 
-	bindables.push_back(std::make_unique<InputLayout>(renderer, vertexBufferData.getLayout().getDescLayout(), vertexShaderBytecode));
+	bindables.push_back(std::make_shared<InputLayout>(renderer, vertexBufferData.getLayout().getDescLayout(), vertexShaderBytecode));
 
 	return std::make_unique<Mesh>(renderer, std::move(bindables));
 }

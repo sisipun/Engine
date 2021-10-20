@@ -212,9 +212,6 @@
     <ClInclude Include="vertex_buffer.h">
       <Filter>Header Files\bindable</Filter>
     </ClInclude>
-    <ClInclude Include="drawable_base.h">
-      <Filter>Header Files\drawable</Filter>
-    </ClInclude>
     <ClInclude Include="math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -280,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="color.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bindable_codex.h">
+      <Filter>Header Files\bindable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

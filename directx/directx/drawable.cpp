@@ -7,21 +7,14 @@ void Drawable::draw(const Renderer& renderer) const
 		bind->bind(renderer);
 	}
 
-	for (auto& bind : getStaticBinds())
-	{
-		bind->bind(renderer);
-	}
-
 	renderer.drawIndexed(indexBuffer->getCount());
 }
 
-void Drawable::addBind(std::unique_ptr<Bindable> bind) noexcept
+void Drawable::addBind(std::shared_ptr<Bindable> bind) noexcept
 {
+	if (typeid(*bind) == typeid(IndexBuffer))
+	{
+		this->indexBuffer = &static_cast<IndexBuffer&>(*bind);
+	}
 	binds.push_back(std::move(bind));
-}
-
-void Drawable::addIndexBuffer(std::unique_ptr<IndexBuffer> indexBuffer) noexcept
-{
-	this->indexBuffer = indexBuffer.get();
-	binds.push_back(std::move(indexBuffer));
 }

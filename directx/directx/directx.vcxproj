@@ -216,11 +216,11 @@
     <ClInclude Include="base_hr_exception.h" />
     <ClInclude Include="base_throw_macros.h" />
     <ClInclude Include="bindable.h" />
+    <ClInclude Include="bindable_codex.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="constant_buffer.h" />
     <ClInclude Include="drawable.h" />
-    <ClInclude Include="drawable_base.h" />
     <ClInclude Include="dxgi_info_manager.h" />
     <ClInclude Include="gdi_plus_manager.h" />
     <ClInclude Include="imgui\imconfig.h" />
