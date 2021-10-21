@@ -30,6 +30,7 @@ public:
 		using SysType = DirectX::XMFLOAT2;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
 		static constexpr const char* semantic = "Position";
+		static constexpr const char* code = "P2";
 	};
 
 	template<>
@@ -38,6 +39,7 @@ public:
 		using SysType = DirectX::XMFLOAT3;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 		static constexpr const char* semantic = "Position";
+		static constexpr const char* code = "P3";
 	};
 
 	template<>
@@ -46,6 +48,7 @@ public:
 		using SysType = DirectX::XMFLOAT2;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
 		static constexpr const char* semantic = "TexCoord";
+		static constexpr const char* code = "T2";
 	};
 
 	template<>
@@ -54,6 +57,7 @@ public:
 		using SysType = DirectX::XMFLOAT3;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 		static constexpr const char* semantic = "Normal";
+		static constexpr const char* code = "N2";
 	};
 
 	template<>
@@ -62,6 +66,7 @@ public:
 		using SysType = DirectX::XMFLOAT3;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 		static constexpr const char* semantic = "Color";
+		static constexpr const char* code = "C3";
 	};
 
 	template<>
@@ -70,6 +75,7 @@ public:
 		using SysType = DirectX::XMFLOAT4;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		static constexpr const char* semantic = "Color";
+		static constexpr const char* code = "C4";
 	};
 
 	template<>
@@ -78,6 +84,7 @@ public:
 		using SysType = RGBAColor;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		static constexpr const char* semantic = "Color";
+		static constexpr const char* code = "C8";
 	};
 
 	class Element
@@ -91,6 +98,7 @@ public:
 		static constexpr size_t sizeOf(ElementType type) noexcept;
 		ElementType getType() const noexcept;
 		D3D11_INPUT_ELEMENT_DESC getDesc() const noexcept;
+		const char* getCode() const noexcept;
 
 	private:
 		template<ElementType T>
@@ -121,6 +129,7 @@ public:
 	size_t size() const noexcept;
 	size_t getElementsCount() const noexcept;
 	std::vector<D3D11_INPUT_ELEMENT_DESC> getDescLayout() const noexcept;
+	std::string getCode() const noexcept;
 
 private:
 	std::vector<Element> elements;

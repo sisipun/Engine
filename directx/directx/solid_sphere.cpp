@@ -31,7 +31,7 @@ SolidSphere::SolidSphere(const Renderer& renderer, float radius)
 	} constData;
 	addBind(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData));
 
-	addBind(std::make_unique<InputLayout>(renderer, model.vertexBufferData.getLayout().getDescLayout(), vertexShaderBytecode));
+	addBind(std::make_unique<InputLayout>(renderer, model.vertexBufferData.getLayout(), vertexShaderBytecode));
 	addBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	addBind(std::make_unique<TransformCbuf>(renderer, *this));

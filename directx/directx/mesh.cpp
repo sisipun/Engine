@@ -256,11 +256,11 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 		aiString textureFileName;
 
 		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(std::make_shared<Texture>(renderer, Surface::fromFile(base + textureFileName.C_Str())));
+			bindables.push_back(std::make_shared<Texture>(renderer, base + textureFileName.C_Str()));
 		}
 
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(std::make_shared<Texture>(renderer, Surface::fromFile(base + textureFileName.C_Str()), 1));
+			bindables.push_back(std::make_shared<Texture>(renderer, base + textureFileName.C_Str(), 1));
 			hasSpecularMap = true;
 		} 
 		else
@@ -294,7 +294,7 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 		bindables.push_back(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));
 	}
 
-	bindables.push_back(std::make_shared<InputLayout>(renderer, vertexBufferData.getLayout().getDescLayout(), vertexShaderBytecode));
+	bindables.push_back(std::make_shared<InputLayout>(renderer, vertexBufferData.getLayout(), vertexShaderBytecode));
 
 	return std::make_unique<Mesh>(renderer, std::move(bindables));
 }

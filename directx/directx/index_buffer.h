@@ -10,7 +10,6 @@ public:
 
 	void bind(const Renderer& renderer) noexcept override;
 	UINT getCount() const noexcept;
-
 protected:
 	UINT count;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;

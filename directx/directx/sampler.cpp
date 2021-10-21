@@ -1,5 +1,6 @@
 #include "sampler.h"
 #include "renderer_throw_macros.h"
+#include "bindable_codex.h"
 
 Sampler::Sampler(const Renderer& renderer)
 {

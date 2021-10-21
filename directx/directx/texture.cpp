@@ -1,8 +1,10 @@
 #include "texture.h"
 #include "renderer_throw_macros.h"
 
-Texture::Texture(const Renderer& renderer, const Surface& surface, unsigned int slot) : slot(slot)
+Texture::Texture(const Renderer& renderer, const std::string& path, unsigned int slot) : Bindable(true), slot(slot), path(path)
 {
+	const auto surface = Surface::fromFile(path);
+
 	HRESULT hResult;
 
 	D3D11_TEXTURE2D_DESC textureDescription = {};
@@ -36,4 +38,9 @@ Texture::Texture(const Renderer& renderer, const Surface& surface, unsigned int 
 void Texture::bind(const Renderer& renderer) noexcept
 {
 	renderer.getContext()->PSSetShaderResources(slot, 1, textureView.GetAddressOf());
+}
+
+std::string Texture::getUid() const noexcept
+{
+	return typeid(Texture).name() + std::string("#") + path + std::string("#") + std::to_string(slot);
 }

@@ -4,7 +4,7 @@
 #include "renderer_throw_macros.h"
 #include "bindable_codex.h"
 
-VertexShader::VertexShader(const Renderer& renderer, const std::string& path) : path(path)
+VertexShader::VertexShader(const Renderer& renderer, const std::string& path) : Bindable(true), path(path)
 {
 	HRESULT hResult;
 
@@ -23,21 +23,6 @@ ID3DBlob* VertexShader::getBytecode() const noexcept
 }
 
 std::string VertexShader::getUid() const noexcept
-{
-	return generateUid(path);
-}
-
-std::shared_ptr<Bindable> VertexShader::resolve(const Renderer& renderer, const std::string& path)
-{
-	auto bindable = Codex::resolve(generateUid(path));
-	if (!bindable)
-	{
-		bindable = std::make_shared<VertexShader>(renderer, path);
-	}
-	return bindable;
-}
-
-std::string VertexShader::generateUid(const std::string& path)
 {
 	return typeid(VertexShader).name() + std::string("#") + path;
 }

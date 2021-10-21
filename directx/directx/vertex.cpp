@@ -70,6 +70,29 @@ D3D11_INPUT_ELEMENT_DESC VertexLayout::Element::getDesc() const noexcept
 	return { "INVALID", 0, DXGI_FORMAT_UNKNOWN, 0, (UINT)offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 }
 
+const char* VertexLayout::Element::getCode() const noexcept
+{
+	switch (type)
+	{
+	case POSITION2D:
+		return Map<POSITION2D>::code;
+	case POSITION3D:
+		return Map<POSITION3D>::code;
+	case TEXTURE2D:
+		return Map<TEXTURE2D>::code;
+	case NORMAL:
+		return Map<NORMAL>::code;
+	case FLOAT3_COLOR:
+		return Map<FLOAT3_COLOR>::code;
+	case FLOAT4_COLOR:
+		return Map<FLOAT4_COLOR>::code;
+	case RGBA_COLOR:
+		return Map<RGBA_COLOR>::code;
+	}
+
+	return "Invalid";
+}
+
 const VertexLayout::Element& VertexLayout::resolveByIndex(size_t i) const noexcept
 {
 	return elements[i];
@@ -100,6 +123,16 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> VertexLayout::getDescLayout() const noexce
 		descriptions.push_back(element.getDesc());
 	}
 	return descriptions;
+}
+
+std::string VertexLayout::getCode() const noexcept
+{
+	std::string code;
+	for (const auto& element : elements)
+	{
+		code += element.getCode();
+	}
+	return code;
 }
 
 Vertex::Vertex(char* data, const VertexLayout& layout) noexcept : data(data), layout(layout)
