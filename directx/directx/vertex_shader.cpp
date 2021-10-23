@@ -2,9 +2,8 @@
 
 #include "vertex_shader.h"
 #include "renderer_throw_macros.h"
-#include "bindable_codex.h"
 
-VertexShader::VertexShader(const Renderer& renderer, const std::string& path) : Bindable(true), path(path)
+VertexShader::VertexShader(const Renderer& renderer, const std::string& path)
 {
 	HRESULT hResult;
 
@@ -22,7 +21,7 @@ ID3DBlob* VertexShader::getBytecode() const noexcept
 	return bytecodeBlob.Get();
 }
 
-std::string VertexShader::getUid() const noexcept
+std::string VertexShader::getUid(const std::string& path) noexcept
 {
 	return typeid(VertexShader).name() + std::string("#") + path;
 }

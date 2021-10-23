@@ -278,7 +278,7 @@
     <ClInclude Include="color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="bindable_codex.h">
+    <ClInclude Include="bindable_store.h">
       <Filter>Header Files\bindable</Filter>
     </ClInclude>
   </ItemGroup>

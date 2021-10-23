@@ -10,10 +10,9 @@ public:
 	
 	void bind(const Renderer& renderer) noexcept override;
 	ID3DBlob* getBytecode() const noexcept;
-	std::string getUid() const noexcept override;
+	static std::string getUid(const std::string& path) noexcept;
 
 protected:
-	std::string path;
 	Microsoft::WRL::ComPtr<ID3DBlob> bytecodeBlob;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
 };

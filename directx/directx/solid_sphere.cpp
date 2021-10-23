@@ -1,4 +1,5 @@
 #include "solid_sphere.h"
+#include "bindable_store.h"
 #include "constant_buffer.h"
 #include "index_buffer.h"
 #include "input_layout.h"
@@ -17,10 +18,10 @@ SolidSphere::SolidSphere(const Renderer& renderer, float radius)
 
 	addBind(std::make_unique<VertexBuffer>(renderer, model.vertexBufferData));
 
-	auto vertexShader = std::make_unique<VertexShader>(renderer, "solid_vertex.cso");
+	auto vertexShader = BindableStore::resolve<VertexShader>(renderer, "solid_vertex.cso");
 	auto vertexShaderBytecode = vertexShader->getBytecode();
 	addBind(std::move(vertexShader));
-	addBind(std::make_unique<PixelShader>(renderer, "solid_pixel.cso"));
+	addBind(BindableStore::resolve<PixelShader>(renderer, "solid_pixel.cso"));
 
 	addBind(std::make_unique<IndexBuffer>(renderer, model.indices));
 
@@ -31,8 +32,8 @@ SolidSphere::SolidSphere(const Renderer& renderer, float radius)
 	} constData;
 	addBind(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData));
 
-	addBind(std::make_unique<InputLayout>(renderer, model.vertexBufferData.getLayout(), vertexShaderBytecode));
-	addBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	addBind(BindableStore::resolve<InputLayout>(renderer, model.vertexBufferData.getLayout(), vertexShaderBytecode));
+	addBind(BindableStore::resolve<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	addBind(std::make_unique<TransformCbuf>(renderer, *this));
 }

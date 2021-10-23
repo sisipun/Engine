@@ -1,7 +1,7 @@
 #include "texture.h"
 #include "renderer_throw_macros.h"
 
-Texture::Texture(const Renderer& renderer, const std::string& path, unsigned int slot) : Bindable(true), slot(slot), path(path)
+Texture::Texture(const Renderer& renderer, const std::string& path, unsigned int slot) : slot(slot)
 {
 	const auto surface = Surface::fromFile(path);
 
@@ -40,7 +40,7 @@ void Texture::bind(const Renderer& renderer) noexcept
 	renderer.getContext()->PSSetShaderResources(slot, 1, textureView.GetAddressOf());
 }
 
-std::string Texture::getUid() const noexcept
+std::string Texture::getUid(const std::string& path, unsigned int slot) noexcept
 {
 	return typeid(Texture).name() + std::string("#") + path + std::string("#") + std::to_string(slot);
 }

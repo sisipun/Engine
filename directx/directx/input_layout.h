@@ -10,10 +10,9 @@ public:
 	InputLayout(const Renderer& renderer, const VertexLayout& layout, ID3DBlob* vertexShaderBytecode);
 
 	void bind(const Renderer& renderer) noexcept override;
-	std::string getUid() const noexcept override;
+	static std::string getUid(const VertexLayout& layout, ID3DBlob* vertexShaderBytecode) noexcept;
 
 protected:
-	VertexLayout layout;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
 };
 

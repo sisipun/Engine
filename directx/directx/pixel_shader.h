@@ -9,10 +9,9 @@ public:
 	PixelShader(const Renderer& renderer, const std::string& path);
 	
 	void bind(const Renderer& renderer) noexcept override;
-	std::string getUid() const noexcept override;
+	static std::string getUid(const std::string& path) noexcept;
 
 protected:
-	std::string path;
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
 };
 

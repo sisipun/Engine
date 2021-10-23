@@ -216,7 +216,7 @@
     <ClInclude Include="base_hr_exception.h" />
     <ClInclude Include="base_throw_macros.h" />
     <ClInclude Include="bindable.h" />
-    <ClInclude Include="bindable_codex.h" />
+    <ClInclude Include="bindable_store.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="constant_buffer.h" />

@@ -8,7 +8,7 @@
 #include "imgui/imgui.h"
 
 #include "mesh.h"
-#include "surface.h"
+#include "bindable_store.h"
 #include "constant_buffer.h"
 #include "index_buffer.h"
 #include "input_layout.h"
@@ -24,7 +24,7 @@
 
 Mesh::Mesh(const Renderer& renderer, std::vector<std::shared_ptr<Bindable>> bindables) noexcept
 {
-	addBind(std::make_unique<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	addBind(BindableStore::resolve<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	for (auto& bindable : bindables)
 	{
@@ -256,11 +256,11 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 		aiString textureFileName;
 
 		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(std::make_shared<Texture>(renderer, base + textureFileName.C_Str()));
+			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str()));
 		}
 
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(std::make_shared<Texture>(renderer, base + textureFileName.C_Str(), 1));
+			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str(), 1));
 			hasSpecularMap = true;
 		} 
 		else
@@ -274,16 +274,16 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 	bindables.push_back(std::make_shared<VertexBuffer>(renderer, vertexBufferData));
 	bindables.push_back(std::make_shared<IndexBuffer>(renderer, indices));
 
-	auto vertexShader = std::make_shared<VertexShader>(renderer, "phong_vertex.cso");
+	auto vertexShader = BindableStore::resolve<VertexShader>(renderer, "phong_vertex.cso");
 	auto vertexShaderBytecode = vertexShader->getBytecode();
 	bindables.push_back(std::move(vertexShader));
 	
 	if (hasSpecularMap) {
-		bindables.push_back(std::make_shared<PixelShader>(renderer, "phong_specular_pixel.cso"));
+		bindables.push_back(BindableStore::resolve<PixelShader>(renderer, "phong_specular_pixel.cso"));
 	}
 	else 
 	{
-		bindables.push_back(std::make_shared<PixelShader>(renderer, "phong_pixel.cso"));
+		bindables.push_back(BindableStore::resolve<PixelShader>(renderer, "phong_pixel.cso"));
 		struct ConstantData
 		{
 			float specularIntensity = 0.8f;
@@ -294,7 +294,7 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 		bindables.push_back(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));
 	}
 
-	bindables.push_back(std::make_shared<InputLayout>(renderer, vertexBufferData.getLayout(), vertexShaderBytecode));
+	bindables.push_back(BindableStore::resolve<InputLayout>(renderer, vertexBufferData.getLayout(), vertexShaderBytecode));
 
 	return std::make_unique<Mesh>(renderer, std::move(bindables));
 }
