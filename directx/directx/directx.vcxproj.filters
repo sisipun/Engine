@@ -141,6 +141,12 @@
     <ClCompile Include="vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="plane.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="test_plane.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -281,6 +287,9 @@
     <ClInclude Include="bindable_store.h">
       <Filter>Header Files\bindable</Filter>
     </ClInclude>
+    <ClInclude Include="test_plane.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="phong_vertex.hlsl">
@@ -296,6 +305,9 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="phong_specular_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="phong_normal_pixel.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "point_light.h"
 #include "mesh.h"
+#include "test_plane.h"
 
 class App
 {
@@ -24,8 +25,10 @@ private:
 	Timer timer;
 	Camera camera;
 	PointLight light;
+	Model nano;
+	TestPlane plane;
+
 	float speed_factor = 1.0f;
-	Model nano{ window.getRenderer(), "models\\nano_textured\\nanosuit.obj" };
 
 	static constexpr float travelSpeed = 6.0f;
 };

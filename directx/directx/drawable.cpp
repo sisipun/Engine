@@ -2,19 +2,19 @@
 
 void Drawable::draw(const Renderer& renderer) const
 {
-	for (auto& bind : binds)
+	for (auto& bindable : bindables)
 	{
-		bind->bind(renderer);
+		bindable->bind(renderer);
 	}
 
 	renderer.drawIndexed(indexBuffer->getCount());
 }
 
-void Drawable::addBind(std::shared_ptr<Bindable> bind) noexcept
+void Drawable::addBind(std::shared_ptr<Bindable> bindable) noexcept
 {
-	if (typeid(*bind) == typeid(IndexBuffer))
+	if (typeid(*bindable) == typeid(IndexBuffer))
 	{
-		this->indexBuffer = &static_cast<IndexBuffer&>(*bind);
+		this->indexBuffer = &static_cast<IndexBuffer&>(*bindable);
 	}
-	binds.push_back(std::move(bind));
+	bindables.push_back(std::move(bindable));
 }

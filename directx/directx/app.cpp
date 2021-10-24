@@ -10,8 +10,14 @@
 
 GDIPlusManager gdipm;
 
-App::App() : window(100, 100, 1280, 720, "Basic window"), light(window.getRenderer()), camera(window.getRenderer())
+App::App() :
+	window(100, 100, 1280, 720, "Basic window"),
+	light(window.getRenderer()),
+	camera(window.getRenderer()),
+	nano(window.getRenderer(), "models\\nano_textured\\nanosuit.obj"),
+	plane(window.getRenderer(), 3.0f)
 {
+	plane.setPos({ 1.0f,17.0f,-1.0f });
 	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40.0f));
 }
 
@@ -42,11 +48,13 @@ void App::processFrame()
 	light.update(window.getRenderer());
 
 	nano.draw(window.getRenderer());
+	plane.draw(window.getRenderer());
 	light.draw(window.getRenderer());
 
-	camera.spawnControlWindow();
-	light.spawnControlWindow();
 	nano.spawnControlWindow();
+	plane.spawnControlWindow(window.getRenderer());
+	light.spawnControlWindow();
+	camera.spawnControlWindow();
 
 	window.getRenderer().endFrame();
 
@@ -106,7 +114,7 @@ void App::processFrame()
 	{
 		if (!window.isCursorEnabled())
 		{
-			camera.rotate((float) delta->x, (float) delta->y);
+			camera.rotate((float)delta->x, (float)delta->y);
 		}
 	}
 

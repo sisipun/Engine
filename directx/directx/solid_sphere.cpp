@@ -16,26 +16,26 @@ SolidSphere::SolidSphere(const Renderer& renderer, float radius)
 	auto model = Sphere::make();
 	model.transform(DirectX::XMMatrixScaling(radius, radius, radius));
 
-	addBind(std::make_unique<VertexBuffer>(renderer, model.vertexBufferData));
+	addBind(std::make_shared<VertexBuffer>(renderer, model.vertexBufferData));
 
 	auto vertexShader = BindableStore::resolve<VertexShader>(renderer, "solid_vertex.cso");
 	auto vertexShaderBytecode = vertexShader->getBytecode();
 	addBind(std::move(vertexShader));
 	addBind(BindableStore::resolve<PixelShader>(renderer, "solid_pixel.cso"));
 
-	addBind(std::make_unique<IndexBuffer>(renderer, model.indices));
+	addBind(std::make_shared<IndexBuffer>(renderer, model.indices));
 
 	struct ConstantData
 	{
 		DirectX::XMFLOAT3 color = { 1.0f, 1.0f, 1.0f };
 		float padding;
 	} constData;
-	addBind(std::make_unique<PixelConstantBuffer<ConstantData>>(renderer, constData));
+	addBind(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));
 
 	addBind(BindableStore::resolve<InputLayout>(renderer, model.vertexBufferData.getLayout(), vertexShaderBytecode));
 	addBind(BindableStore::resolve<Topology>(renderer, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
-	addBind(std::make_unique<TransformCbuf>(renderer, *this));
+	addBind(std::make_shared<TransformCbuf>(renderer, *this));
 }
 
 void SolidSphere::setPos(DirectX::XMFLOAT3 pos) noexcept
