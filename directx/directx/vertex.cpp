@@ -143,13 +143,23 @@ ConstVertex::ConstVertex(const Vertex& vertex) noexcept : vertex(vertex)
 {
 }
 
-VertexBufferData::VertexBufferData(VertexLayout layout) noexcept : layout(std::move(layout))
+VertexBufferData::VertexBufferData(VertexLayout layout, size_t size) noexcept : layout(std::move(layout))
 {
+	resize(size);
 }
 
 const char* VertexBufferData::getData() const noexcept
 {
 	return buffer.data();
+}
+
+void VertexBufferData::resize(size_t newSize) noexcept
+{
+	const auto oldSize = size();
+	if (oldSize < newSize)
+	{
+		buffer.resize(buffer.size() + layout.size() * (newSize - oldSize));
+	}
 }
 
 const VertexLayout& VertexBufferData::getLayout() const noexcept

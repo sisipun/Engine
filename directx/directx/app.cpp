@@ -15,9 +15,11 @@ App::App() :
 	light(window.getRenderer()),
 	camera(window.getRenderer()),
 	nano(window.getRenderer(), "models\\nano_textured\\nanosuit.obj"),
-	plane(window.getRenderer(), 3.0f)
+	plane(window.getRenderer(), 3.0f),
+	cube(window.getRenderer(), 4.0f)
 {
-	plane.setPos({ 1.0f,17.0f,-1.0f });
+	plane.setPos({ -5.0f,17.0f,-1.0f });
+	cube.setPos({ 3.0f,14.0f,-2.0f });
 	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40.0f));
 }
 
@@ -49,10 +51,12 @@ void App::processFrame()
 
 	nano.draw(window.getRenderer());
 	plane.draw(window.getRenderer());
+	cube.draw(window.getRenderer());
 	light.draw(window.getRenderer());
 
 	nano.spawnControlWindow();
 	plane.spawnControlWindow(window.getRenderer());
+	cube.spawnControlWindow(window.getRenderer());
 	light.spawnControlWindow();
 	camera.spawnControlWindow();
 

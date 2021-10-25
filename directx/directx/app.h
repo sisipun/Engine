@@ -8,6 +8,7 @@
 #include "point_light.h"
 #include "mesh.h"
 #include "test_plane.h"
+#include "test_cube.h"
 
 class App
 {
@@ -27,6 +28,7 @@ private:
 	PointLight light;
 	Model nano;
 	TestPlane plane;
+	TestCube cube;
 
 	float speed_factor = 1.0f;
 

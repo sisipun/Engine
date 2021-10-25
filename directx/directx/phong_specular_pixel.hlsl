@@ -33,7 +33,7 @@ float4 main(float3 worldPos : Position, float3 norm : Normal, float2 texCoord : 
     const float3 diffuseLight = diffuseColor * light * att * max(0.0f, dot(lightDir, normalize(norm)));
     
     const float3 viewDir = normalize(cameraPos - worldPos);
-    const float3 reflectDir = reflect(-lightDir, norm);
+    const float3 reflectDir = normalize(reflect(-lightDir, norm));
     //const float3 halfway = normalize(viewDir + lightDir);
     //pow(max(0.0f, dot(halfway, normalize(norm))), specularPower)
     

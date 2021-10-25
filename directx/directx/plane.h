@@ -14,8 +14,8 @@ class Plane
 public:
 	static IndexedTriangleList make(VertexLayout layout, int divisionsX, int divisionsY)
 	{
-		constexpr float width = 2.0f;
-		constexpr float height = 2.0f;
+		constexpr float width = 1.0f;
+		constexpr float height = 1.0f;
 		const int nVerticesX = divisionsX + 1;
 		const int nVerticesY = divisionsY + 1;
 		VertexBufferData vertexData(std::move(layout));

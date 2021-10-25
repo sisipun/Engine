@@ -202,6 +202,7 @@
     <ClCompile Include="sampler.cpp" />
     <ClCompile Include="solid_sphere.cpp" />
     <ClCompile Include="surface.cpp" />
+    <ClCompile Include="test_cube.cpp" />
     <ClCompile Include="test_plane.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="timer.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="constant_buffer.h" />
+    <ClInclude Include="cube.h" />
     <ClInclude Include="drawable.h" />
     <ClInclude Include="dxgi_info_manager.h" />
     <ClInclude Include="gdi_plus_manager.h" />
@@ -249,6 +251,7 @@
     <ClInclude Include="solid_sphere.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="surface.h" />
+    <ClInclude Include="test_cube.h" />
     <ClInclude Include="test_plane.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="timer.h" />

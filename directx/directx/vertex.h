@@ -221,10 +221,11 @@ private:
 class VertexBufferData
 {
 public:
-	VertexBufferData(VertexLayout layout) noexcept;
+	VertexBufferData(VertexLayout layout, size_t size = 0) noexcept;
 
 	const char* getData() const noexcept;
 	const VertexLayout& getLayout() const noexcept;
+	void resize(size_t newSize) noexcept;
 	size_t size() const noexcept;
 	size_t sizeBytes() const noexcept;
 

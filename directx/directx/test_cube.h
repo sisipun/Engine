@@ -1,13 +1,14 @@
-#ifndef TEST_PLANE_H
-#define TEST_PLANE_H
+#ifndef TEST_CUBE_H
+#define TEST_CUBE_H
 
 #include "drawable.h"
 
-class TestPlane : public Drawable
+class TestCube : public Drawable
 {
 public:
-	TestPlane(const Renderer& renderer, float radius);
+	TestCube(const Renderer& renderer, float size);
 	void setPos(DirectX::XMFLOAT3 pos) noexcept;
+	void setRotation(float roll, float pitch, float yaw) noexcept;
 	DirectX::XMMATRIX getTransform() const noexcept override;
 	void spawnControlWindow(const Renderer& renderer) noexcept;
 private:

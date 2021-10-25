@@ -147,6 +147,9 @@
     <ClCompile Include="test_plane.cpp">
       <Filter>Source Files\drawable</Filter>
     </ClCompile>
+    <ClCompile Include="test_cube.cpp">
+      <Filter>Source Files\drawable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -288,6 +291,12 @@
       <Filter>Header Files\bindable</Filter>
     </ClInclude>
     <ClInclude Include="test_plane.h">
+      <Filter>Header Files\drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="cube.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="test_cube.h">
       <Filter>Header Files\drawable</Filter>
     </ClInclude>
   </ItemGroup>
