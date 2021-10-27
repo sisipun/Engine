@@ -10,12 +10,14 @@
 class VertexLayout
 {
 public:
-	enum ElementType
+	enum class ElementType
 	{
 		POSITION2D,
 		POSITION3D,
 		TEXTURE2D,
 		NORMAL,
+		TANGENT,
+		BITANGENT,
 		FLOAT3_COLOR,
 		FLOAT4_COLOR,
 		RGBA_COLOR
@@ -25,7 +27,7 @@ public:
 	struct Map;
 
 	template<>
-	struct Map<POSITION2D>
+	struct Map<ElementType::POSITION2D>
 	{
 		using SysType = DirectX::XMFLOAT2;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
@@ -34,7 +36,7 @@ public:
 	};
 
 	template<>
-	struct Map<POSITION3D>
+	struct Map<ElementType::POSITION3D>
 	{
 		using SysType = DirectX::XMFLOAT3;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -43,7 +45,7 @@ public:
 	};
 
 	template<>
-	struct Map<TEXTURE2D>
+	struct Map<ElementType::TEXTURE2D>
 	{
 		using SysType = DirectX::XMFLOAT2;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
@@ -52,7 +54,7 @@ public:
 	};
 
 	template<>
-	struct Map<NORMAL>
+	struct Map<ElementType::NORMAL>
 	{
 		using SysType = DirectX::XMFLOAT3;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -60,8 +62,28 @@ public:
 		static constexpr const char* code = "N2";
 	};
 
+
 	template<>
-	struct Map<FLOAT3_COLOR>
+	struct Map<ElementType::TANGENT>
+	{
+		using SysType = DirectX::XMFLOAT3;
+		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+		static constexpr const char* semantic = "Tangent";
+		static constexpr const char* code = "Nt";
+	};
+
+
+	template<>
+	struct Map<ElementType::BITANGENT>
+	{
+		using SysType = DirectX::XMFLOAT3;
+		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+		static constexpr const char* semantic = "Bitangent";
+		static constexpr const char* code = "Nb";
+	};
+
+	template<>
+	struct Map<ElementType::FLOAT3_COLOR>
 	{
 		using SysType = DirectX::XMFLOAT3;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -70,7 +92,7 @@ public:
 	};
 
 	template<>
-	struct Map<FLOAT4_COLOR>
+	struct Map<ElementType::FLOAT4_COLOR>
 	{
 		using SysType = DirectX::XMFLOAT4;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -79,7 +101,7 @@ public:
 	};
 
 	template<>
-	struct Map<RGBA_COLOR>
+	struct Map<ElementType::RGBA_COLOR>
 	{
 		using SysType = RGBAColor;
 		static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -154,26 +176,32 @@ public:
 		auto attribute = data + element.getOffset();
 		switch (element.getType())
 		{
-		case VertexLayout::POSITION2D:
-			setAttribute<VertexLayout::POSITION2D>(attribute, std::forward<T>(value));
+		case VertexLayout::ElementType::POSITION2D:
+			setAttribute<VertexLayout::ElementType::POSITION2D>(attribute, std::forward<T>(value));
 			break;
-		case VertexLayout::POSITION3D:
-			setAttribute<VertexLayout::POSITION3D>(attribute, std::forward<T>(value));
+		case VertexLayout::ElementType::POSITION3D:
+			setAttribute<VertexLayout::ElementType::POSITION3D>(attribute, std::forward<T>(value));
 			break;
-		case VertexLayout::TEXTURE2D:
-			setAttribute<VertexLayout::TEXTURE2D>(attribute, std::forward<T>(value));
+		case VertexLayout::ElementType::TEXTURE2D:
+			setAttribute<VertexLayout::ElementType::TEXTURE2D>(attribute, std::forward<T>(value));
 			break;
-		case VertexLayout::NORMAL:
-			setAttribute<VertexLayout::NORMAL>(attribute, std::forward<T>(value));
+		case VertexLayout::ElementType::NORMAL:
+			setAttribute<VertexLayout::ElementType::NORMAL>(attribute, std::forward<T>(value));
 			break;
-		case VertexLayout::FLOAT3_COLOR:
-			setAttribute<VertexLayout::FLOAT3_COLOR>(attribute, std::forward<T>(value));
+		case VertexLayout::ElementType::TANGENT:
+			setAttribute<VertexLayout::ElementType::TANGENT>(attribute, std::forward<T>(value));
 			break;
-		case VertexLayout::FLOAT4_COLOR:
-			setAttribute<VertexLayout::FLOAT4_COLOR>(attribute, std::forward<T>(value));
+		case VertexLayout::ElementType::BITANGENT:
+			setAttribute<VertexLayout::ElementType::BITANGENT>(attribute, std::forward<T>(value));
 			break;
-		case VertexLayout::RGBA_COLOR:
-			setAttribute<VertexLayout::RGBA_COLOR>(attribute, std::forward<T>(value));
+		case VertexLayout::ElementType::FLOAT3_COLOR:
+			setAttribute<VertexLayout::ElementType::FLOAT3_COLOR>(attribute, std::forward<T>(value));
+			break;
+		case VertexLayout::ElementType::FLOAT4_COLOR:
+			setAttribute<VertexLayout::ElementType::FLOAT4_COLOR>(attribute, std::forward<T>(value));
+			break;
+		case VertexLayout::ElementType::RGBA_COLOR:
+			setAttribute<VertexLayout::ElementType::RGBA_COLOR>(attribute, std::forward<T>(value));
 			break;
 		}
 	}

@@ -57,6 +57,7 @@ public:
 
 	void draw(const Renderer& renderer) const noexcept;
 	void spawnControlWindow() noexcept;
+	void setTransform(DirectX::FXMMATRIX transform) noexcept;
 
 private:
 	std::unique_ptr<Mesh> parseMesh(const Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* materials) const noexcept;

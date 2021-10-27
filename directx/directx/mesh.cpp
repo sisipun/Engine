@@ -185,7 +185,8 @@ Model::Model(const Renderer& renderer, const std::string fileName) : controlWind
 	const auto model = importer.ReadFile(fileName, aiProcess_Triangulate
 		| aiProcess_JoinIdenticalVertices
 		| aiProcess_ConvertToLeftHanded
-		| aiProcess_GenNormals);
+		| aiProcess_GenNormals
+		| aiProcess_CalcTangentSpace);
 
 	if (model == nullptr)
 	{
@@ -219,19 +220,28 @@ void Model::spawnControlWindow() noexcept
 	controlWindow->spawn(*root);
 }
 
+void Model::setTransform(DirectX::FXMMATRIX transform) noexcept
+{
+	root->setAppliedTransform(transform);
+}
+
 std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* materials) const noexcept
 {
 	VertexBufferData vertexBufferData(std::move(VertexLayout()
-		.append(VertexLayout::POSITION3D)
-		.append(VertexLayout::NORMAL))
-		.append(VertexLayout::TEXTURE2D));
+		.append(VertexLayout::ElementType::POSITION3D)
+		.append(VertexLayout::ElementType::NORMAL)
+		.append(VertexLayout::ElementType::TEXTURE2D)
+		.append(VertexLayout::ElementType::TANGENT)
+		.append(VertexLayout::ElementType::BITANGENT)));
 
 	for (unsigned int i = 0; i < mesh.mNumVertices; i++)
 	{
 		vertexBufferData.emplaceBack(
 			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mVertices[i]),
 			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mNormals[i]),
-			*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh.mTextureCoords[0][i])
+			*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh.mTextureCoords[0][i]),
+			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mTangents[i]),
+			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mBitangents[i])
 		);
 	}
 
@@ -252,15 +262,19 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 	if (mesh.mMaterialIndex >= 0)
 	{
 		auto& material = *materials[mesh.mMaterialIndex];
-		const auto base = std::string("Models\\nano_textured\\");
+		const auto base = std::string("models\\brick_wall\\");
 		aiString textureFileName;
 
 		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName) == aiReturn_SUCCESS) {
 			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str()));
 		}
 
-		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureFileName) == aiReturn_SUCCESS) {
+		if (material.GetTexture(aiTextureType_NORMALS, 0, &textureFileName) == aiReturn_SUCCESS) {
 			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str(), 1));
+		}
+
+		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureFileName) == aiReturn_SUCCESS) {
+			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str(), 2));
 			hasSpecularMap = true;
 		} 
 		else
@@ -274,21 +288,28 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 	bindables.push_back(std::make_shared<VertexBuffer>(renderer, vertexBufferData));
 	bindables.push_back(std::make_shared<IndexBuffer>(renderer, indices));
 
-	auto vertexShader = BindableStore::resolve<VertexShader>(renderer, "phong_vertex.cso");
+	auto vertexShader = BindableStore::resolve<VertexShader>(renderer, "phong_normal_vertex.cso");
 	auto vertexShaderBytecode = vertexShader->getBytecode();
 	bindables.push_back(std::move(vertexShader));
 	
 	if (hasSpecularMap) {
-		bindables.push_back(BindableStore::resolve<PixelShader>(renderer, "phong_specular_pixel.cso"));
+		bindables.push_back(BindableStore::resolve<PixelShader>(renderer, "phong_specular_normal_pixel.cso"));
+		struct ConstantData
+		{
+			BOOL normalMapEnabled = TRUE;
+			float padding[3];
+		} constData;
+		bindables.push_back(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));
 	}
 	else 
 	{
-		bindables.push_back(BindableStore::resolve<PixelShader>(renderer, "phong_pixel.cso"));
+		bindables.push_back(BindableStore::resolve<PixelShader>(renderer, "phong_normal_pixel.cso"));
 		struct ConstantData
 		{
-			float specularIntensity = 0.8f;
+			float specularIntensity = 0.18f;
 			float specularPower;
-			float padding[2];
+			BOOL normalMapEnabled = TRUE;
+			float padding[1];
 		} constData;
 		constData.specularPower = shininess;
 		bindables.push_back(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));

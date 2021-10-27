@@ -23,20 +23,24 @@ constexpr size_t VertexLayout::Element::sizeOf(ElementType type) noexcept
 {
 	switch (type)
 	{
-	case POSITION2D:
-		return sizeof(Map<POSITION2D>::SysType);
-	case POSITION3D:
-		return sizeof(Map<POSITION3D>::SysType);
-	case TEXTURE2D:
-		return sizeof(Map<TEXTURE2D>::SysType);
-	case NORMAL:
-		return sizeof(Map<NORMAL>::SysType);
-	case FLOAT3_COLOR:
-		return sizeof(Map<FLOAT3_COLOR>::SysType);
-	case FLOAT4_COLOR:
-		return sizeof(Map<FLOAT4_COLOR>::SysType);
-	case RGBA_COLOR:
-		return sizeof(Map<RGBA_COLOR>::SysType);
+	case ElementType::POSITION2D:
+		return sizeof(Map<ElementType::POSITION2D>::SysType);
+	case ElementType::POSITION3D:
+		return sizeof(Map<ElementType::POSITION3D>::SysType);
+	case ElementType::TEXTURE2D:
+		return sizeof(Map<ElementType::TEXTURE2D>::SysType);
+	case ElementType::NORMAL:
+		return sizeof(Map<ElementType::NORMAL>::SysType);
+	case ElementType::TANGENT:
+		return sizeof(Map<ElementType::TANGENT>::SysType);
+	case ElementType::BITANGENT:
+		return sizeof(Map<ElementType::BITANGENT>::SysType);
+	case ElementType::FLOAT3_COLOR:
+		return sizeof(Map<ElementType::FLOAT3_COLOR>::SysType);
+	case ElementType::FLOAT4_COLOR:
+		return sizeof(Map<ElementType::FLOAT4_COLOR>::SysType);
+	case ElementType::RGBA_COLOR:
+		return sizeof(Map<ElementType::RGBA_COLOR>::SysType);
 	}
 
 	return 0;
@@ -51,20 +55,24 @@ D3D11_INPUT_ELEMENT_DESC VertexLayout::Element::getDesc() const noexcept
 {
 	switch (type)
 	{
-	case POSITION2D:
-		return generateDesc<POSITION2D>(getOffset());
-	case POSITION3D:
-		return generateDesc<POSITION3D>(getOffset());
-	case TEXTURE2D:
-		return generateDesc<TEXTURE2D>(getOffset());
-	case NORMAL:
-		return generateDesc<NORMAL>(getOffset());
-	case FLOAT3_COLOR:
-		return generateDesc<FLOAT3_COLOR>(getOffset());
-	case FLOAT4_COLOR:
-		return generateDesc<FLOAT4_COLOR>(getOffset());
-	case RGBA_COLOR:
-		return generateDesc<RGBA_COLOR>(getOffset());
+	case ElementType::POSITION2D:
+		return generateDesc<ElementType::POSITION2D>(getOffset());
+	case ElementType::POSITION3D:
+		return generateDesc<ElementType::POSITION3D>(getOffset());
+	case ElementType::TEXTURE2D:
+		return generateDesc<ElementType::TEXTURE2D>(getOffset());
+	case ElementType::NORMAL:
+		return generateDesc<ElementType::NORMAL>(getOffset());
+	case ElementType::TANGENT:
+		return generateDesc<ElementType::TANGENT>(getOffset());
+	case ElementType::BITANGENT:
+		return generateDesc<ElementType::BITANGENT>(getOffset());
+	case ElementType::FLOAT3_COLOR:
+		return generateDesc<ElementType::FLOAT3_COLOR>(getOffset());
+	case ElementType::FLOAT4_COLOR:
+		return generateDesc<ElementType::FLOAT4_COLOR>(getOffset());
+	case ElementType::RGBA_COLOR:
+		return generateDesc<ElementType::RGBA_COLOR>(getOffset());
 	}
 
 	return { "INVALID", 0, DXGI_FORMAT_UNKNOWN, 0, (UINT)offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
@@ -74,20 +82,24 @@ const char* VertexLayout::Element::getCode() const noexcept
 {
 	switch (type)
 	{
-	case POSITION2D:
-		return Map<POSITION2D>::code;
-	case POSITION3D:
-		return Map<POSITION3D>::code;
-	case TEXTURE2D:
-		return Map<TEXTURE2D>::code;
-	case NORMAL:
-		return Map<NORMAL>::code;
-	case FLOAT3_COLOR:
-		return Map<FLOAT3_COLOR>::code;
-	case FLOAT4_COLOR:
-		return Map<FLOAT4_COLOR>::code;
-	case RGBA_COLOR:
-		return Map<RGBA_COLOR>::code;
+	case ElementType::POSITION2D:
+		return Map<ElementType::POSITION2D>::code;
+	case ElementType::POSITION3D:
+		return Map<ElementType::POSITION3D>::code;
+	case ElementType::TEXTURE2D:
+		return Map<ElementType::TEXTURE2D>::code;
+	case ElementType::NORMAL:
+		return Map<ElementType::NORMAL>::code;
+	case ElementType::TANGENT:
+		return Map<ElementType::TANGENT>::code;
+	case ElementType::BITANGENT:
+		return Map<ElementType::BITANGENT>::code;
+	case ElementType::FLOAT3_COLOR:
+		return Map<ElementType::FLOAT3_COLOR>::code;
+	case ElementType::FLOAT4_COLOR:
+		return Map<ElementType::FLOAT4_COLOR>::code;
+	case ElementType::RGBA_COLOR:
+		return Map<ElementType::RGBA_COLOR>::code;
 	}
 
 	return "Invalid";

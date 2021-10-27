@@ -20,7 +20,7 @@ public:
 		const int nVerticesY = divisionsY + 1;
 		VertexBufferData vertexData(std::move(layout));
 
-		const float sideS = width / 2.0f;
+		const float sideX = width / 2.0f;
 		const float sideY = height / 2.0f;
 		const float divisionSizeX = width / float(divisionsX);
 		const float divisionSizeY = height / float(divisionsY);
@@ -29,11 +29,11 @@ public:
 
 		for (int y = 0, i = 0; y < nVerticesY; y++)
 		{
-			const float yPos = float(y) * divisionSizeY - 1.0f;
+			const float yPos = float(y) * divisionSizeY - sideY;
 			const float yPosTexCoord = 1.0f - float(y) * divisionSizeYTexCoord;
 			for (int x = 0; x < nVerticesX; x++, i++)
 			{
-				const float xPos = float(x) * divisionSizeX - 1.0f;
+				const float xPos = float(x) * divisionSizeX - sideX;
 				const float xPosTexCoord = float(x) * divisionSizeXTexCoord;
 				vertexData.emplaceBack(
 					DirectX::XMFLOAT3{ xPos,yPos,0.0f },
@@ -75,9 +75,9 @@ public:
 	static IndexedTriangleList make()
 	{
 		VertexLayout layout;
-		layout.append(VertexLayout::POSITION3D);
-		layout.append(VertexLayout::NORMAL);
-		layout.append(VertexLayout::TEXTURE2D);
+		layout.append(VertexLayout::ElementType::POSITION3D);
+		layout.append(VertexLayout::ElementType::NORMAL);
+		layout.append(VertexLayout::ElementType::TEXTURE2D);
 
 		return make(std::move(layout), 1, 1);
 	}

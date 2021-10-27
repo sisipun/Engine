@@ -313,10 +313,13 @@
     <FxCompile Include="solid_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="phong_specular_pixel.hlsl">
+    <FxCompile Include="phong_specular_normal_pixel.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="phong_normal_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="phong_normal_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

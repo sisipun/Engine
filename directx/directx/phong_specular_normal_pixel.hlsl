@@ -1,3 +1,8 @@
+cbuffer ConstantData : register(b0)
+{
+    bool normalMapEnabled;
+};
+
 cbuffer LightConstantData : register(b1)
 {
     float3 lightPos;
@@ -14,12 +19,30 @@ cbuffer CameraConstantData : register(b2)
     float3 cameraPos;
 };
 
-Texture2D diffuseTex;
-Texture2D specularTex;
+Texture2D diffuseTex : register(t0);
+Texture2D normalTex : register(t1);
+Texture2D specularTex : register(t2);
+
 SamplerState smplr;
 
-float4 main(float3 worldPos : Position, float3 norm : Normal, float2 texCoord : Texcoord) : SV_Target
+float4 main(float3 worldPos : Position, float3 norm : Normal, float3 tan : Tangent, float3 bitan : Bitangent, float2 texCoord : Texcoord) : SV_Target
 {
+    if (normalMapEnabled)
+    {
+        const float3x3 tanToModel = float3x3(
+            normalize(tan),
+            normalize(bitan),
+            normalize(norm)
+        );
+        
+        const float3 normSample = normalTex.Sample(smplr, texCoord).xyz;
+        norm.x = normSample.x * 2.0f - 1.0f;
+        norm.y = -normSample.y * 2.0f + 1.0f;
+        norm.z = normSample.z;
+        
+        norm = mul(norm, tanToModel);
+    }
+    
     const float3 lightToPos = lightPos - worldPos;
     const float lightDist = length(lightToPos);
     const float3 lightDir = lightToPos / lightDist;
