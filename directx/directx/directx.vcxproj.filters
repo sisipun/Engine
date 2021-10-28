@@ -322,6 +322,12 @@
     <FxCompile Include="phong_normal_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="phong_mesh_pixel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="phong_mesh_vertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

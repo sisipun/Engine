@@ -257,63 +257,71 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 
 	std::vector<std::shared_ptr<Bindable>> bindables;
 
+	bool hasDiffuseMap = false;
+	bool hasNormalMap = false;
 	bool hasSpecularMap = false;
-	float shininess = 35.0f;
+	bool hasSpecularAlpha = false;
+	float shininess = 2.0f;
+	DirectX::XMFLOAT3 diffuseColor = { 0.45f, 0.45f, 0.85f };
+	DirectX::XMFLOAT3 specularColor = { 0.18f, 0.18f, 0.18f };
 	if (mesh.mMaterialIndex >= 0)
 	{
 		auto& material = *materials[mesh.mMaterialIndex];
-		const auto base = std::string("models\\brick_wall\\");
+		const auto base = std::string("models\\gobber\\");
 		aiString textureFileName;
 
 		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName) == aiReturn_SUCCESS) {
 			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str()));
+			hasDiffuseMap = true;
 		}
 
 		if (material.GetTexture(aiTextureType_NORMALS, 0, &textureFileName) == aiReturn_SUCCESS) {
 			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str(), 1));
+			hasNormalMap = true;
 		}
 
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str(), 2));
+			const auto specularMap = BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str(), 2);
+			bindables.push_back(specularMap);
 			hasSpecularMap = true;
-		} 
-		else
-		{
-			material.Get(AI_MATKEY_SHININESS, shininess);
+			hasSpecularAlpha = specularMap->hasAplha();
 		}
 
+		material.Get(AI_MATKEY_COLOR_DIFFUSE, reinterpret_cast<aiColor3D&>(diffuseColor));
+		material.Get(AI_MATKEY_COLOR_SPECULAR, reinterpret_cast<aiColor3D&>(specularColor));
+		material.Get(AI_MATKEY_SHININESS, shininess);
 		bindables.push_back(std::make_shared<Sampler>(renderer));
 	}
 
 	bindables.push_back(std::make_shared<VertexBuffer>(renderer, vertexBufferData));
 	bindables.push_back(std::make_shared<IndexBuffer>(renderer, indices));
 
-	auto vertexShader = BindableStore::resolve<VertexShader>(renderer, "phong_normal_vertex.cso");
+	auto vertexShader = BindableStore::resolve<VertexShader>(renderer, "phong_mesh_vertex.cso");
 	auto vertexShaderBytecode = vertexShader->getBytecode();
 	bindables.push_back(std::move(vertexShader));
+
+
+	bindables.push_back(BindableStore::resolve<PixelShader>(renderer, "phong_mesh_pixel.cso"));
 	
-	if (hasSpecularMap) {
-		bindables.push_back(BindableStore::resolve<PixelShader>(renderer, "phong_specular_normal_pixel.cso"));
-		struct ConstantData
-		{
-			BOOL normalMapEnabled = TRUE;
-			float padding[3];
-		} constData;
-		bindables.push_back(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));
-	}
-	else 
+	struct ConstantData
 	{
-		bindables.push_back(BindableStore::resolve<PixelShader>(renderer, "phong_normal_pixel.cso"));
-		struct ConstantData
-		{
-			float specularIntensity = 0.18f;
-			float specularPower;
-			BOOL normalMapEnabled = TRUE;
-			float padding[1];
-		} constData;
-		constData.specularPower = shininess;
-		bindables.push_back(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));
-	}
+		DirectX::XMFLOAT3 materialColor = { 0.45f, 0.45f, 0.85f };
+		BOOL hasDiffuse;
+		BOOL hasNormal;
+		DirectX::XMFLOAT3 specularIntensity = { 0.75f, 0.75f, 0.75f };
+		BOOL hasSpecular;
+		BOOL hasSpecularAlpha;
+		float specularShininess;
+		float padding[1];
+	} constData;
+	constData.materialColor = diffuseColor;
+	constData.hasDiffuse = hasDiffuseMap;
+	constData.hasNormal = hasNormalMap;
+	constData.specularIntensity = specularColor;
+	constData.hasSpecular = hasSpecularMap;
+	constData.hasSpecularAlpha = hasSpecularAlpha;
+	constData.specularShininess = shininess;
+	bindables.push_back(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));
 
 	bindables.push_back(BindableStore::resolve<InputLayout>(renderer, vertexBufferData.getLayout(), vertexShaderBytecode));
 
