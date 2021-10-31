@@ -301,25 +301,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="phong_vertex.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="phong_pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
     <FxCompile Include="solid_pixel.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="solid_vertex.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="phong_specular_normal_pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="phong_normal_pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="phong_normal_vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="phong_mesh_pixel.hlsl">

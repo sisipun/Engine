@@ -36,8 +36,8 @@ void PointLight::spawnControlWindow() noexcept
 void PointLight::reset() noexcept
 {
 	constData = {
-		{ 2.0f, 9.0f, -17.0f },
-		{ 0.05f, 0.05f, 0.05f },
+		{ 2.0f, 2.0f, -2.0f },
+		{ 0.3f, 0.3f, 0.3f },
 		{ 1.0f, 1.0f, 1.0f },
 		1.0f,
 		1.0f,

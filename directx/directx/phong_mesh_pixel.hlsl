@@ -33,6 +33,7 @@ SamplerState smplr;
 
 float4 main(float3 worldPos : Position, float3 norm : Normal, float3 tan : Tangent, float3 bitan : Bitangent, float2 texCoord : Texcoord) : SV_Target
 {
+    norm = normalize(norm);
     if (hasNormal)
     {
         const float3x3 tanToModel = float3x3(
@@ -56,9 +57,10 @@ float4 main(float3 worldPos : Position, float3 norm : Normal, float3 tan : Tange
 	
     const float att = 1 / (attConst + attLinear * lightDist + attQuadratic * lightDist * lightDist);
 	
-    const float3 ambientLight = ambientColor * light * att;
     
     const float3 diffuseColor = hasDiffuse ? diffuseTex.Sample(smplr, texCoord).rgb : materialColor;
+    
+    const float3 ambientLight = diffuseColor * ambientColor * light * att;
     const float3 diffuseLight = diffuseColor * light * att * max(0.0f, dot(lightDir, normalize(norm)));
     
     const float3 viewDir = normalize(cameraPos - worldPos);
@@ -69,5 +71,5 @@ float4 main(float3 worldPos : Position, float3 norm : Normal, float3 tan : Tange
     const float3 specularColor = hasSpecular ? specularSample.rgb : specularIntensity;
     const float3 specularLight = specularColor * light * att * pow(max(0.0f, dot(viewDir, reflectDir)), specularPower);
     
-    return float4(saturate(diffuseLight), 1.0f);
+    return float4(saturate(ambientLight + diffuseLight + specularLight), 1.0f);
 }

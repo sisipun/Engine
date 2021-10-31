@@ -305,10 +305,10 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 	
 	struct ConstantData
 	{
-		DirectX::XMFLOAT3 materialColor = { 0.45f, 0.45f, 0.85f };
+		DirectX::XMFLOAT3 materialColor;
 		BOOL hasDiffuse;
 		BOOL hasNormal;
-		DirectX::XMFLOAT3 specularIntensity = { 0.75f, 0.75f, 0.75f };
+		DirectX::XMFLOAT3 specularIntensity;
 		BOOL hasSpecular;
 		BOOL hasSpecularAlpha;
 		float specularShininess;
