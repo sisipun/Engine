@@ -1,3 +1,5 @@
+#include "base_shader.hlsl"
+
 cbuffer ConstantData : register(b0)
 {
     float3 materialColor;
@@ -33,43 +35,24 @@ SamplerState smplr;
 
 float4 main(float3 worldPos : Position, float3 norm : Normal, float3 tan : Tangent, float3 bitan : Bitangent, float2 texCoord : Texcoord) : SV_Target
 {
-    norm = normalize(norm);
-    if (hasNormal)
-    {
-        const float3x3 tanToModel = float3x3(
-            normalize(tan),
-            normalize(bitan),
-            normalize(norm)
-        );
-        
-        const float3 normSample = normalTex.Sample(smplr, texCoord).xyz;
-        norm.x = normSample.x * 2.0f - 1.0f;
-        norm.y = -normSample.y * 2.0f + 1.0f;
-        norm.z = normSample.z;
-        
-        norm = mul(norm, tanToModel);
-    }
+    norm = hasNormal ? mapNormal(normalize(tan), normalize(bitan), normalize(norm), texCoord, normalTex, smplr) : normalize(norm);
     
     const float3 lightToPos = lightPos - worldPos;
     const float lightDist = length(lightToPos);
     const float3 lightDir = lightToPos / lightDist;
     const float3 light = (lightColor * lightIntensity);
 	
-    const float att = 1 / (attConst + attLinear * lightDist + attQuadratic * lightDist * lightDist);
-	
+    const float att = attenuate(attConst, attLinear, attQuadratic, lightDist);
     
     const float3 diffuseColor = hasDiffuse ? diffuseTex.Sample(smplr, texCoord).rgb : materialColor;
     
-    const float3 ambientLight = diffuseColor * ambientColor * light * att;
-    const float3 diffuseLight = diffuseColor * light * att * max(0.0f, dot(lightDir, normalize(norm)));
+    const float3 ambientLight = ambient(ambientColor, diffuseColor, att, light);
+    const float3 diffuseLight = diffuse(diffuseColor, att, light, lightDir, norm);
     
-    const float3 viewDir = normalize(cameraPos - worldPos);
-    const float3 reflectDir = normalize(reflect(-lightDir, norm));
-
     const float4 specularSample = specularTex.Sample(smplr, texCoord);
     const float specularPower = hasSpecularAlpha ? pow(2.0f, specularSample.a * 13.0f) : specularShininess;
     const float3 specularColor = hasSpecular ? specularSample.rgb : specularIntensity;
-    const float3 specularLight = specularColor * light * att * pow(max(0.0f, dot(viewDir, reflectDir)), specularPower);
+    const float3 specularLight = speculate(specularColor, specularPower, att, light, lightDir, worldPos, norm, cameraPos);
     
     return float4(saturate(ambientLight + diffuseLight + specularLight), 1.0f);
 }

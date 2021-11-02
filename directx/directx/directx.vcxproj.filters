@@ -150,6 +150,9 @@
     <ClCompile Include="test_cube.cpp">
       <Filter>Source Files\drawable</Filter>
     </ClCompile>
+    <ClCompile Include="dx_math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -298,6 +301,12 @@
     </ClInclude>
     <ClInclude Include="test_cube.h">
       <Filter>Header Files\drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="base_shader.hlsl">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="dx_math.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

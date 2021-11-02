@@ -1,6 +1,8 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include <filesystem>
+
 #include <assimp/scene.h>
 
 #include "drawable.h"
@@ -25,6 +27,7 @@ public:
 
 	void draw(const Renderer& renderer, DirectX::FXMMATRIX accumulatedTransform) const noexcept;
 	void setAppliedTransform(DirectX::FXMMATRIX transform) noexcept;
+	DirectX::XMFLOAT4X4 getAppliedTransform();
 	void spawnControlTree(Node*& selectedNode) const noexcept;
 	int getId() const noexcept;
 
@@ -52,7 +55,7 @@ public:
 	private:
 		std::string note;
 	};
-	Model(const Renderer& renderer, const std::string fileName);
+	Model(const Renderer& renderer, const std::string& filePath, float scale = 1.0f);
 	~Model() noexcept;
 
 	void draw(const Renderer& renderer) const noexcept;
@@ -60,7 +63,7 @@ public:
 	void setTransform(DirectX::FXMMATRIX transform) noexcept;
 
 private:
-	std::unique_ptr<Mesh> parseMesh(const Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* materials) const noexcept;
+	std::unique_ptr<Mesh> parseMesh(const Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* materials, const std::filesystem::path& path, float scale) const noexcept;
 	std::unique_ptr<Node> parseNode(int &nextId, const aiNode& node) const noexcept;
 
 private:
@@ -68,7 +71,6 @@ private:
 	std::vector<std::unique_ptr<Mesh>> meshes;
 	std::unique_ptr<class ModelControlWindow> controlWindow;
 	DirectX::XMFLOAT4X4 transform;
-	DirectX::XMFLOAT4X4 appliedTransform;
 };
 
 #endif

@@ -20,6 +20,7 @@
 #include "vertex.h"
 #include "texture.h"
 #include "sampler.h"
+#include "dx_math.h"
 
 
 Mesh::Mesh(const Renderer& renderer, std::vector<std::shared_ptr<Bindable>> bindables) noexcept
@@ -98,6 +99,11 @@ void Node::setAppliedTransform(DirectX::FXMMATRIX transform) noexcept
 	DirectX::XMStoreFloat4x4(&appliedTransform, transform);
 }
 
+DirectX::XMFLOAT4X4 Node::getAppliedTransform() 
+{
+	return appliedTransform;
+}
+
 int Node::getId() const noexcept
 {
 	return id;
@@ -116,7 +122,24 @@ public:
 			ImGui::NextColumn();
 			if (selectedNode != nullptr)
 			{
-				auto& transform = transforms[selectedNode->getId()];
+				const auto id = selectedNode->getId();
+				auto iter = transforms.find(id);
+				if (iter == transforms.end())
+				{
+					const auto& appliedTransform = selectedNode->getAppliedTransform();
+					const auto angles = extractRollPitchYaw(appliedTransform);
+					const auto translation = extractTranslation(appliedTransform);
+					TransformParameters params;
+					params.pitch = angles.x;
+					params.yaw = angles.y;
+					params.roll = angles.z;
+					params.x = translation.x;
+					params.y = translation.y;
+					params.z = translation.z;
+					const auto inserted = transforms.insert({ id, params });
+					iter = inserted.first;
+				}
+				auto& transform = iter->second;
 				ImGui::Text("Orientation");
 				ImGui::SliderAngle("Roll", &transform.roll, -180.0f, 180.0f);
 				ImGui::SliderAngle("Pitch", &transform.pitch, -180.0f, 180.0f);
@@ -179,10 +202,10 @@ const std::string& Model::LoadException::getErrorNote() const noexcept
 	return note;
 }
 
-Model::Model(const Renderer& renderer, const std::string fileName) : controlWindow(std::make_unique<ModelControlWindow>())
+Model::Model(const Renderer& renderer, const std::string& filePath, float scale) : controlWindow(std::make_unique<ModelControlWindow>())
 {
 	Assimp::Importer importer;
-	const auto model = importer.ReadFile(fileName, aiProcess_Triangulate
+	const auto model = importer.ReadFile(filePath, aiProcess_Triangulate
 		| aiProcess_JoinIdenticalVertices
 		| aiProcess_ConvertToLeftHanded
 		| aiProcess_GenNormals
@@ -195,7 +218,7 @@ Model::Model(const Renderer& renderer, const std::string fileName) : controlWind
 
 	for (size_t i = 0; i < model->mNumMeshes; i++)
 	{
-		meshes.push_back(parseMesh(renderer, *model->mMeshes[i], model->mMaterials));
+		meshes.push_back(parseMesh(renderer, *model->mMeshes[i], model->mMaterials, filePath, scale));
 	}
 
 	int nextId = 0;
@@ -225,7 +248,13 @@ void Model::setTransform(DirectX::FXMMATRIX transform) noexcept
 	root->setAppliedTransform(transform);
 }
 
-std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& mesh, const aiMaterial* const* materials) const noexcept
+std::unique_ptr<Mesh> Model::parseMesh(
+	const Renderer& renderer, 
+	const aiMesh& mesh, 
+	const aiMaterial* const* materials, 
+	const std::filesystem::path& path, 
+	float scale
+) const noexcept
 {
 	VertexBufferData vertexBufferData(std::move(VertexLayout()
 		.append(VertexLayout::ElementType::POSITION3D)
@@ -237,7 +266,7 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 	for (unsigned int i = 0; i < mesh.mNumVertices; i++)
 	{
 		vertexBufferData.emplaceBack(
-			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mVertices[i]),
+			DirectX::XMFLOAT3(mesh.mVertices[i].x * scale, mesh.mVertices[i].y * scale, mesh.mVertices[i].z * scale),
 			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mNormals[i]),
 			*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh.mTextureCoords[0][i]),
 			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mTangents[i]),
@@ -257,6 +286,8 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 
 	std::vector<std::shared_ptr<Bindable>> bindables;
 
+	const auto rootPath = path.parent_path().string() + "\\";
+
 	bool hasDiffuseMap = false;
 	bool hasNormalMap = false;
 	bool hasSpecularMap = false;
@@ -267,21 +298,20 @@ std::unique_ptr<Mesh> Model::parseMesh(const Renderer& renderer, const aiMesh& m
 	if (mesh.mMaterialIndex >= 0)
 	{
 		auto& material = *materials[mesh.mMaterialIndex];
-		const auto base = std::string("models\\gobber\\");
 		aiString textureFileName;
 
 		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str()));
+			bindables.push_back(BindableStore::resolve<Texture>(renderer, rootPath + textureFileName.C_Str()));
 			hasDiffuseMap = true;
 		}
 
 		if (material.GetTexture(aiTextureType_NORMALS, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str(), 1));
+			bindables.push_back(BindableStore::resolve<Texture>(renderer, rootPath + textureFileName.C_Str(), 1));
 			hasNormalMap = true;
 		}
 
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureFileName) == aiReturn_SUCCESS) {
-			const auto specularMap = BindableStore::resolve<Texture>(renderer, base + textureFileName.C_Str(), 2);
+			const auto specularMap = BindableStore::resolve<Texture>(renderer, rootPath + textureFileName.C_Str(), 2);
 			bindables.push_back(specularMap);
 			hasSpecularMap = true;
 			hasSpecularAlpha = specularMap->hasAplha();
