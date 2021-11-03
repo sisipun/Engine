@@ -14,10 +14,9 @@ App::App() :
 	window(100, 100, 1280, 720, "Basic window"),
 	light(window.getRenderer()),
 	camera(window.getRenderer()),
-	model(window.getRenderer(), "models\\gobber\\GoblinX.obj")
+	model(window.getRenderer(), "models\\sponza\\sponza.obj", 1/20.0f)
 {
-	model.setTransform(DirectX::XMMatrixTranslation(-1.5f, 2.0f, -1.0f) * DirectX::XMMatrixRotationRollPitchYaw(10.0f, -5.0f, 13.0f));
-	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40.0f));
+	window.getRenderer().setProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 400.0f));
 }
 
 App::~App()
