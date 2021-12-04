@@ -4,7 +4,7 @@
 Texture::Texture(const Renderer& renderer, const std::string& path, unsigned int slot) : slot(slot)
 {
 	const auto surface = Surface::fromFile(path);
-	hasAlpha = surface.isAlphaLoaded();
+	alpha = surface.isAlphaLoaded();
 
 	HRESULT hResult;
 
@@ -46,7 +46,7 @@ std::string Texture::getUid(const std::string& path, unsigned int slot) noexcept
 	return typeid(Texture).name() + std::string("#") + path + std::string("#") + std::to_string(slot);
 }
 
-bool Texture::hasAplha() const noexcept
+bool Texture::hasAlpha() const noexcept
 {
-	return hasAlpha;
+	return alpha;
 }

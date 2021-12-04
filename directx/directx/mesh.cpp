@@ -20,6 +20,8 @@
 #include "vertex.h"
 #include "texture.h"
 #include "sampler.h"
+#include "blender.h"
+#include "rasterizer.h"
 #include "dx_math.h"
 
 
@@ -289,6 +291,7 @@ std::unique_ptr<Mesh> Model::parseMesh(
 	const auto rootPath = path.parent_path().string() + "\\";
 
 	bool hasDiffuseMap = false;
+	bool hasDiffuseAlpha = false;
 	bool hasNormalMap = false;
 	bool hasSpecularMap = false;
 	bool hasSpecularAlpha = false;
@@ -301,8 +304,10 @@ std::unique_ptr<Mesh> Model::parseMesh(
 		aiString textureFileName;
 
 		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName) == aiReturn_SUCCESS) {
-			bindables.push_back(BindableStore::resolve<Texture>(renderer, rootPath + textureFileName.C_Str()));
+			const auto diffuseMap = BindableStore::resolve<Texture>(renderer, rootPath + textureFileName.C_Str());
+			bindables.push_back(diffuseMap);
 			hasDiffuseMap = true;
+			hasDiffuseAlpha = diffuseMap->hasAlpha();
 		}
 
 		if (material.GetTexture(aiTextureType_NORMALS, 0, &textureFileName) == aiReturn_SUCCESS) {
@@ -314,7 +319,7 @@ std::unique_ptr<Mesh> Model::parseMesh(
 			const auto specularMap = BindableStore::resolve<Texture>(renderer, rootPath + textureFileName.C_Str(), 2);
 			bindables.push_back(specularMap);
 			hasSpecularMap = true;
-			hasSpecularAlpha = specularMap->hasAplha();
+			hasSpecularAlpha = specularMap->hasAlpha();
 		}
 
 		material.Get(AI_MATKEY_COLOR_DIFFUSE, reinterpret_cast<aiColor3D&>(diffuseColor));
@@ -354,6 +359,7 @@ std::unique_ptr<Mesh> Model::parseMesh(
 	bindables.push_back(std::make_shared<PixelConstantBuffer<ConstantData>>(renderer, constData));
 
 	bindables.push_back(BindableStore::resolve<InputLayout>(renderer, vertexBufferData.getLayout(), vertexShaderBytecode));
+	bindables.push_back(BindableStore::resolve<Rasterizer>(renderer, hasDiffuseAlpha));
 
 	return std::make_unique<Mesh>(renderer, std::move(bindables));
 }

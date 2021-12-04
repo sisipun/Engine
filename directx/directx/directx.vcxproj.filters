@@ -153,6 +153,12 @@
     <ClCompile Include="dx_math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="blender.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="rasterizer.cpp">
+      <Filter>Source Files\bindable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -307,6 +313,12 @@
     </ClInclude>
     <ClInclude Include="dx_math.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="blender.h">
+      <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="rasterizer.h">
+      <Filter>Header Files\bindable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

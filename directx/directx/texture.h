@@ -11,10 +11,10 @@ public:
 
 	void bind(const Renderer& rennderer) noexcept override;
 	static std::string getUid(const std::string& path, unsigned int slot = 0) noexcept;
-	bool hasAplha() const noexcept;
+	bool hasAlpha() const noexcept;
 
 private:
-	bool hasAlpha = false;
+	bool alpha = false;
 	unsigned int slot;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureView;
 };
