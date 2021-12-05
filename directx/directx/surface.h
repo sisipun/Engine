@@ -3,9 +3,12 @@
 
 #include <string>
 #include <memory>
+#include <optional>
+
+#include <DirectXTex\DirectXTex.h>
 
 #include "win_api.h"
-#include "base_exception.h"
+#include "base_hr_exception.h"
 
 class Surface
 {
@@ -25,7 +28,7 @@ public:
 		{
 		}
 
-		constexpr Color(unsigned char r, unsigned char g, unsigned char b) noexcept : value((r << 16) | (g << 8) | b)
+		constexpr Color(unsigned char r, unsigned char g, unsigned char b) noexcept : value((255 << 24) | (r << 16) | (g << 8) | b)
 		{
 		}
 
@@ -82,23 +85,25 @@ public:
 		unsigned int value;
 	};
 
-	class Exception : public BaseException
+	class HrException : public BaseHrException
 	{
 	public:
-		Exception(int line, const char* file, std::string node) noexcept;
+		HrException(int line, const char* file, std::string node, HRESULT hResult) noexcept;
+		HrException(int line, const char* file, std::string filename, std::string node, HRESULT hResult) noexcept;
 		const char* what() const noexcept override;
 		const char* getType() const noexcept override;
 		const std::string& getNote() const noexcept;
 	private:
+		std::optional<HRESULT> hResult;
 		std::string note;
 	};
 
-	Surface(unsigned int width, unsigned int height) noexcept;
-	Surface(Surface&& source) noexcept;
+	Surface(unsigned int width, unsigned int height);
+	Surface(Surface&& source) noexcept = default;
 	Surface(Surface& source) = delete;
-	Surface& operator=(Surface&& source) noexcept;
+	Surface& operator=(Surface&& source) noexcept = default;
 	Surface& operator=(const Surface& source) = delete;
-	~Surface();
+	~Surface() = default;
 	void clear(Color fillValue) noexcept;
 	void putPixel(unsigned int x, unsigned int y, Color color) noexcept;
 	Color getPixel(unsigned int x, unsigned int y) const noexcept;
@@ -109,16 +114,13 @@ public:
 	const Color* getBufferPointerConst() const noexcept;
 	static Surface fromFile(const std::string& filename);
 	void save(const std::string& filename) const;
-	void copy(const Surface& source) noexcept;
 	bool isAlphaLoaded() const noexcept;
 
 private:
-	Surface(unsigned int width, unsigned int height, std::unique_ptr<Color[]> bufferParam, bool alphaLoaded) noexcept;
+	Surface(DirectX::ScratchImage scratch) noexcept;
 
-	std::unique_ptr<Color[]> buffer;
-	unsigned int width;
-	unsigned int height;
-	bool alphaLoaded = false;
+	static constexpr DXGI_FORMAT format = DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
+	DirectX::ScratchImage scratch;
 };
 
 #endif

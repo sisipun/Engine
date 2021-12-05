@@ -159,6 +159,9 @@
     <ClCompile Include="rasterizer.cpp">
       <Filter>Source Files\bindable</Filter>
     </ClCompile>
+    <ClCompile Include="string_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -319,6 +322,12 @@
     </ClInclude>
     <ClInclude Include="rasterizer.h">
       <Filter>Header Files\bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="surface_throw_macros.h">
+      <Filter>Header Files\macros</Filter>
+    </ClInclude>
+    <ClInclude Include="string_util.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
