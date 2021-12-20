@@ -1,5 +1,5 @@
-#ifndef DXGI_INFO_MANAGER
-#define DXGI_INFO_MANAGER
+#ifndef DXGI_INFO_MANAGER_H
+#define DXGI_INFO_MANAGER_H
 
 #include <string>
 #include <vector>
@@ -15,10 +15,10 @@ public:
 	~DxgiInfoManager() = default;
 	DxgiInfoManager(const DxgiInfoManager&) = delete;
 	DxgiInfoManager& operator=(const DxgiInfoManager&) = delete;
-	void set() noexcept;
+	void set() const noexcept;
 	std::vector<std::string> getMessages() const;
 private:
-	unsigned long long next = 0u;
+	mutable unsigned long long next = 0u;
 	Microsoft::WRL::ComPtr<IDXGIInfoQueue> dxgiInfoQueue;
 };
 
