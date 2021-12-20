@@ -6,6 +6,7 @@
 class Bindable
 {
 public:
+    virtual ~Bindable() = default;
     virtual void bind(const Shader &shader) const = 0;
 };
 
