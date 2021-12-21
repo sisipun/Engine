@@ -13,14 +13,14 @@ namespace pickle
             {
             }
 
-            Vector2 operator+(Vector2 vector)
+            virtual Vector2<T> operator+(Vector2<T> vector)
             {
-                return Vector2(x + vector.x, y + vector.y);
+                return Vector2<T>(x + vector.x, y + vector.y);
             }
 
-            Vector2 operator-(Vector2 vector)
+            virtual Vector2<T> operator-(Vector2<T> vector)
             {
-                return Vector2(x - vector.x, y - vector.y);
+                return Vector2<T>(x - vector.x, y - vector.y);
             }
 
         public:
