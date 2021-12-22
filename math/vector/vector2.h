@@ -1,30 +1,53 @@
 #ifndef PICKLE_MATH_VECTOR2
 #define PICKLE_MATH_VECTOR2
 
+#include "math.h"
+
 namespace pickle
 {
     namespace math
     {
-        template <typename T>
         class Vector2
         {
         public:
-            Vector2(T x, T y) : x(x), y(y)
+            Vector2(float x, float y) : x(x), y(y)
             {
             }
 
-            virtual Vector2<T> operator+(Vector2<T> vector)
+            Vector2 operator+(Vector2 vector) const
             {
-                return Vector2<T>(x + vector.x, y + vector.y);
+                return Vector2(x + vector.x, y + vector.y);
             }
 
-            virtual Vector2<T> operator-(Vector2<T> vector)
+            Vector2 operator-(Vector2 vector) const
             {
-                return Vector2<T>(x - vector.x, y - vector.y);
+                return Vector2(x - vector.x, y - vector.y);
+            }
+
+            Vector2 operator*(float scalar) const
+            {
+                return Vector2(x * scalar, y * scalar);
+            }
+
+            Vector2 operator/(float divider) const
+            {
+                return Vector2(x / divider, y / divider);
+            }
+
+            virtual float length() const
+            {
+                return sqrt(x * x + y * y);
+            }
+
+            virtual void normalize()
+            {
+                float len = length();
+                x /= len;
+                y /= len;
             }
 
         public:
-            T x, y;
+            float x, y;
         };
     }
 }
