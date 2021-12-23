@@ -14,12 +14,30 @@ namespace pickle
             {
             }
 
-            Vector2 operator+(Vector2 vector) const
+            Vector2(const Vector2& vector) : Vector2(vector.x, vector.y)
+            {
+            }
+
+            ~Vector2() = default;
+
+            Vector2& operator=(const Vector2& vector)
+            {
+                if (this == &vector)
+                {
+                    return *this;
+                }
+
+                this->x = vector.x;
+                this->y = vector.y;
+                return *this;
+            }
+
+            Vector2 operator+(const Vector2& vector) const
             {
                 return Vector2(x + vector.x, y + vector.y);
             }
 
-            Vector2 operator-(Vector2 vector) const
+            Vector2 operator-(const Vector2& vector) const
             {
                 return Vector2(x - vector.x, y - vector.y);
             }
@@ -32,6 +50,11 @@ namespace pickle
             Vector2 operator/(float divider) const
             {
                 return Vector2(x / divider, y / divider);
+            }
+
+            float dot(const Vector2& vector) const
+            {
+                return x * vector.x + y * vector.y;
             }
 
             virtual float length() const

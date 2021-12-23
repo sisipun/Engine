@@ -1,26 +1,44 @@
 #ifndef PICKLE_MATH_VECTOR3
 #define PICKLE_MATH_VECTOR3
 
-#include "vector2.h"
 #include "math.h"
 
 namespace pickle
 {
     namespace math
     {
-        class Vector3 : public Vector2
+        class Vector3
         {
         public:
-            Vector3(float x, float y, float z) : Vector2(x, y), z(z)
+            Vector3(float x, float y, float z) : x(x), y(y), z(z)
             {
             }
 
-            Vector3 operator+(Vector3 vector) const
+            Vector3(const Vector3& vector) : Vector3(vector.x, vector.y, vector.z)
+            {
+            }
+
+            ~Vector3() = default;
+
+            Vector3& operator=(const Vector3& vector)
+            {
+                if (this == &vector)
+                {
+                    return *this;
+                }
+
+                this->x = vector.x;
+                this->y = vector.y;
+                this->z = vector.z;
+                return *this;
+            }
+
+            Vector3 operator+(const Vector3& vector) const
             {
                 return Vector3(x + vector.x, y + vector.y, z + vector.z);
             }
 
-            Vector3 operator-(Vector3 vector) const
+            Vector3 operator-(const Vector3& vector) const
             {
                 return Vector3(x - vector.x, y - vector.y, z - vector.z);
             }
@@ -35,12 +53,22 @@ namespace pickle
                 return Vector3(x / divider, y / divider, z / divider);
             }
 
-            virtual float length() const override
+            float dot(const Vector3& vector) const
+            {
+                return x * vector.x + y * vector.y + z * vector.z;
+            }
+
+            Vector3 cross(const Vector3& vector)
+            {
+                return Vector3(y * vector.z - z * vector.y, -x * vector.z + z * vector.x, x * vector.y - y * vector.x);
+            }
+
+            virtual float length() const
             {
                 return sqrt(x * x + y * y + z * z);
             }
 
-            virtual void normalize() override
+            virtual void normalize()
             {
                 float len = length();
                 x /= len;
@@ -49,7 +77,7 @@ namespace pickle
             }
 
         public:
-            float z;
+            float x, y, z;
         };
     }
 }
