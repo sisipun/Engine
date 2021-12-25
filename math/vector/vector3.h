@@ -63,6 +63,11 @@ namespace pickle
                 return Vector3(y * vector.z - z * vector.y, -x * vector.z + z * vector.x, x * vector.y - y * vector.x);
             }
 
+            Vector3 reflect(const Vector3& norm) const
+            {
+                return *this - (norm * 2 * (this->dot(norm) / norm.dot(norm)));
+            }
+
             virtual float length() const
             {
                 return sqrt(x * x + y * y + z * z);

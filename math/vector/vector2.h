@@ -52,6 +52,11 @@ namespace pickle
                 return Vector2(x / divider, y / divider);
             }
 
+            Vector2 reflect(const Vector2& norm) const
+            {
+                return *this - (norm * 2 * (this->dot(norm) / norm.dot(norm)));
+            }
+
             float dot(const Vector2& vector) const
             {
                 return x * vector.x + y * vector.y;
