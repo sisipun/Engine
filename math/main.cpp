@@ -6,13 +6,13 @@
 int main()
 {
     using namespace pickle::math;
-    Vector2 v2First(1, 1);
-    Vector2 v2Second(-1, 0);
-    Vector2 v2Sum = v2First + v2Second;
-    Vector2 v2Sub = v2First - v2Second;
-    Vector2 v2Mul = v2First * 3;
-    Vector2 v2Div = v2Second / 2.0;
-    Vector2 v2Ref = v2Second.reflect(Vector2(1, 1));
+    Vector<2> v2First(1, 1);
+    Vector<2> v2Second(-1, 0);
+    Vector<2> v2Sum = v2First + v2Second;
+    Vector<2> v2Sub = v2First - v2Second;
+    Vector<2> v2Mul = v2First * 3;
+    Vector<2> v2Div = v2Second / 2.0;
+    Vector<2> v2Ref = v2Second.reflect(Vector<2>(1, 1));
     float v2Dot = v2First.dot(v2Second);
 
     std::cout << "Vector2 - Sum: (" << v2Sum.x << "," << v2Sum.y << ")" << std::endl;
@@ -26,15 +26,15 @@ int main()
     v2First.normalize();
     std::cout << "Vector2 - Norm: (" << v2First.x << "," << v2First.y << ")" << std::endl;
 
-    Vector3 v3First(4, -2, 5);
-    Vector3 v3Second(-1, -1, -1);
-    Vector3 v3Sum = v3First + v3Second;
-    Vector3 v3Sub = v3First - v3Second;
-    Vector3 v3Mul = v3First * 4;
-    Vector3 v3Div = v3Second / 5;
-    Vector3 v3Ref = v3Second.reflect(Vector3(1, 0, 0));
+    Vector<3> v3First(4, -2, 5);
+    Vector<3> v3Second(-1, -1, -1);
+    Vector<3> v3Sum = v3First + v3Second;
+    Vector<3> v3Sub = v3First - v3Second;
+    Vector<3> v3Mul = v3First * 4;
+    Vector<3> v3Div = v3Second / 5;
+    Vector<3> v3Ref = v3Second.reflect(Vector<3>(1, 0, 0));
     float v3Dot = v3First.dot(v3Second);
-    Vector3 v3Cross = v3First.cross(v3Second);
+    Vector<3> v3Cross = v3First.cross(v3Second);
 
     std::cout << "Vector3 - Sum: (" << v3Sum.x << "," << v3Sum.y << "," << v3Sum.z << ")" << std::endl;
     std::cout << "Vector3 - Sub: (" << v3Sub.x << "," << v3Sub.y << "," << v3Sub.z << ")" << std::endl;
