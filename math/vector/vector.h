@@ -5,7 +5,7 @@ namespace pickle
 {
     namespace math
     {
-        template<int D>
+        template<int D, typename T>
         class Vector;
     }
 }

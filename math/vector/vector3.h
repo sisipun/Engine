@@ -8,21 +8,21 @@ namespace pickle
 {
     namespace math
     {
-        template<>
-        class Vector<3>
+        template<typename T>
+        class Vector<3, T>
         {
         public:
-            Vector(float x, float y, float z) : x(x), y(y), z(z)
+            Vector(T x, T y, T z) : x(x), y(y), z(z)
             {
             }
 
-            Vector(const Vector<3>& vector) : x(vector.x), y(vector.y), z(vector.z)
+            Vector(const Vector<3, T>& vector) : x(vector.x), y(vector.y), z(vector.z)
             {
             }
 
             ~Vector() = default;
 
-            Vector& operator=(const Vector<3>& vector)
+            Vector& operator=(const Vector<3, T>& vector)
             {
                 if (this == &vector)
                 {
@@ -35,37 +35,37 @@ namespace pickle
                 return *this;
             }
 
-            Vector<3> operator+(const Vector<3>& vector) const
+            Vector<3, T> operator+(const Vector<3, T>& vector) const
             {
-                return Vector<3>(x + vector.x, y + vector.y, z + vector.z);
+                return Vector<3, T>(x + vector.x, y + vector.y, z + vector.z);
             }
 
-            Vector<3> operator-(const Vector<3>& vector) const
+            Vector<3, T> operator-(const Vector<3, T>& vector) const
             {
-                return Vector<3>(x - vector.x, y - vector.y, z - vector.z);
+                return Vector<3, T>(x - vector.x, y - vector.y, z - vector.z);
             }
 
-            Vector<3> operator*(float scalar) const
+            Vector<3, T> operator*(float scalar) const
             {
-                return Vector<3>(x * scalar, y * scalar, z * scalar);
+                return Vector<3, T>(x * scalar, y * scalar, z * scalar);
             }
 
-            Vector<3> operator/(float divider) const
+            Vector<3, T> operator/(float divider) const
             {
-                return Vector<3>(x / divider, y / divider, z / divider);
+                return Vector<3, T>(x / divider, y / divider, z / divider);
             }
 
-            float dot(const Vector<3>& vector) const
+            float dot(const Vector<3, T>& vector) const
             {
                 return x * vector.x + y * vector.y + z * vector.z;
             }
 
-            Vector<3> cross(const Vector<3>& vector)
+            Vector<3, T> cross(const Vector<3, T>& vector)
             {
-                return Vector<3>(y * vector.z - z * vector.y, -x * vector.z + z * vector.x, x * vector.y - y * vector.x);
+                return Vector<3, T>(y * vector.z - z * vector.y, -x * vector.z + z * vector.x, x * vector.y - y * vector.x);
             }
 
-            Vector<3> reflect(const Vector<3>& norm) const
+            Vector<3, T> reflect(const Vector<3, T>& norm) const
             {
                 return *this - (norm * 2 * (this->dot(norm) / norm.dot(norm)));
             }
@@ -84,7 +84,7 @@ namespace pickle
             }
 
         public:
-            float x, y, z;
+            T x, y, z;
         };
     }
 }

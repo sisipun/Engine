@@ -5,7 +5,7 @@ namespace pickle
 {
     namespace math
     {
-        template <int R, int C>
+        template <int R, int C, typename T>
         class Matrix
         {
         public:
@@ -13,7 +13,7 @@ namespace pickle
             {
             }
 
-            Matrix(const float (&data)[R * C])
+            Matrix(const T (&data)[R * C])
             {
                 for (int i = 0; i < R; i++)
                 {
@@ -25,13 +25,13 @@ namespace pickle
                 }
             }
 
-            Matrix(const Matrix &matrix) : Matrix(matrix.data)
+            Matrix(const Matrix<R, C, T> &matrix) : Matrix(matrix.data)
             {
             }
 
             ~Matrix() = default;
 
-            Matrix<R, C> &operator=(const Matrix<R, C> &matrix)
+            Matrix<R, C, T> &operator=(const Matrix<R, C, T> &matrix)
             {
                 if (this == &matrix)
                 {
@@ -49,9 +49,9 @@ namespace pickle
                 return *this;
             }
 
-            Matrix<R, C> operator+(const Matrix<R, C> &matrix)
+            Matrix<R, C, T> operator+(const Matrix<R, C, T> &matrix)
             {
-                Matrix<R, C> sum;
+                Matrix<R, C, T> sum;
                 for (int i = 0; i < R; i++)
                 {
                     for (int j = 0; j < C; j++)
@@ -63,9 +63,9 @@ namespace pickle
                 return sum;
             }
 
-            Matrix<R, C> operator-(const Matrix<R, C> &matrix)
+            Matrix<R, C, T> operator-(const Matrix<R, C, T> &matrix)
             {
-                Matrix<R, C> sub;
+                Matrix<R, C, T> sub;
                 for (int i = 0; i < R; i++)
                 {
                     for (int j = 0; j < C; j++)
@@ -77,9 +77,9 @@ namespace pickle
                 return sub;
             }
 
-            Matrix<R, C> operator*(float scalar) const
+            Matrix<R, C, T> operator*(float scalar) const
             {
-                Matrix<R, C> mul;
+                Matrix<R, C, T> mul;
                 for (int i = 0; i < R; i++)
                 {
                     for (int j = 0; j < C; j++)
@@ -91,9 +91,9 @@ namespace pickle
                 return mul;
             }
 
-            Matrix<R, C> operator/(float divider) const
+            Matrix<R, C, T> operator/(float divider) const
             {
-                Matrix<R, C> div;
+                Matrix<R, C, T> div;
                 for (int i = 0; i < R; i++)
                 {
                     for (int j = 0; j < C; j++)
@@ -106,7 +106,7 @@ namespace pickle
             }
 
         public:
-            float data[R * C];
+            T data[R * C];
         };
     }
 }

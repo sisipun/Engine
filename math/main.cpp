@@ -7,14 +7,14 @@
 int main()
 {
     using namespace pickle::math;
-    Vector<2> v2First(1, 1);
-    Vector<2> v2Cpy = v2First;
-    Vector<2> v2Second(-1, 0);
-    Vector<2> v2Sum = v2First + v2Second;
-    Vector<2> v2Sub = v2First - v2Second;
-    Vector<2> v2Mul = v2First * 3;
-    Vector<2> v2Div = v2Second / 2.0;
-    Vector<2> v2Ref = v2Second.reflect(Vector<2>(1, 1));
+    Vector<2, float> v2First(1, 1);
+    Vector<2, float> v2Cpy = v2First;
+    Vector<2, float> v2Second(-1, 0);
+    Vector<2, float> v2Sum = v2First + v2Second;
+    Vector<2, float> v2Sub = v2First - v2Second;
+    Vector<2, float> v2Mul = v2First * 3;
+    Vector<2, float> v2Div = v2Second / 2.0;
+    Vector<2, float> v2Ref = v2Second.reflect(Vector<2, float>(1, 1));
     float v2Dot = v2First.dot(v2Second);
     v2First.normalize();
 
@@ -28,16 +28,16 @@ int main()
     std::cout << "Vector2 - Len: (" << v2First.length() << ")" << std::endl;
     std::cout << "Vector2 - Norm: (" << v2First.x << "," << v2First.y << ")" << std::endl;
 
-    Vector<3> v3First(4, -2, 5);
-    Vector<3> v3Cpy = v3First;
-    Vector<3> v3Second(-1, -1, -1);
-    Vector<3> v3Sum = v3First + v3Second;
-    Vector<3> v3Sub = v3First - v3Second;
-    Vector<3> v3Mul = v3First * 4;
-    Vector<3> v3Div = v3Second / 5;
-    Vector<3> v3Ref = v3Second.reflect(Vector<3>(1, 0, 0));
+    Vector<3, float> v3First(4, -2, 5);
+    Vector<3, float> v3Cpy = v3First;
+    Vector<3, float> v3Second(-1, -1, -1);
+    Vector<3, float> v3Sum = v3First + v3Second;
+    Vector<3, float> v3Sub = v3First - v3Second;
+    Vector<3, float> v3Mul = v3First * 4;
+    Vector<3, float> v3Div = v3Second / 5;
+    Vector<3, float> v3Ref = v3Second.reflect(Vector<3, float>(1, 0, 0));
     float v3Dot = v3First.dot(v3Second);
-    Vector<3> v3Cross = v3First.cross(v3Second);
+    Vector<3, float> v3Cross = v3First.cross(v3Second);
     v3First.normalize();
 
     std::cout << "Vector3 - Cpy: (" << v3Cpy.x << "," << v3Cpy.y << "," << v3Cpy.z << ")" << std::endl;
@@ -51,13 +51,13 @@ int main()
     std::cout << "Vector3 - Len: (" << v3First.length() << ")" << std::endl;
     std::cout << "Vector3 - Norm: (" << v3First.x << "," << v3First.y << "," << v3First.z << ")" << std::endl;
 
-    Matrix<2, 2> matrixFirst({0.5f, 3.0f, 0.0f, -1.4f});
-    Matrix<2, 2> matrixCpy = matrixFirst;
-    Matrix<2, 2> matrixSecond({1.0f, 2.0f, 3.0f, 4.0f});
-    Matrix<2, 2> matrixSum = matrixSecond + matrixFirst;
-    Matrix<2, 2> matrixSub = matrixSecond - matrixFirst;
-    Matrix<2, 2> matrixMul = matrixFirst * 2;
-    Matrix<2, 2> matrixDiv = matrixSecond / 2;
+    Matrix<2, 2, float> matrixFirst({0.5f, 3.0f, 0.0f, -1.4f});
+    Matrix<2, 2, float> matrixCpy = matrixFirst;
+    Matrix<2, 2, float> matrixSecond({1.0f, 2.0f, 3.0f, 4.0f});
+    Matrix<2, 2, float> matrixSum = matrixSecond + matrixFirst;
+    Matrix<2, 2, float> matrixSub = matrixSecond - matrixFirst;
+    Matrix<2, 2, float> matrixMul = matrixFirst * 2;
+    Matrix<2, 2, float> matrixDiv = matrixSecond / 2;
 
     std::cout << "Matrix - Cpy: \n" << matrixCpy.data[0] << ", " << matrixCpy.data[1] << "\n" << matrixCpy.data[2] << ", " << matrixCpy.data[3] << "\n" << std::endl;
     std::cout << "Matrix - Sum: \n" << matrixSum.data[0] << ", " << matrixSum.data[1] << "\n" << matrixSum.data[2] << ", " << matrixSum.data[3] << "\n" << std::endl;

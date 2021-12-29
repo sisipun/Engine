@@ -8,11 +8,11 @@ namespace pickle
 {
     namespace math
     {
-        template<>
-        class Vector<2>
+        template<typename T>
+        class Vector<2, T>
         {
         public:
-            Vector(float x, float y) : x(x), y(y)
+            Vector(T x, T y) : x(x), y(y)
             {
             }
 
@@ -22,7 +22,7 @@ namespace pickle
 
             ~Vector() = default;
 
-            Vector<2>& operator=(const Vector<2>& vector)
+            Vector<2, T>& operator=(const Vector<2, T>& vector)
             {
                 if (this == &vector)
                 {
@@ -34,32 +34,32 @@ namespace pickle
                 return *this;
             }
 
-            Vector<2> operator+(const Vector<2>& vector) const
+            Vector<2, T> operator+(const Vector<2, T>& vector) const
             {
-                return Vector<2>(x + vector.x, y + vector.y);
+                return Vector<2, T>(x + vector.x, y + vector.y);
             }
 
-            Vector<2> operator-(const Vector<2>& vector) const
+            Vector<2, T> operator-(const Vector<2, T>& vector) const
             {
-                return Vector<2>(x - vector.x, y - vector.y);
+                return Vector<2, T>(x - vector.x, y - vector.y);
             }
 
-            Vector<2> operator*(float scalar) const
+            Vector<2, T> operator*(float scalar) const
             {
-                return Vector<2>(x * scalar, y * scalar);
+                return Vector<2, T>(x * scalar, y * scalar);
             }
 
-            Vector<2> operator/(float divider) const
+            Vector<2, T> operator/(float divider) const
             {
-                return Vector<2>(x / divider, y / divider);
+                return Vector<2, T>(x / divider, y / divider);
             }
 
-            Vector<2> reflect(const Vector<2>& norm) const
+            Vector<2, T> reflect(const Vector<2, T>& norm) const
             {
                 return *this - (norm * 2 * (this->dot(norm) / norm.dot(norm)));
             }
 
-            float dot(const Vector<2>& vector) const
+            float dot(const Vector<2, T>& vector) const
             {
                 return x * vector.x + y * vector.y;
             }
@@ -77,7 +77,7 @@ namespace pickle
             }
 
         public:
-            float x, y;
+            T x, y;
         };
     }
 }
