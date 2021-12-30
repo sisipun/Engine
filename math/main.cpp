@@ -59,9 +59,34 @@ int main()
     Matrix<2, 2, float> matrixMul = matrixFirst * 2;
     Matrix<2, 2, float> matrixDiv = matrixSecond / 2;
 
-    std::cout << "Matrix - Cpy: \n" << matrixCpy.data[0] << ", " << matrixCpy.data[1] << "\n" << matrixCpy.data[2] << ", " << matrixCpy.data[3] << "\n" << std::endl;
-    std::cout << "Matrix - Sum: \n" << matrixSum.data[0] << ", " << matrixSum.data[1] << "\n" << matrixSum.data[2] << ", " << matrixSum.data[3] << "\n" << std::endl;
-    std::cout << "Matrix - Sub: \n" << matrixSub.data[0] << ", " << matrixSub.data[1] << "\n" << matrixSub.data[2] << ", " << matrixSub.data[3] << "\n" << std::endl;
-    std::cout << "Matrix - Mul: \n" << matrixMul.data[0] << ", " << matrixMul.data[1] << "\n" << matrixMul.data[2] << ", " << matrixMul.data[3] << "\n" << std::endl;
-    std::cout << "Matrix - Div: \n" << matrixDiv.data[0] << ", " << matrixDiv.data[1] << "\n" << matrixDiv.data[2] << ", " << matrixDiv.data[3] << "\n" << std::endl;
+    std::cout << "Matrix - Cpy: \n"
+              << matrixCpy.data[0] << ", " << matrixCpy.data[1] << "\n"
+              << matrixCpy.data[2] << ", " << matrixCpy.data[3] << "\n"
+              << std::endl;
+    std::cout << "Matrix - Sum: \n"
+              << matrixSum.data[0] << ", " << matrixSum.data[1] << "\n"
+              << matrixSum.data[2] << ", " << matrixSum.data[3] << "\n"
+              << std::endl;
+    std::cout << "Matrix - Sub: \n"
+              << matrixSub.data[0] << ", " << matrixSub.data[1] << "\n"
+              << matrixSub.data[2] << ", " << matrixSub.data[3] << "\n"
+              << std::endl;
+    std::cout << "Matrix - Mul: \n"
+              << matrixMul.data[0] << ", " << matrixMul.data[1] << "\n"
+              << matrixMul.data[2] << ", " << matrixMul.data[3] << "\n"
+              << std::endl;
+    std::cout << "Matrix - Div: \n"
+              << matrixDiv.data[0] << ", " << matrixDiv.data[1] << "\n"
+              << matrixDiv.data[2] << ", " << matrixDiv.data[3] << "\n"
+              << std::endl;
+
+    Matrix<3, 2, float> matrixMulFirst({2, 3, 2, 1, 5, 3});
+    Matrix<2, 3, float> matrixMulSecond({5, 3, 2, 2, 1, 4});
+    Matrix<3, 3, float> matrixMMul = matrixMulFirst * matrixMulSecond;
+
+    std::cout << "Matrix - Mml: \n"
+              << matrixMMul.data[0] << ", " << matrixMMul.data[1] << ", " << matrixMMul.data[2] << "\n"
+              << matrixMMul.data[3] << ", " << matrixMMul.data[4] << ", " << matrixMMul.data[5] << "\n"
+              << matrixMMul.data[6] << ", " << matrixMMul.data[7] << ", " << matrixMMul.data[8] << "\n"
+              << std::endl;
 }

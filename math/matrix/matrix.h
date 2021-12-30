@@ -91,6 +91,25 @@ namespace pickle
                 return mul;
             }
 
+            template<int NC>
+            Matrix<R, NC, T> operator*(const Matrix<C, NC, T>& matrix)
+            {
+                Matrix<R, NC, T> mul;
+                for (int i = 0; i < R; i++)
+                {
+                    for (int j = 0; j < NC; j++)
+                    {
+                        T value = 0;
+                        for (int k = 0; k < C; k++)
+                        {
+                            value += data[i * C + k] * matrix.data[k * NC + j];
+                        }
+                        mul.data[i * NC + j] = value;
+                    }
+                }
+                return mul;
+            }
+
             Matrix<R, C, T> operator/(float divider) const
             {
                 Matrix<R, C, T> div;
