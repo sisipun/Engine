@@ -3,6 +3,7 @@
 #include "vector/vector2.h"
 #include "vector/vector3.h"
 #include "matrix/matrix.h"
+#include "matrix/square_matrix.h"
 
 int main()
 {
@@ -88,5 +89,19 @@ int main()
               << matrixMMul.data[0] << ", " << matrixMMul.data[1] << ", " << matrixMMul.data[2] << "\n"
               << matrixMMul.data[3] << ", " << matrixMMul.data[4] << ", " << matrixMMul.data[5] << "\n"
               << matrixMMul.data[6] << ", " << matrixMMul.data[7] << ", " << matrixMMul.data[8] << "\n"
+              << std::endl;
+
+    SquareMatrix<3, float> matrixIdn = SquareMatrix<3, float>::identity();
+    std::cout << "Matrix - Idn: \n"
+              << matrixIdn.data[0] << ", " << matrixIdn.data[1] << ", " << matrixIdn.data[2] << "\n"
+              << matrixIdn.data[3] << ", " << matrixIdn.data[4] << ", " << matrixIdn.data[5] << "\n"
+              << matrixIdn.data[6] << ", " << matrixIdn.data[7] << ", " << matrixIdn.data[8] << "\n"
+              << std::endl;
+
+    Matrix<3, 3, float> matrixIdMul = matrixMMul * matrixIdn;
+    std::cout << "Matrix - Idn mul: \n"
+              << matrixIdMul.data[0] << ", " << matrixIdMul.data[1] << ", " << matrixIdMul.data[2] << "\n"
+              << matrixIdMul.data[3] << ", " << matrixIdMul.data[4] << ", " << matrixIdMul.data[5] << "\n"
+              << matrixIdMul.data[6] << ", " << matrixIdMul.data[7] << ", " << matrixIdMul.data[8] << "\n"
               << std::endl;
 }

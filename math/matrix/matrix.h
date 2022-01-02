@@ -49,7 +49,7 @@ namespace pickle
                 return *this;
             }
 
-            Matrix<R, C, T> operator+(const Matrix<R, C, T> &matrix)
+            Matrix<R, C, T> operator+(const Matrix<R, C, T> &matrix) const
             {
                 Matrix<R, C, T> sum;
                 for (int i = 0; i < R; i++)
@@ -63,7 +63,7 @@ namespace pickle
                 return sum;
             }
 
-            Matrix<R, C, T> operator-(const Matrix<R, C, T> &matrix)
+            Matrix<R, C, T> operator-(const Matrix<R, C, T> &matrix) const
             {
                 Matrix<R, C, T> sub;
                 for (int i = 0; i < R; i++)
@@ -92,7 +92,7 @@ namespace pickle
             }
 
             template<int NC>
-            Matrix<R, NC, T> operator*(const Matrix<C, NC, T>& matrix)
+            Matrix<R, NC, T> operator*(const Matrix<C, NC, T>& matrix) const
             {
                 Matrix<R, NC, T> mul;
                 for (int i = 0; i < R; i++)
