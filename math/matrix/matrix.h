@@ -1,6 +1,8 @@
 #ifndef PICKLE_MATH_MATRIX
 #define PICKLE_MATH_MATRIX
 
+#include "../vector/vector.h"
+
 namespace pickle
 {
     namespace math
@@ -91,8 +93,8 @@ namespace pickle
                 return mul;
             }
 
-            template<int NC>
-            Matrix<R, NC, T> operator*(const Matrix<C, NC, T>& matrix) const
+            template <int NC>
+            Matrix<R, NC, T> operator*(const Matrix<C, NC, T> &matrix) const
             {
                 Matrix<R, NC, T> mul;
                 for (int i = 0; i < R; i++)
@@ -110,6 +112,21 @@ namespace pickle
                 return mul;
             }
 
+            Vector<R, T> operator*(const Vector<C, T> &vector) const
+            {
+                Vector<R, T> mul;
+                for (int i = 0; i < R; i++)
+                {
+                    T value = 0;
+                    for (int k = 0; k < C; k++)
+                    {
+                        value += data[i * C + k] * vector.data[k];
+                    }
+                    mul.data[i] = value;
+                }
+                return mul;
+            }
+
             Matrix<R, C, T> operator/(float divider) const
             {
                 Matrix<R, C, T> div;
@@ -122,6 +139,20 @@ namespace pickle
                     }
                 }
                 return div;
+            }
+
+            Matrix<C, R, T> transpose()
+            {
+                Matrix<C, R, T> transposed;
+                for (int i = 0; i < R; i++)
+                {
+                    for (int j = 0; j < C; j++)
+                    {
+                        int index = i * C + j;
+                        transposed.data[j * R + i] = data[i * C + j];
+                    }
+                }
+                return transposed;
             }
 
         public:
