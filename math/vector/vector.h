@@ -67,6 +67,16 @@ namespace pickle
                 return sub;
             }
 
+            Vector<D, T> operator-() const
+            {
+                Vector<D, T> opposite;
+                for (int i = 0; i < D; i++)
+                {
+                    opposite.data[i] = -this->data[i];
+                }
+                return opposite;
+            }
+
             Vector<D, T> operator*(float scalar) const
             {
                 Vector<D, T> mul;
@@ -87,52 +97,9 @@ namespace pickle
                 return div;
             }
 
-            float dot(const Vector<D, T> &vector) const
-            {
-                float dotValue = 0;
-                for (int i = 0; i < D; i++)
-                {
-                    dotValue += data[i] * vector.data[i];
-                }
-                return dotValue;
-            }
-
-            Vector<D, T> reflect(const Vector<D, T> &norm) const
-            {
-                return *this - (norm * 2 * (this->dot(norm) / norm.dot(norm)));
-            }
-
-            virtual float length() const
-            {
-                float lenSq = 0;
-                for (int i = 0; i < D; i++)
-                {
-                    T value = data[i];
-                    lenSq += value * value;
-                }
-                return sqrt(lenSq);
-            }
-
-            virtual void normalize()
-            {
-                float len = length();
-                for (int i = 0; i < D; i++)
-                {
-                    data[i] /= len;
-                }
-            }
-
         public:
             T data[D];
         };
-
-        template <typename T>
-        Vector<3, T> cross(const Vector<3, T> &first, const Vector<3, T> &second)
-        {
-            return Vector<3, T>({first.data[1] * second.data[2] - first.data[2] * second.data[1],
-                                 -first.data[0] * second.data[2] + first.data[2] * second.data[0],
-                                 first.data[0] * second.data[1] - first.data[1] * second.data[0]});
-        }
     }
 }
 

@@ -1,8 +1,6 @@
 #include <iostream>
 
-#include "vector/vector.h"
-#include "matrix/matrix.h"
-#include "matrix/square_matrix.h"
+#include "math_engine.h"
 
 int main()
 {
@@ -14,9 +12,9 @@ int main()
     Vector<2, float> v2Sub = v2First - v2Second;
     Vector<2, float> v2Mul = v2First * 3;
     Vector<2, float> v2Div = v2Second / 2.0;
-    Vector<2, float> v2Ref = v2Second.reflect(Vector<2, float>({1, 1}));
-    float v2Dot = v2First.dot(v2Second);
-    v2First.normalize();
+    Vector<2, float> v2Ref = reflect(v2Second, Vector<2, float>({1, 1}));
+    float v2Dot = dot(v2First, v2Second);
+    Vector<2, float> v2Norm = normalize(v2First);
 
     std::cout << "Vector2 - Cpy: (" << v2Cpy.data[0] << "," << v2Cpy.data[1] << ")" << std::endl;
     std::cout << "Vector2 - Sum: (" << v2Sum.data[0] << "," << v2Sum.data[1] << ")" << std::endl;
@@ -25,8 +23,8 @@ int main()
     std::cout << "Vector2 - Div: (" << v2Div.data[0] << "," << v2Div.data[1] << ")" << std::endl;
     std::cout << "Vector2 - Ref: (" << v2Ref.data[0] << "," << v2Ref.data[1] << ")" << std::endl;
     std::cout << "Vector2 - Dot: (" << v2Dot << ")" << std::endl;
-    std::cout << "Vector2 - Len: (" << v2First.length() << ")" << std::endl;
-    std::cout << "Vector2 - Norm: (" << v2First.data[0] << "," << v2First.data[1] << ")" << std::endl;
+    std::cout << "Vector2 - Len: (" << length(v2First) << ")" << std::endl;
+    std::cout << "Vector2 - Norm: (" << v2Norm.data[0] << "," << v2Norm.data[1] << ")" << std::endl;
 
     Vector<3, float> v3First({4, -2, 5});
     Vector<3, float> v3Cpy = v3First;
@@ -35,10 +33,10 @@ int main()
     Vector<3, float> v3Sub = v3First - v3Second;
     Vector<3, float> v3Mul = v3First * 4;
     Vector<3, float> v3Div = v3Second / 5;
-    Vector<3, float> v3Ref = v3Second.reflect(Vector<3, float>({1, 0, 0}));
-    float v3Dot = v3First.dot(v3Second);
+    Vector<3, float> v3Ref = reflect(v3Second, Vector<3, float>({1, 0, 0}));
+    float v3Dot = dot(v3First, v3Second);
     Vector<3, float> v3Cross = cross(v3First, v3Second);
-    v3First.normalize();
+    Vector<3, float> v3Norm = normalize(v3First);
 
     std::cout << "Vector3 - Cpy: (" << v3Cpy.data[0] << "," << v3Cpy.data[1] << "," << v3Cpy.data[2] << ")" << std::endl;
     std::cout << "Vector3 - Sum: (" << v3Sum.data[0] << "," << v3Sum.data[1] << "," << v3Sum.data[2] << ")" << std::endl;
@@ -48,8 +46,8 @@ int main()
     std::cout << "Vector3 - Ref: (" << v3Ref.data[0] << "," << v3Ref.data[1] << "," << v3Ref.data[2] << ")" << std::endl;
     std::cout << "Vector3 - Dot: (" << v3Dot << ")" << std::endl;
     std::cout << "Vector3 - Crs: (" << v3Cross.data[0] << "," << v3Cross.data[1] << "," << v3Cross.data[2] << ")" << std::endl;
-    std::cout << "Vector3 - Len: (" << v3First.length() << ")" << std::endl;
-    std::cout << "Vector3 - Norm: (" << v3First.data[0] << "," << v3First.data[1] << "," << v3First.data[2] << ")" << std::endl;
+    std::cout << "Vector3 - Len: (" << length(v3First) << ")" << std::endl;
+    std::cout << "Vector3 - Norm: (" << v3Norm.data[0] << "," << v3Norm.data[1] << "," << v3Norm.data[2] << ")" << std::endl;
 
     Matrix<2, 2, float> matrixFirst({0.5f, 3.0f, 0.0f, -1.4f});
     Matrix<2, 2, float> matrixCpy = matrixFirst;
@@ -90,7 +88,7 @@ int main()
               << matrixMMul.data[6] << ", " << matrixMMul.data[7] << ", " << matrixMMul.data[8] << "\n"
               << std::endl;
 
-    SquareMatrix<3, float> matrixIdn = SquareMatrix<3, float>::identity();
+    Matrix<3, 3, float> matrixIdn = identity<3, float>();
     std::cout << "Matrix - Idn: \n"
               << matrixIdn.data[0] << ", " << matrixIdn.data[1] << ", " << matrixIdn.data[2] << "\n"
               << matrixIdn.data[3] << ", " << matrixIdn.data[4] << ", " << matrixIdn.data[5] << "\n"
@@ -104,7 +102,7 @@ int main()
               << matrixIdMul.data[6] << ", " << matrixIdMul.data[7] << ", " << matrixIdMul.data[8] << "\n"
               << std::endl;
 
-    Matrix<3, 2, float> matrixTrn = Matrix<2, 3, float>({2, 1, 4, 3, 5, 1}).transpose();
+    Matrix<3, 2, float> matrixTrn = transpose(Matrix<2, 3, float>({2, 1, 4, 3, 5, 1}));
     std::cout << "Matrix - Trn: \n"
               << matrixTrn.data[0] << ", " << matrixTrn.data[1] << "\n"
               << matrixTrn.data[2] << ", " << matrixTrn.data[3] << "\n"
@@ -114,5 +112,27 @@ int main()
     Vector<3, float> matrixVecMul = Matrix<3, 2, float>({1, 2, 3, 4, 5, 6}) * Vector<2, float>({7, 8});
     std::cout << "Matrix - Vec mul: \n"
               << matrixVecMul.data[0] << ", " << matrixVecMul.data[1] << ", " << matrixVecMul.data[2] << "\n"
+              << std::endl;
+
+    Matrix<4, 4, float> matrixTst = translate(identity<4, float>(), Vector<3, float>({1, 2, 3}));
+    std::cout << "Matrix - Tst: \n"
+              << matrixTst.data[0] << ", " << matrixTst.data[1] << ", " << matrixTst.data[2] << ", " << matrixTst.data[3] << "\n"
+              << matrixTst.data[4] << ", " << matrixTst.data[5] << ", " << matrixTst.data[6] << ", " << matrixTst.data[7] << "\n"
+              << matrixTst.data[8] << ", " << matrixTst.data[9] << ", " << matrixTst.data[10] << ", " << matrixTst.data[11] << "\n"
+              << matrixTst.data[12] << ", " << matrixTst.data[13] << ", " << matrixTst.data[14] << ", " << matrixTst.data[15] << "\n"
+              << std::endl;
+
+    Matrix<4, 4, float> matrixScl = scale(matrixTst, Vector<3, float>({2, 2, 2}));
+    std::cout << "Matrix - Scl + tst: \n"
+              << matrixScl.data[0] << ", " << matrixScl.data[1] << ", " << matrixScl.data[2] << ", " << matrixScl.data[3] << "\n"
+              << matrixScl.data[4] << ", " << matrixScl.data[5] << ", " << matrixScl.data[6] << ", " << matrixScl.data[7] << "\n"
+              << matrixScl.data[8] << ", " << matrixScl.data[9] << ", " << matrixScl.data[10] << ", " << matrixScl.data[11] << "\n"
+              << matrixScl.data[12] << ", " << matrixScl.data[13] << ", " << matrixScl.data[14] << ", " << matrixScl.data[15] << "\n"
+              << std::endl;
+
+    Vector<4, float> posVector = Vector<4, float>({4, 3, 2, 1});
+    Vector<4, float> transformedVector = matrixScl * posVector;
+    std::cout << "Transformed vector: \n"
+              << transformedVector.data[0] << ", " << transformedVector.data[1] << ", " << transformedVector.data[2] << ", " << transformedVector.data[3] << "\n"
               << std::endl;
 }

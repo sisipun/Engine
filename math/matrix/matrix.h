@@ -1,12 +1,10 @@
 #ifndef PICKLE_MATH_MATRIX
 #define PICKLE_MATH_MATRIX
 
-#include "../vector/vector.h"
-
 namespace pickle
 {
     namespace math
-    {
+    {        
         template <int R, int C, typename T>
         class Matrix
         {
@@ -139,20 +137,6 @@ namespace pickle
                     }
                 }
                 return div;
-            }
-
-            Matrix<C, R, T> transpose()
-            {
-                Matrix<C, R, T> transposed;
-                for (int i = 0; i < R; i++)
-                {
-                    for (int j = 0; j < C; j++)
-                    {
-                        int index = i * C + j;
-                        transposed.data[j * R + i] = data[i * C + j];
-                    }
-                }
-                return transposed;
             }
 
         public:
