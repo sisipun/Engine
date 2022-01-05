@@ -1,7 +1,7 @@
 #ifndef PICKLE_MATH_VECTOR
 #define PICKLE_MATH_VECTOR
 
-#include "math.h"
+#include <cmath>
 
 namespace pickle
 {
@@ -11,7 +11,7 @@ namespace pickle
         class Vector
         {
         public:
-            Vector() : data{0.0f}
+            Vector() : data{0}
             {
             }
 

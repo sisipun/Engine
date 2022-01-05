@@ -135,4 +135,8 @@ int main()
     std::cout << "Transformed vector: \n"
               << transformedVector.data[0] << ", " << transformedVector.data[1] << ", " << transformedVector.data[2] << ", " << transformedVector.data[3] << "\n"
               << std::endl;
+
+    Matrix<4, 4, float> matrixDet = Matrix<4, 4, float>({24, 20, 3, 40, 15, 3, 5, 11, 21, 24, 1, -8, 5, -3, 16, -10});
+    float det = determinant(matrixDet);
+    std::cout << "Matrix det: " << det << std::endl;
 }

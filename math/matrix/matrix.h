@@ -9,7 +9,7 @@ namespace pickle
         class Matrix
         {
         public:
-            Matrix() : data{0.0f}
+            Matrix() : data{0}
             {
             }
 
