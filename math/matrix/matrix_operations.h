@@ -9,6 +9,17 @@ namespace pickle
 {
     namespace math
     {
+        template <int D, typename T>
+        Matrix<D, D, T> identity()
+        {
+            Matrix<D, D, T> identityMatrix;
+            for (int i = 0; i < D; i++)
+            {
+                identityMatrix.data[i * D + i] = 1;
+            }
+            return identityMatrix;
+        }
+
         template <int R, int C, typename T>
         Matrix<C, R, T> transpose(const Matrix<R, C, T> &matrix)
         {
@@ -25,23 +36,42 @@ namespace pickle
         }
 
         template <int D, typename T>
-        Matrix<D, D, T> identity()
+        Matrix<D, D, T> inverse(const Matrix<D, D, T> &matrix)
         {
-            Matrix<D, D, T> identityMatrix;
+            Matrix<D, D, T> inverse;
             for (int i = 0; i < D; i++)
             {
-                identityMatrix.data[i * D + i] = 1;
+                for (int j = 0; j < D; j++)
+                {
+                    Matrix<D - 1, D - 1, T> subMatrix;
+                    for (int k = 0; k < D; k++)
+                    {
+                        if (k == i)
+                        {
+                            continue;
+                        }
+                        for (int l = 0; l < D; l++)
+                        {
+                            if (l == j)
+                            {
+                                continue;
+                            }
+                            subMatrix.data[(k < i ? k : k - 1) * (D - 1) + (l < j ? l : l - 1)] = matrix.data[k * D + l];
+                        }
+                    }
+                    inverse.data[j * D + i] = pow(-1, i + j) * determinant(subMatrix);
+                }
             }
-            return identityMatrix;
+            return inverse * (1 / determinant(matrix));
         }
 
-        template <int D>
-        float determinant(const Matrix<D, D, float> &matrix)
+        template <int D, typename T>
+        typename std::enable_if<(D > 1), T>::type determinant(const Matrix<D, D, T> &matrix)
         {
-            float value = 0;
+            T value = 0;
             for (int i = 0; i < D; i++)
             {
-                Matrix<D - 1, D - 1, float> subMatrix;
+                Matrix<D - 1, D - 1, T> subMatrix;
                 for (int j = 1; j < D; j++)
                 {
                     for (int k = 0; k < D; k++)
@@ -58,14 +88,14 @@ namespace pickle
             return value;
         }
 
-        template <>
-        float determinant<0>(const Matrix<0, 0, float> &matrix)
+        template <int D, typename T>
+        typename std::enable_if<D == 0, T>::type determinant(const Matrix<D, D, T> &matrix)
         {
             return 0;
         }
 
-        template <>
-        float determinant<1>(const Matrix<1, 1, float> &matrix)
+        template <int D, typename T>
+        typename std::enable_if<D == 1, T>::type determinant(const Matrix<D, D, T> &matrix)
         {
             return matrix.data[0];
         }

@@ -136,7 +136,21 @@ int main()
               << transformedVector.data[0] << ", " << transformedVector.data[1] << ", " << transformedVector.data[2] << ", " << transformedVector.data[3] << "\n"
               << std::endl;
 
-    Matrix<4, 4, float> matrixDet = Matrix<4, 4, float>({24, 20, 3, 40, 15, 3, 5, 11, 21, 24, 1, -8, 5, -3, 16, -10});
-    float det = determinant(matrixDet);
+    float det = determinant(Matrix<4, 4, float>({24, 20, 3, 40, 15, 3, 5, 11, 21, 24, 1, -8, 5, -3, 16, -10}));
     std::cout << "Matrix det: " << det << std::endl;
+
+    Matrix<3, 3, float> matirxInvBase = Matrix<3, 3, float>({3, 0, 2, 2, 0, -2, 0, 1, 1});
+    Matrix<3, 3, float> matrixInv = inverse(matirxInvBase);
+    std::cout << "Matrix - Inv: \n"
+              << matrixInv.data[0] << ", " << matrixInv.data[1] << ", " << matrixInv.data[2] << "\n"
+              << matrixInv.data[3] << ", " << matrixInv.data[4] << ", " << matrixInv.data[5] << "\n"
+              << matrixInv.data[6] << ", " << matrixInv.data[7] << ", " << matrixInv.data[8] << "\n"
+              << std::endl;
+
+    Matrix<3, 3, float> matrixInvMul = matrixInv * matirxInvBase;
+    std::cout << "Matrix - Inv mul: \n"
+              << matrixInvMul.data[0] << ", " << matrixInvMul.data[1] << ", " << matrixInvMul.data[2] << "\n"
+              << matrixInvMul.data[3] << ", " << matrixInvMul.data[4] << ", " << matrixInvMul.data[5] << "\n"
+              << matrixInvMul.data[6] << ", " << matrixInvMul.data[7] << ", " << matrixInvMul.data[8] << "\n"
+              << std::endl;
 }
