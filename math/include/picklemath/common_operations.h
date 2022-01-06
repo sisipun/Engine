@@ -1,8 +1,8 @@
 #ifndef PICKLE_MATH_COMMON_OPERATIONS
 #define PICKLE_MATH_COMMON_OPERATIONS
 
-#include "vector/vector.h"
-#include "matrix/matrix.h"
+#include "vector.h"
+#include "matrix.h"
 
 namespace pickle
 {

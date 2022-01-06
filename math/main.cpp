@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "math_engine.h"
+#include <picklemath/math_engine.h>
 
 int main()
 {
