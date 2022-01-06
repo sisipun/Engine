@@ -7,7 +7,7 @@ namespace pickle
 {
     namespace math
     {
-        template <int D, typename T>
+        template <size_t D, typename T>
         class Vector
         {
         public:
@@ -17,7 +17,7 @@ namespace pickle
 
             Vector(const T (&data)[D])
             {
-                for (int i = 0; i < D; i++)
+                for (size_t i = 0; i < D; i++)
                 {
                     this->data[i] = data[i];
                 }
@@ -25,7 +25,7 @@ namespace pickle
 
             Vector(const Vector<D, T> &vector)
             {
-                for (int i = 0; i < D; i++)
+                for (size_t i = 0; i < D; i++)
                 {
                     data[i] = vector.data[i];
                 }
@@ -40,7 +40,7 @@ namespace pickle
                     return *this;
                 }
 
-                for (int i = 0; i < D; i++)
+                for (size_t i = 0; i < D; i++)
                 {
                     data[i] = vector.data[i];
                 }
@@ -50,7 +50,7 @@ namespace pickle
             Vector<D, T> operator+(const Vector<D, T> &vector) const
             {
                 Vector<D, T> sum;
-                for (int i = 0; i < D; i++)
+                for (size_t i = 0; i < D; i++)
                 {
                     sum.data[i] = data[i] + vector.data[i];
                 }
@@ -60,7 +60,7 @@ namespace pickle
             Vector<D, T> operator-(const Vector<D, T> &vector) const
             {
                 Vector<D, T> sub;
-                for (int i = 0; i < D; i++)
+                for (size_t i = 0; i < D; i++)
                 {
                     sub.data[i] = this->data[i] - vector.data[i];
                 }
@@ -70,7 +70,7 @@ namespace pickle
             Vector<D, T> operator-() const
             {
                 Vector<D, T> opposite;
-                for (int i = 0; i < D; i++)
+                for (size_t i = 0; i < D; i++)
                 {
                     opposite.data[i] = -this->data[i];
                 }
@@ -80,7 +80,7 @@ namespace pickle
             Vector<D, T> operator*(float scalar) const
             {
                 Vector<D, T> mul;
-                for (int i = 0; i < D; i++)
+                for (size_t i = 0; i < D; i++)
                 {
                     mul.data[i] = data[i] * scalar;
                 }
@@ -90,7 +90,7 @@ namespace pickle
             Vector<D, T> operator/(float divider) const
             {
                 Vector<D, T> div;
-                for (int i = 0; i < D; i++)
+                for (size_t i = 0; i < D; i++)
                 {
                     div.data[i] = data[i] / divider;
                 }

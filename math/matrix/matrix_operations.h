@@ -9,95 +9,89 @@ namespace pickle
 {
     namespace math
     {
-        template <int D, typename T>
+        template <size_t D, typename T>
         Matrix<D, D, T> identity()
         {
             Matrix<D, D, T> identityMatrix;
-            for (int i = 0; i < D; i++)
+            for (size_t i = 0; i < D; i++)
             {
                 identityMatrix.data[i * D + i] = 1;
             }
             return identityMatrix;
         }
 
-        template <int R, int C, typename T>
+        template <size_t R, size_t C, typename T>
         Matrix<C, R, T> transpose(const Matrix<R, C, T> &matrix)
         {
             Matrix<C, R, T> transposed;
-            for (int i = 0; i < R; i++)
+            for (size_t i = 0; i < R; i++)
             {
-                for (int j = 0; j < C; j++)
+                for (size_t j = 0; j < C; j++)
                 {
-                    int index = i * C + j;
+                    size_t index = i * C + j;
                     transposed.data[j * R + i] = matrix.data[i * C + j];
                 }
             }
             return transposed;
         }
 
-        template <int D, typename T>
+        template <size_t D, typename T>
         Matrix<D, D, T> inverse(const Matrix<D, D, T> &matrix)
         {
             Matrix<D, D, T> inverse;
-            for (int i = 0; i < D; i++)
+            for (size_t i = 0; i < D; i++)
             {
-                for (int j = 0; j < D; j++)
+                for (size_t j = 0; j < D; j++)
                 {
-                    Matrix<D - 1, D - 1, T> subMatrix;
-                    for (int k = 0; k < D; k++)
-                    {
-                        if (k == i)
-                        {
-                            continue;
-                        }
-                        for (int l = 0; l < D; l++)
-                        {
-                            if (l == j)
-                            {
-                                continue;
-                            }
-                            subMatrix.data[(k < i ? k : k - 1) * (D - 1) + (l < j ? l : l - 1)] = matrix.data[k * D + l];
-                        }
-                    }
-                    inverse.data[j * D + i] = pow(-1, i + j) * determinant(subMatrix);
+                    inverse.data[j * D + i] = pow(-1, i + j) * determinant(excludeRowAndColumn(matrix, i, j));
                 }
             }
             return inverse * (1 / determinant(matrix));
         }
 
-        template <int D, typename T>
+        template <size_t D, typename T>
         typename std::enable_if<(D > 1), T>::type determinant(const Matrix<D, D, T> &matrix)
         {
             T value = 0;
-            for (int i = 0; i < D; i++)
+            for (size_t i = 0; i < D; i++)
             {
-                Matrix<D - 1, D - 1, T> subMatrix;
-                for (int j = 1; j < D; j++)
-                {
-                    for (int k = 0; k < D; k++)
-                    {
-                        if (k == i)
-                        {
-                            continue;
-                        }
-                        subMatrix.data[(j - 1) * (D - 1) + (k < i ? k : k - 1)] = matrix.data[j * D + k];
-                    }
-                }
-                value += pow(-1, i) * matrix.data[i] * determinant(subMatrix);
+                value += pow(-1, i) * matrix.data[i] * determinant(excludeRowAndColumn(matrix, 0, i));
             }
             return value;
         }
 
-        template <int D, typename T>
+        template <size_t D, typename T>
         typename std::enable_if<D == 0, T>::type determinant(const Matrix<D, D, T> &matrix)
         {
             return 0;
         }
 
-        template <int D, typename T>
+        template <size_t D, typename T>
         typename std::enable_if<D == 1, T>::type determinant(const Matrix<D, D, T> &matrix)
         {
             return matrix.data[0];
+        }
+
+        template <size_t D, typename T>
+        Matrix<D - 1, D - 1, T> excludeRowAndColumn(const Matrix<D, D, T> &matrix, size_t rowIndex, size_t columnIndex)
+        {
+            Matrix<D - 1, D - 1, T> excludedMatrix;
+            for (size_t i = 0; i < D; i++)
+            {
+                if (i == rowIndex)
+                {
+                    continue;
+                }
+                for (size_t j = 0; j < D; j++)
+                {
+                    if (j == columnIndex)
+                    {
+                        continue;
+                    }
+                    excludedMatrix.data[(i < rowIndex ? i : i - 1) * (D - 1) + (j < columnIndex ? j : j - 1)] = matrix.data[i * D + j];
+                }
+            }
+            return excludedMatrix;
         }
     }
 }

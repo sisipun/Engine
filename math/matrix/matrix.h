@@ -5,7 +5,7 @@ namespace pickle
 {
     namespace math
     {        
-        template <int R, int C, typename T>
+        template <size_t R, size_t C, typename T>
         class Matrix
         {
         public:
@@ -15,11 +15,11 @@ namespace pickle
 
             Matrix(const T (&data)[R * C])
             {
-                for (int i = 0; i < R; i++)
+                for (size_t i = 0; i < R; i++)
                 {
-                    for (int j = 0; j < C; j++)
+                    for (size_t j = 0; j < C; j++)
                     {
-                        int index = i * C + j;
+                        size_t index = i * C + j;
                         this->data[index] = data[index];
                     }
                 }
@@ -38,11 +38,11 @@ namespace pickle
                     return *this;
                 }
 
-                for (int i = 0; i < R; i++)
+                for (size_t i = 0; i < R; i++)
                 {
-                    for (int j = 0; j < C; j++)
+                    for (size_t j = 0; j < C; j++)
                     {
-                        int index = i * C + j;
+                        size_t index = i * C + j;
                         this->data[index] = matrix.data[index];
                     }
                 }
@@ -52,11 +52,11 @@ namespace pickle
             Matrix<R, C, T> operator+(const Matrix<R, C, T> &matrix) const
             {
                 Matrix<R, C, T> sum;
-                for (int i = 0; i < R; i++)
+                for (size_t i = 0; i < R; i++)
                 {
-                    for (int j = 0; j < C; j++)
+                    for (size_t j = 0; j < C; j++)
                     {
-                        int index = i * C + j;
+                        size_t index = i * C + j;
                         sum.data[index] = data[index] + matrix.data[index];
                     }
                 }
@@ -66,11 +66,11 @@ namespace pickle
             Matrix<R, C, T> operator-(const Matrix<R, C, T> &matrix) const
             {
                 Matrix<R, C, T> sub;
-                for (int i = 0; i < R; i++)
+                for (size_t i = 0; i < R; i++)
                 {
-                    for (int j = 0; j < C; j++)
+                    for (size_t j = 0; j < C; j++)
                     {
-                        int index = i * C + j;
+                        size_t index = i * C + j;
                         sub.data[index] = data[index] - matrix.data[index];
                     }
                 }
@@ -80,27 +80,27 @@ namespace pickle
             Matrix<R, C, T> operator*(float scalar) const
             {
                 Matrix<R, C, T> mul;
-                for (int i = 0; i < R; i++)
+                for (size_t i = 0; i < R; i++)
                 {
-                    for (int j = 0; j < C; j++)
+                    for (size_t j = 0; j < C; j++)
                     {
-                        int index = i * C + j;
+                        size_t index = i * C + j;
                         mul.data[index] = data[index] * scalar;
                     }
                 }
                 return mul;
             }
 
-            template <int NC>
+            template <size_t NC>
             Matrix<R, NC, T> operator*(const Matrix<C, NC, T> &matrix) const
             {
                 Matrix<R, NC, T> mul;
-                for (int i = 0; i < R; i++)
+                for (size_t i = 0; i < R; i++)
                 {
-                    for (int j = 0; j < NC; j++)
+                    for (size_t j = 0; j < NC; j++)
                     {
                         T value = 0;
-                        for (int k = 0; k < C; k++)
+                        for (size_t k = 0; k < C; k++)
                         {
                             value += data[i * C + k] * matrix.data[k * NC + j];
                         }
@@ -113,10 +113,10 @@ namespace pickle
             Vector<R, T> operator*(const Vector<C, T> &vector) const
             {
                 Vector<R, T> mul;
-                for (int i = 0; i < R; i++)
+                for (size_t i = 0; i < R; i++)
                 {
                     T value = 0;
-                    for (int k = 0; k < C; k++)
+                    for (size_t k = 0; k < C; k++)
                     {
                         value += data[i * C + k] * vector.data[k];
                     }
@@ -128,11 +128,11 @@ namespace pickle
             Matrix<R, C, T> operator/(float divider) const
             {
                 Matrix<R, C, T> div;
-                for (int i = 0; i < R; i++)
+                for (size_t i = 0; i < R; i++)
                 {
-                    for (int j = 0; j < C; j++)
+                    for (size_t j = 0; j < C; j++)
                     {
-                        int index = i * C + j;
+                        size_t index = i * C + j;
                         div.data[index] = data[index] / divider;
                     }
                 }
