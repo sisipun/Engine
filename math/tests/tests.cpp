@@ -10,7 +10,7 @@ using namespace pickle::math;
 
 float roundTwoDigets(float value)
 {
-    return ceil(value * 100) / 100.0f;
+    return round(value * 100) / 100.0f;
 }
 
 TEST_CASE("Vector Copy", "[vector]")
@@ -285,7 +285,7 @@ TEST_CASE("Scale", "[matrix][vector][transformation]")
 
 TEST_CASE("Rotate X", "[matrix][vector][transformation]")
 {
-    Matrix<4, 4, float> rot = rotate(identity<4, float>(), 90.0f * PI / 180.0f, Vector<3, float>({1, 0, 0}));
+    Matrix<4, 4, float> rot = rotate(identity<4, float>(), PI / 2.0f, Vector<3, float>({1, 0, 0}));
     REQUIRE(roundTwoDigets(rot.data[0]) == 1.0f);
     REQUIRE(roundTwoDigets(rot.data[1]) == 0.0f);
     REQUIRE(roundTwoDigets(rot.data[2]) == 0.0f);
@@ -302,6 +302,85 @@ TEST_CASE("Rotate X", "[matrix][vector][transformation]")
     REQUIRE(roundTwoDigets(rot.data[13]) == 0.0f);
     REQUIRE(roundTwoDigets(rot.data[14]) == 0.0f);
     REQUIRE(roundTwoDigets(rot.data[15]) == 1.0f);
+}
+
+TEST_CASE("Rotate Y", "[matrix][vector][transformation]")
+{
+    Matrix<4, 4, float> rot = rotate(identity<4, float>(), PI, Vector<3, float>({0, 1, 0}));
+    REQUIRE(roundTwoDigets(rot.data[0]) == -1.0f);
+    REQUIRE(roundTwoDigets(rot.data[1]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[2]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[3]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[4]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[5]) == 1.0f);
+    REQUIRE(roundTwoDigets(rot.data[6]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[7]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[8]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[9]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[10]) == -1.0f);
+    REQUIRE(roundTwoDigets(rot.data[11]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[12]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[13]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[14]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[15]) == 1.0f);
+}
+
+TEST_CASE("Rotate Z", "[matrix][vector][transformation]")
+{
+    Matrix<4, 4, float> rot = rotate(identity<4, float>(), PI / 6.0f, Vector<3, float>({0, 0, 1}));
+    REQUIRE(roundTwoDigets(rot.data[0]) == 0.87f);
+    REQUIRE(roundTwoDigets(rot.data[1]) == -0.5f);
+    REQUIRE(roundTwoDigets(rot.data[2]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[3]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[4]) == 0.5f);
+    REQUIRE(roundTwoDigets(rot.data[5]) == 0.87f);
+    REQUIRE(roundTwoDigets(rot.data[6]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[7]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[8]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[9]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[10]) == 1.0f);
+    REQUIRE(roundTwoDigets(rot.data[11]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[12]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[13]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[14]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[15]) == 1.0f);
+}
+
+TEST_CASE("Rotate XYZ", "[matrix][vector][transformation]")
+{
+    Matrix<4, 4, float> rot = rotate(identity<4, float>(), PI / 2.0f, Vector<3, float>({1, 1, 1}));
+    REQUIRE(roundTwoDigets(rot.data[0]) == 1.0f);
+    REQUIRE(roundTwoDigets(rot.data[1]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[2]) == 2.0f);
+    REQUIRE(roundTwoDigets(rot.data[3]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[4]) == 2.0f);
+    REQUIRE(roundTwoDigets(rot.data[5]) == 1.0f);
+    REQUIRE(roundTwoDigets(rot.data[6]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[7]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[8]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[9]) == 2.0f);
+    REQUIRE(roundTwoDigets(rot.data[10]) == 1.0f);
+    REQUIRE(roundTwoDigets(rot.data[11]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[12]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[13]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[14]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[15]) == 1.0f);
+}
+
+TEST_CASE("Rotate Vector Z", "[matrix][vector][transformation]")
+{
+    Vector<4, float> rot = rotate(identity<4, float>(), PI / 6.0f, Vector<3, float>({0, 0, 1})) * Vector<4, float>({2, 1, 3});
+    REQUIRE(roundTwoDigets(rot.data[0]) == 1.23f);
+    REQUIRE(roundTwoDigets(rot.data[1]) == 1.87f);
+    REQUIRE(roundTwoDigets(rot.data[2]) == 3.0f);
+}
+
+TEST_CASE("Rotate Vector XYZ", "[matrix][vector][transformation]")
+{
+    Vector<4, float> rot = rotate(identity<4, float>(), PI / 2.0f, Vector<3, float>({1, 1, 1})) * Vector<4, float>({2, 1, 3});
+    REQUIRE(roundTwoDigets(rot.data[0]) == 8.0f);
+    REQUIRE(roundTwoDigets(rot.data[1]) == 5.0f);
+    REQUIRE(roundTwoDigets(rot.data[2]) == 5.0f);
 }
 
 TEST_CASE("Combine transformations", "[matrix][vector][transformation]")
