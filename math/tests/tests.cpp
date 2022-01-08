@@ -1,4 +1,5 @@
 #define CATCH_CONFIG_MAIN
+#define PI 3.14159265f
 
 #include <iostream>
 
@@ -6,6 +7,11 @@
 #include <picklemath/math_engine.h>
 
 using namespace pickle::math;
+
+float roundTwoDigets(float value)
+{
+    return ceil(value * 100) / 100.0f;
+}
 
 TEST_CASE("Vector Copy", "[vector]")
 {
@@ -275,6 +281,27 @@ TEST_CASE("Scale", "[matrix][vector][transformation]")
     REQUIRE(scl.data[13] == 0.0f);
     REQUIRE(scl.data[14] == 0.0f);
     REQUIRE(scl.data[15] == 1.0f);
+}
+
+TEST_CASE("Rotate X", "[matrix][vector][transformation]")
+{
+    Matrix<4, 4, float> rot = rotate(identity<4, float>(), 90.0f * PI / 180.0f, Vector<3, float>({1, 0, 0}));
+    REQUIRE(roundTwoDigets(rot.data[0]) == 1.0f);
+    REQUIRE(roundTwoDigets(rot.data[1]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[2]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[3]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[4]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[5]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[6]) == -1.0f);
+    REQUIRE(roundTwoDigets(rot.data[7]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[8]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[9]) == 1.0f);
+    REQUIRE(roundTwoDigets(rot.data[10]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[11]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[12]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[13]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[14]) == 0.0f);
+    REQUIRE(roundTwoDigets(rot.data[15]) == 1.0f);
 }
 
 TEST_CASE("Combine transformations", "[matrix][vector][transformation]")
