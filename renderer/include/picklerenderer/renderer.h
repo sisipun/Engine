@@ -7,7 +7,8 @@ namespace pickle
     {
         class Renderer
         {
-            virtual void render() = 0;
+            public:
+            virtual void render() const = 0;
         };
     }
 }
