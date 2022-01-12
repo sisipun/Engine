@@ -3,6 +3,8 @@
 
 #include "renderer.h"
 
+#include <SDL.h>
+
 namespace pickle
 {
     namespace renderer
@@ -12,7 +14,12 @@ namespace pickle
         public:
             OpenGLRenderer();
 
+            ~OpenGLRenderer();
+
             void render() const override;
+
+        private:
+            SDL_GLContext context;
         };
     }
 }
