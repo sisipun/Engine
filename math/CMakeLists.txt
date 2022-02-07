@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(Catch2 REQUIRED)
 
-add_library(PickleMath STATIC include/picklemath/math_engine.h src/math_engine.cpp)
+add_library(PickleMath STATIC include/pickle/math.h src/math.cpp)
 add_executable(PickleMathTests tests/tests.cpp)
 
 target_include_directories(PickleMath PUBLIC include)

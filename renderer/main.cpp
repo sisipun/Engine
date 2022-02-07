@@ -1,18 +1,8 @@
 #if defined(_WIN32)
-#include <picklerenderer/directx_renderer.h>
+#include <pickle/directx_renderer.h>
 #endif
 
-#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
-#include <picklerenderer/opengl_renderer.h>
-#endif
-
-#if defined(_WIN32) || defined(__linux__)
-#include <picklerenderer/vulkan_renderer.h>
-#endif
-
-#if defined(__APPLE__)
-#include <picklerenderer/metal_renderer.h>
-#endif
+#include <pickle/opengl_renderer.h>
 
 #include <iostream>
 
@@ -33,26 +23,10 @@ int main(int argc, char *argv[])
     }
 #endif
 
-#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__)
     if (strcmp(key, "-o") == 0)
     {
         renderer = new pickle::renderer::OpenGLRenderer();
     }
-#endif
-
-#if defined(_WIN32) || defined(__linux__)
-    if (strcmp(key, "-v") == 0)
-    {
-        renderer = new pickle::renderer::VulkanRenderer();
-    }
-#endif
-
-#if defined(__APPLE__)
-    if (strcmp(key, "-m") == 0)
-    {
-        renderer = new pickle::renderer::MetalRenderer();
-    }
-#endif
 
     if (renderer == nullptr)
     {

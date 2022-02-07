@@ -1,4 +1,4 @@
-#include <picklerenderer/opengl_renderer.h>
+#include <pickle/opengl_renderer.h>
 
 #include <iostream>
 

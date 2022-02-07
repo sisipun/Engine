@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include <catch2/catch.hpp>
-#include <picklemath/math_engine.h>
+#include <pickle/math.h>
 
 using namespace pickle::math;
 
