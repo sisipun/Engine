@@ -3,11 +3,27 @@
 
 #include "renderer.h"
 
-class Window
+#include <memory>
+
+namespace pickle
 {
-public:
-    Window(int width, int height);
-    ~Window();
+    class Window
+    {
+    public:
+        Window(int width, int height);
+        ~Window();
+
+        Window(const Window &window) = delete;
+        Window &operator=(const Window &window) = delete;
+
+        Renderer &getRenderer() const
+        {
+            return *renderer;
+        }
+
+    private:
+        std::unique_ptr<Renderer> renderer;
+    };
 }
 
 #endif

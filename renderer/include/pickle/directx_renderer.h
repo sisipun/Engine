@@ -5,16 +5,13 @@
 
 namespace pickle
 {
-    namespace renderer
+    class DirectXRenderer : public Renderer
     {
-        class DirectXRenderer : public Renderer
-        {
-        public:
-            DirectXRenderer();
+    public:
+        DirectXRenderer();
 
-            void render() const override;
-        };
-    }
+        void render() const override;
+    };
 }
 
 #endif

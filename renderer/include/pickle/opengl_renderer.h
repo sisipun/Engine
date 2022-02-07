@@ -7,21 +7,18 @@
 
 namespace pickle
 {
-    namespace renderer
+    class OpenGLRenderer : public Renderer
     {
-        class OpenGLRenderer : public Renderer
-        {
-        public:
-            OpenGLRenderer();
+    public:
+        OpenGLRenderer();
 
-            ~OpenGLRenderer();
+        ~OpenGLRenderer();
 
-            void render() const override;
+        void render() const override;
 
-        private:
-            SDL_GLContext context;
-        };
-    }
+    private:
+        SDL_GLContext context;
+    };
 }
 
 #endif

@@ -3,14 +3,11 @@
 
 namespace pickle
 {
-    namespace renderer
+    class Renderer
     {
-        class Renderer
-        {
-        public:
-            virtual void render() const = 0;
-        };
-    }
+    public:
+        virtual void render() const = 0;
+    };
 }
 
 #endif

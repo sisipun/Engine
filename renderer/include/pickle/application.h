@@ -1,13 +1,23 @@
 #ifndef PICKLE_APPLICATION
 #define PICKLE_APPLICATION
 
-class Application
+#include <pickle/window.h>
+namespace pickle
 {
-public:
-    Application();
-    ~Application();
+    class Application
+    {
+    public:
+        Application();
+        ~Application();
 
-    void start();
+        Application(const Application &application) = delete;
+        Application &operator=(const Application &application) = delete;
+
+        void start();
+
+    private:
+        Window window;
+    };
 }
 
 #endif

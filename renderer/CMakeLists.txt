@@ -9,8 +9,9 @@ add_subdirectory(../math ./build)
 add_subdirectory(lib/glad/)
 
 add_library(PickleRenderer STATIC 
-    include/pickle/renderer.h src/renderer.cpp
-    include/
+    include/pickle/renderer.h
+    include/pickle/window.h src/window.cpp
+    include/pickle/application.h src/application.cpp
     include/pickle/directx_renderer.h src/directx_renderer.cpp
     include/pickle/opengl_renderer.h src/opengl_renderer.cpp
 )
