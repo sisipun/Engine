@@ -9,6 +9,10 @@ namespace pickle
         std::cout << "Init DirectX" << std::endl;
     }
 
+    DirectXRenderer::~DirectXRenderer()
+    {
+    }
+
     void DirectXRenderer::render() const
     {
         std::cout << "Render DirectX" << std::endl;

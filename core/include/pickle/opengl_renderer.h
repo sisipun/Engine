@@ -10,9 +10,9 @@ namespace pickle
     class OpenGLRenderer : public Renderer
     {
     public:
-        OpenGLRenderer();
+        OpenGLRenderer(SDL_Window *window);
 
-        ~OpenGLRenderer();
+        ~OpenGLRenderer() override;
 
         void render() const override;
 

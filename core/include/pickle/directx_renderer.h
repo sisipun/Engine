@@ -10,6 +10,8 @@ namespace pickle
     public:
         DirectXRenderer();
 
+        ~DirectXRenderer() override;
+
         void render() const override;
     };
 }

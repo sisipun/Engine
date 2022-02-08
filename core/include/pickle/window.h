@@ -16,10 +16,8 @@ namespace pickle
         Window(const Window &window) = delete;
         Window &operator=(const Window &window) = delete;
 
-        Renderer &getRenderer() const
-        {
-            return *renderer;
-        }
+        Renderer &getRenderer() const;
+        bool isClosed() const;
 
     private:
         std::unique_ptr<Renderer> renderer;

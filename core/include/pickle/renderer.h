@@ -6,6 +6,10 @@ namespace pickle
     class Renderer
     {
     public:
+        virtual ~Renderer()
+        {
+        }
+
         virtual void render() const = 0;
     };
 }
