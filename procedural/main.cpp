@@ -29,8 +29,10 @@ void checkProgramLinking(unsigned int program)
     }
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
+    float width = 800;
+    float height = 600;
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cout << "Can't load SDL module" << std::endl;
@@ -40,7 +42,7 @@ int main(int argc, char *argv[])
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    SDL_Window *window = SDL_CreateWindow("Procedural", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_OPENGL);
+    SDL_Window* window = SDL_CreateWindow("Procedural", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
     if (window == nullptr)
     {
         std::cout << "Can't create window" << std::endl;
@@ -52,8 +54,8 @@ int main(int argc, char *argv[])
         std::cout << "Can't load glad module" << std::endl;
     }
 
-    std::fstream vertexShaderFile("../shader.vert");
-    std::fstream fragmentShaderFile("../shader.frag");
+    std::ifstream vertexShaderFile("../shader.vert");
+    std::ifstream fragmentShaderFile("../shader.frag");
 
     if (!vertexShaderFile)
     {
@@ -76,8 +78,8 @@ int main(int argc, char *argv[])
     std::string vertexShaderContentString = vertexShaderContentStream.str();
     std::string fragmentShaderContentString = fragmentShaderContentStream.str();
 
-    const char *vertexShaderContent = vertexShaderContentString.c_str();
-    const char *fragmentShaderContent = fragmentShaderContentString.c_str();
+    const char* vertexShaderContent = vertexShaderContentString.c_str();
+    const char* fragmentShaderContent = fragmentShaderContentString.c_str();
 
     int vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     int fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -100,15 +102,13 @@ int main(int argc, char *argv[])
 
     checkProgramLinking(shaderProgramId);
 
-    float vertices[] = {-0.5,
-                        -0.5,
-                        0,
-                        0.5,
-                        -0.5,
-                        0,
-                        0,
-                        0.5,
-                        0};
+    float vertices[] = { -1.0f, -1.0f, 0.0f,
+                        -1.0f, 1.0f, 0.0f,
+                        1.0f, -1.0f, 0.0f,
+
+                        -1.0f, 1.0f, 0.0f,
+                        1.0f, -1.0f, 0.0f,
+                        1.0f, 1.0f, 0.0f };
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     glBindVertexArray(0);
@@ -133,8 +133,12 @@ int main(int argc, char *argv[])
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgramId);
+
+        int resolutionUniformId = glGetUniformLocation(shaderProgramId, "u_resolution");
+        glUniform2f(resolutionUniformId, width, height);
+
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
 
         if (SDL_PollEvent(&event) != 0)
@@ -146,4 +150,11 @@ int main(int argc, char *argv[])
         }
         SDL_GL_SwapWindow(window);
     }
+
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteProgram(shaderProgramId);
+
+    SDL_GL_DeleteContext(context);
+    SDL_Quit();
 }
