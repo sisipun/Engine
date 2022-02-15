@@ -9,9 +9,16 @@ layout(location = 0) out vec4 fragColor;
 uniform vec2 u_resolution;
 uniform float u_time;
 
-float planeSdf(vec3 position)
+mat2 rotation(float angle)
 {
-    return position.y;
+    float s = sin(angle);
+    float c = cos(angle);
+    return mat2(c, -s, s, c);
+}
+
+float planeSdf(vec3 position, vec3 norm)
+{
+    return dot(position, norm);
 }
 
 float sphereSdf(vec3 position, vec3 sphere, float radius)
@@ -40,17 +47,19 @@ float torusSdf(vec3 position, vec3 torus, float smallRadius, float bigRadius)
 
 float boxSdf(vec3 position, vec3 box, vec3 size)
 {
-    return length(max(abs(position - box) - size, 0));
+    vec3 offsetPosition = position - box;
+    offsetPosition = abs(offsetPosition) - size;
+    return length(max(offsetPosition, 0.0f)) + min(max(offsetPosition.x, max(offsetPosition.y, offsetPosition.z)), 0.0f);
 }
 
 float getDistance(vec3 position)
 {
-    float planeDistance = planeSdf(position);
-    float sphereDistance = sphereSdf(position, vec3(3.0f, 1.0f, 10.0f), 1.0f);
+    float planeDistance = planeSdf(position, vec3(0.0f, 1.0f, 0.0f));
+    float sphereDistance = sphereSdf(position, vec3(1.0f, 1.0f, 6.0f), 1.0f);
     float capsuleDistance = capsuleSdf(position, vec3(0.0f, 1.0f, 6.0f), vec3(1.0f, 2.0f, 6.0f), 0.2f);
     float torusDistance = torusSdf(position, vec3(0.0f, 0.5f, 6.0f), 0.5f, 1.5f);
-    float boxDistance = boxSdf(position, vec3(-3.0f, 0.5f, 6.0f), vec3(0.5f));
-    return min(min(min(min(planeDistance, sphereDistance), capsuleDistance), torusDistance), boxDistance);
+    float boxDistance = boxSdf(position, vec3(1.0f, 1.0f, 6.0f), vec3(0.7f));
+    return min(planeDistance, mix(boxDistance, sphereDistance, sin(u_time) * 0.5f + 0.5f));
 }
 
 float rayMarching(vec3 cameraPosition, vec3 cameraDirection)
@@ -75,7 +84,7 @@ vec3 getNormal(vec3 position)
 }
 
 float getLight(vec3 position) {
-    vec3 lightPosition = vec3(0.0f, 5.0f, 6.0f);
+    vec3 lightPosition = vec3(0.0f, 5.0f, 3.0f);
     lightPosition.xz += vec2(sin(u_time), cos(u_time)); 
     vec3 lightDirection = normalize(lightPosition - position);
     vec3 norm = getNormal(position);
@@ -91,8 +100,8 @@ float getLight(vec3 position) {
 void main()
 {
     vec2 uv = (gl_FragCoord.xy - 0.5f * u_resolution.xy) / u_resolution.y;
-    vec3 cameraPosition = vec3(0.0f, 2.0f, 0.0f);
-    vec3 cameraDirection = normalize(vec3(uv.x, uv.y - 0.2f, 1.0f));
+    vec3 cameraPosition = vec3(0.0f, 3.0f, 0.0f);
+    vec3 cameraDirection = normalize(vec3(uv.x, uv.y - 0.4f, 1.0f));
     float dist = rayMarching(cameraPosition, cameraDirection);
     vec3 color = vec3(getLight(cameraPosition + dist * cameraDirection));
     fragColor = vec4(color, 1.0f);
