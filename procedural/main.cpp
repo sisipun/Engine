@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
   }
 
   std::ifstream vertexShaderFile("../shader.vert");
-  std::ifstream fragmentShaderFile("../shader.frag");
+  std::ifstream fragmentShaderFile("../procedural_shader.frag");
 
   if (!vertexShaderFile) {
     std::cout << "Can't read vertex file" << std::endl;
@@ -116,9 +116,11 @@ int main(int argc, char* argv[]) {
 
   bool quit = false;
   SDL_Event event;
+  int mouseX, mouseY;
   while (!quit) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    SDL_GetMouseState(&mouseX, &mouseY);
 
     glUseProgram(shaderProgramId);
 
@@ -127,6 +129,8 @@ int main(int argc, char* argv[]) {
     glUniform2f(resolutionUniformId, width, height);
     int timeUniformId = glGetUniformLocation(shaderProgramId, "u_time");
     glUniform1f(timeUniformId, SDL_GetTicks() / 500.0f);
+    int mouseUniformId = glGetUniformLocation(shaderProgramId, "u_mouse");
+    glUniform2f(mouseUniformId, mouseX, mouseY);
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
