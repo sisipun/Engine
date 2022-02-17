@@ -23,6 +23,10 @@ struct HitObject
     float dist;
 };
 
+float vmax(vec2 v) {
+	return max(v.x, v.y);
+}
+
 float vmax(vec3 v)
 {
     return max(max(v.x, v.y), v.z);
@@ -39,6 +43,11 @@ float fBox(vec3 p, vec3 b)
     return length(max(d, vec3(0.0))) + vmax(min(d, vec3(0.0)));
 }
 
+float fBox2(vec2 p, vec2 b) {
+	vec2 d = abs(p) - b;
+	return length(max(d, vec2(0))) + vmax(min(d, vec2(0)));
+}
+
 float fPlane(vec3 p, vec3 n, float distanceFromOrigin)
 {
     return dot(p, n) + distanceFromOrigin;
@@ -49,6 +58,13 @@ void pR(inout vec2 p, float a)
     p = cos(a) * p + sin(a) * vec2(p.y, -p.x);
 }
 
+float pMod1(inout float p, float size) {
+	float halfsize = size*0.5;
+	float c = floor((p + halfsize)/size);
+	p = mod(p + halfsize, size) - halfsize;
+	return c;
+}
+
 HitObject hitMin(HitObject a, HitObject b)
 {
     return a.dist < b.dist ? a : b;
@@ -57,6 +73,12 @@ HitObject hitMin(HitObject a, HitObject b)
 HitObject hitMax(HitObject a, HitObject b)
 {
     return a.dist > b.dist ? a : b;
+}
+
+HitObject hitNeg(HitObject a)
+{
+    a.dist = -a.dist;
+    return a;
 }
 
 HitObject hitMix(HitObject a, HitObject b, float value)
@@ -74,6 +96,8 @@ HitObject hitMix(HitObject a, HitObject b, float value)
 
 HitObject getHit(vec3 p)
 {
+    pMod1(p.z, 2.0);
+
     HitObject plane = HitObject(
         vec3(0.2 + 0.4 * mod(floor(p.x) + floor(p.z), 2.0)),
         0.2,
@@ -101,7 +125,16 @@ HitObject getHit(vec3 p)
         32, 
         fBox(p, vec3(0.7))
     );
-    return hitMin(plane, hitMix(sphere, box, sin(u_time) * 0.5 + 0.5));
+    HitObject wall = HitObject(
+        vec3(1.0, 1.0, 1.0), 
+        0.3,
+        1.0,
+        0.5,
+        0.1,
+        32, 
+        fBox2(p.xy, vec2(0.2, 1.1))
+    );
+    return hitMin(plane, hitMax(hitNeg(hitMix(sphere, box, sin(u_time) * 0.5 + 0.5)), wall));
 }
 
 HitObject rayMarching(vec3 ro, vec3 rd)
@@ -166,22 +199,34 @@ void mouseControl(inout vec3 ro)
     pR(ro.xz, mouse.x * 2 * PI);
 }
 
-void main()
+vec2 getUV(vec2 offset) {
+    return (2.0 * (gl_FragCoord.xy + offset) - u_resolution.xy) / u_resolution.y;
+}
+
+vec3 render(vec2 uv)
 {
-    vec2 uv = (gl_FragCoord.xy - 0.5f * u_resolution.xy) / u_resolution.y;
     vec3 ro = vec3(3.0f, 3.0f, -3.0f);
     mouseControl(ro);
     vec3 lookAt = vec3(0.0f, 0.0f, 0.0f);
     vec3 rd = getCamera(ro, lookAt) * normalize(vec3(uv, 1.0f));
     HitObject object = rayMarching(ro, rd);
-    vec3 color;
-    if (object.dist < MAX_DISTANCE)
-    {
-        color = getLight(ro + object.dist * rd, ro, object);
-    }
-    else
-    {
-        color = vec3(0.5, 0.8, 0.9);
-    };
-    fragColor = vec4(color, 1.0f);
+
+    vec3 background = vec3(0.5, 0.8, 0.9);
+    vec3 color = object.dist < MAX_DISTANCE 
+        ? mix(getLight(ro + object.dist * rd, ro, object), background, 1.0 - exp(-0.0001 * object.dist * object.dist))
+        : background;
+    return color;
+}
+
+vec3 renderAAx4()
+{
+    vec4 e = vec4(0.125, -0.125, 0.375, -0.375);
+    vec3 colAA = render(getUV(e.xz)) + render(getUV(e.yw)) + render(getUV(e.wx)) + render(getUV(e.zy));
+    return colAA /= 4.0;
+}
+
+void main()
+{
+    vec3 color = renderAAx4();
+    fragColor = vec4(color, 1.0);
 }
