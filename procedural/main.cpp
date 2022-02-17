@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
         std::cout << "Can't load glad module" << std::endl;
     }
 
-    std::ifstream vertexShaderFile("../shader.vert");
-    std::ifstream fragmentShaderFile("../ray_marching_shader.frag");
+    std::ifstream vertexShaderFile("../resource/shader.vert");
+    std::ifstream fragmentShaderFile("../resource/2d_shader.frag");
 
     if (!vertexShaderFile)
     {
