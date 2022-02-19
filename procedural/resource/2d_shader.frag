@@ -18,11 +18,23 @@ float circle(vec2 uv)
     return 1.0 - step(0.5, length(uv - 0.5));
 }
 
-void main()
+float cross(in vec2 _st, in float boldness)
 {
-    vec2 uv = gl_FragCoord.xy / u_resolution;
-    float sq = square(uv, vec2(sin(u_time) * 0.25, cos(u_time) * 0.25), vec2(0.5, 0.5));
-    float cir = circle(uv);
-    vec3 color = vec3(sq, cir, 0.0);
-    fragColor = vec4(color, 1.0);
+    vec2 l = _st - vec2(0.5);
+    return 1.0 - step(boldness, abs(abs(l.x) - abs(l.y)));
+}
+
+void main() {
+	vec2 st = gl_FragCoord.xy/u_resolution;
+    vec3 color = vec3(0.0);
+
+    st *= 3.0;
+    vec2 fract_st = fract(st);
+    vec2 floor_st = floor(st);
+
+    float alph = step(1.0, mod(floor_st.x + floor_st.y, 2.0));
+    color = vec3(fract_st, 0.0);
+    color = vec3(alph * cross(fract_st,0.1) + (1.0 - alph) * circle(fract_st, 0.5));
+
+	gl_FragColor = vec4(color,1.0);
 }
