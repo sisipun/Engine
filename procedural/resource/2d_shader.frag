@@ -49,21 +49,22 @@ vec2 rotateTile(in vec2 uv, in float index)
 
 float noise(in vec2 uv)
 {
-    vec2 uv_i = fract(uv);
-    vec2 uv_f = floor(uv);
-    return mix(random(uv_i), random(uv_i + 1.0), smoothstep(0.0, 1.0, uv_f.x));
+    vec2 uv_i = floor(uv);
+    vec2 uv_f = fract(uv);
+    vec2 sm = smoothstep(0.0, 1.0, uv_f);
+    
+    float a = random(uv_i);
+    float b = random(uv_i + vec2(1.0, 0.0));
+    float c = random(uv_i + vec2(0.0, 1.0));
+    float d = random(uv_i + vec2(1.0, 1.0));
+
+    return mix(mix(a, c, sm.y), mix(b, d, sm.y), sm.x);
 }
 
 void main() {
 	vec2 uv = gl_FragCoord.xy/u_resolution;
-    vec3 color = vec3(0.0);
 
-    uv *= 10.0;
-    vec2 fract_uv = fract(uv);
-    vec2 floor_uv = floor(uv);
-    vec2 tile = rotateTile(fract_uv, random(floor_uv));
-    
-    color = vec3(smoothstep(0.1, 0.0, abs(tile.x - tile.y)));
+    vec3 color = vec3(noise(uv * 5.0));
 
 	fragColor = vec4(color,1.0);
 }
