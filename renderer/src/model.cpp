@@ -1,10 +1,10 @@
-#include "model.h"
+#include <pickle/model.h>
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-Model::Model(std::string path) : vertices(), faces()
+pickle::renderer::Model::Model(std::string path) : vertices(), faces()
 {
     std::ifstream in(path);
     if (in.fail())
@@ -21,8 +21,8 @@ Model::Model(std::string path) : vertices(), faces()
         {
             stream >> trash;
 
-            std::vector<float> vertex(3);
-            stream >> vertex[0] >> vertex[1] >> vertex[2];
+            pickle::math::Vector<3, float> vertex;
+            stream >> vertex.data[0] >> vertex.data[1] >> vertex.data[2];
 
             vertices.push_back(vertex);
         }
@@ -31,11 +31,12 @@ Model::Model(std::string path) : vertices(), faces()
             stream >> trash;
 
             int id, texId, normId;
-            std::vector<int> face;
-            while (stream >> id >> trash >> texId >> trash >> normId)
+            pickle::math::Vector<3, int> face;
+            for (int i = 0; i < 3; i++)
             {
+                stream >> id >> trash >> texId >> trash >> normId;
                 id--;
-                face.push_back(id);
+                face.data[i] = id;
             }
 
             faces.push_back(face);
@@ -45,22 +46,22 @@ Model::Model(std::string path) : vertices(), faces()
     std::cout << "Faces: " << faces.size() << ". Vertices: " << vertices.size();
 }
 
-std::vector<float> Model::getVertex(int i) const
+pickle::math::Vector<3, float> pickle::renderer::Model::getVertex(int i) const
 {
     return vertices[i];
 }
 
-std::vector<int> Model::getFace(int i) const
+pickle::math::Vector<3, int> pickle::renderer::Model::getFace(int i) const
 {
     return faces[i];
 }
 
-int Model::getVerticesCount() const
+int pickle::renderer::Model::getVerticesCount() const
 {
     return vertices.size();
 }
 
-int Model::getFacesCount() const
+int pickle::renderer::Model::getFacesCount() const
 {
     return faces.size();
 }
