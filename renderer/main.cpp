@@ -41,34 +41,26 @@ int main(int argc, char *argv[])
     pickle::renderer::Renderer render(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     pickle::renderer::Model model("../resources/head.obj");
 
+    pickle::math::Vector<3, float> ligthDir({0.0f, 0.0f, -1.0f});
+
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(renderer);
-    // for (int i = 0; i < model.getFacesCount(); i++)
-    // {
-    //     pickle::math::Vector<3, int> face = model.getFace(i);
-    //     for (int j = 0; j < 3; j++)
-    //     {
-    //         pickle::math::Vector<3, float> vertex1 = model.getVertex(face.data[j]);
-    //         pickle::math::Vector<3, float> vertex2 = model.getVertex(face.data[(j + 1) % 3]);
-    //         render.drawLine(vertex1.data[0], vertex1.data[1], vertex2.data[0], vertex2.data[1], {1.0, 1.0, 0.0, 1.0});
-    //     }
-    // }
+    for (int i = 0; i < model.getFacesCount(); i++)
+    {
+        pickle::math::Vector<3, int> face = model.getFace(i);
+        pickle::math::Vector<3, float> vertex1 = model.getVertex(face.data[0]);
+        pickle::math::Vector<3, float> vertex2 = model.getVertex(face.data[1]);
+        pickle::math::Vector<3, float> vertex3 = model.getVertex(face.data[2]);
 
-    render.drawTriangle(
-        pickle::math::Vector<2, float>({-0.9, -0.3}),
-        pickle::math::Vector<2, float>({-0.5, 0.6}),
-        pickle::math::Vector<2, float>({-0.3, -0.2}),
-        {static_cast<float>(rand()) / static_cast<float>(RAND_MAX), static_cast<float>(rand()) / static_cast<float>(RAND_MAX), static_cast<float>(rand()) / static_cast<float>(RAND_MAX), 1.0});
-    render.drawTriangle(
-        pickle::math::Vector<2, float>({0.8, -0.5}),
-        pickle::math::Vector<2, float>({0.5, -1.0}),
-        pickle::math::Vector<2, float>({-0.3, 0.8}),
-        {static_cast<float>(rand()) / static_cast<float>(RAND_MAX), static_cast<float>(rand()) / static_cast<float>(RAND_MAX), static_cast<float>(rand()) / static_cast<float>(RAND_MAX), 1.0});
-    render.drawTriangle(
-        pickle::math::Vector<2, float>({0.8, 0.5}),
-        pickle::math::Vector<2, float>({0.2, 0.6}),
-        pickle::math::Vector<2, float>({0.3, 0.8}),
-        {static_cast<float>(rand()) / static_cast<float>(RAND_MAX), static_cast<float>(rand()) / static_cast<float>(RAND_MAX), static_cast<float>(rand()) / static_cast<float>(RAND_MAX), 1.0});
+        pickle::math::Vector<3, float> norm = cross(vertex3 - vertex1, vertex2 - vertex1);
+        norm = normalize(norm);
+        float intensity = dot(norm, ligthDir);
+
+        if (intensity > 0)
+        {
+            render.drawTriangle(vertex1, vertex2, vertex3, {intensity, intensity, intensity, 1.0});
+        }
+    }
 
     SDL_RenderPresent(renderer);
 

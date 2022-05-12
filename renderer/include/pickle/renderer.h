@@ -20,7 +20,7 @@ namespace pickle
 
             void drawLine(float x1, float y1, float x2, float y2, Color color);
 
-            void drawTriangle(math::Vector<2, float> p1, math::Vector<2, float> p2, math::Vector<2, float> p3, Color color);
+            void drawTriangle(math::Vector<3, float> p1, math::Vector<3, float> p2, math::Vector<3, float> p3, Color color);
 
         private:
             SDL_Renderer *renderer;

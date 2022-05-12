@@ -1,5 +1,6 @@
 #include <pickle/renderer.h>
 
+#include <iostream>
 #include <cmath>
 
 pickle::renderer::Renderer::Renderer(SDL_Renderer *renderer, float width, float height) : renderer(renderer), width(width), height(height)
@@ -62,9 +63,61 @@ void pickle::renderer::Renderer::drawLine(float x1, float y1, float x2, float y2
     }
 }
 
-void pickle::renderer::Renderer::drawTriangle(math::Vector<2, float> p1, math::Vector<2, float> p2, math::Vector<2, float> p3, Color color)
+void pickle::renderer::Renderer::drawTriangle(math::Vector<3, float> p1, math::Vector<3, float> p2, math::Vector<3, float> p3, Color color)
 {
-    drawLine(p1.data[0], p1.data[1], p2.data[0], p2.data[1], color);
-    drawLine(p2.data[0], p2.data[1], p3.data[0], p3.data[1], color);
-    drawLine(p3.data[0], p3.data[1], p1.data[0], p1.data[1], color);
+    if (p1.data[1] < p2.data[1])
+    {
+        std::swap(p1, p2);
+    }
+    if (p1.data[1] < p3.data[1])
+    {
+        std::swap(p1, p3);
+    }
+    if (p2.data[1] < p3.data[1])
+    {
+        std::swap(p2, p3);
+    }
+
+    float stepX = 1 / width;
+    float stepY = 1 / height;
+
+    float fullHeight = p1.data[1] - p3.data[1];
+
+    float firstHalfHeight = p2.data[1] - p3.data[1];
+    for (float y = p3.data[1]; y < p2.data[1]; y += stepY)
+    {
+        float leftT = (y - p3.data[1]) / fullHeight;
+        float rightT = (y - p3.data[1]) / firstHalfHeight;
+
+        math::Vector<3, float> left = p3 + (p1 - p3) * leftT;
+        math::Vector<3, float> right = p3 + (p2 - p3) * rightT;
+
+        if (left.data[0] > right.data[0])
+        {
+            std::swap(left, right);
+        }
+        for (float x = left.data[0]; x < right.data[0]; x += stepX)
+        {
+            drawPoint(x, y, {color.r / 2.0f, color.g / 2.0f, color.b / 2.0f, color.a});
+        }
+    }
+
+    float secondHalfHeight = p1.data[1] - p2.data[1];
+    for (float y = p2.data[1]; y < p1.data[1]; y += stepY)
+    {
+        float leftT = (y - p3.data[1]) / fullHeight;
+        float rightT = (y - p2.data[1]) / secondHalfHeight;
+
+        math::Vector<3, float> left = p3 + (p1 - p3) * leftT;
+        math::Vector<3, float> right = p2 + (p1 - p2) * rightT;
+
+        if (left.data[0] > right.data[0])
+        {
+            std::swap(left, right);
+        }
+        for (float x = left.data[0]; x < right.data[0]; x += stepX)
+        {
+            drawPoint(x, y, {color.r / 2.0f, color.g / 2.0f, color.b / 2.0f, color.a});
+        }
+    }
 }

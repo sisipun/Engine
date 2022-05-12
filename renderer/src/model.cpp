@@ -43,7 +43,7 @@ pickle::renderer::Model::Model(std::string path) : vertices(), faces()
         }
     }
 
-    std::cout << "Faces: " << faces.size() << ". Vertices: " << vertices.size();
+    std::cout << "Faces: " << faces.size() << ". Vertices: " << vertices.size() << std::endl;
 }
 
 pickle::math::Vector<3, float> pickle::renderer::Model::getVertex(int i) const
