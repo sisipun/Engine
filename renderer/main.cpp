@@ -10,8 +10,8 @@
 #include <pickle/math.h>
 #include <pickle/renderer.h>
 
-#define SCREEN_WIDTH 600.0f
-#define SCREEN_HEIGHT 600.0f
+#define SCREEN_WIDTH 600
+#define SCREEN_HEIGHT 600
 
 int main(int argc, char *argv[])
 {
@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    render.present();
     SDL_RenderPresent(renderer);
 
     bool quit = false;
