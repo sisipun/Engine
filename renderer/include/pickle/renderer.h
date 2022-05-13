@@ -7,6 +7,7 @@
 #include <array>
 
 #include "color.h"
+#include "texture.h"
 
 namespace pickle
 {
@@ -21,9 +22,17 @@ namespace pickle
 
             void drawPoint(math::Vector<3, float> p, Color color);
 
-            void drawLine(float x1, float y1, float x2, float y2, Color color);
-
             void drawTriangle(math::Vector<3, float> p1, math::Vector<3, float> p2, math::Vector<3, float> p3, Color color);
+
+            void drawTriangle(
+                math::Vector<3, float> p1,
+                math::Vector<3, float> tc1,
+                math::Vector<3, float> p2,
+                math::Vector<3, float> tc2,
+                math::Vector<3, float> p3,
+                math::Vector<3, float> tc3,
+                float intensity,
+                const Texture &texture);
 
             void present();
 

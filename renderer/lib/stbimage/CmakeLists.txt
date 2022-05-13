@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.14)
+project(Stbimage)
+
+add_library(STBIMAGE include/stbimage/stb_image.h src/stb_image.cpp)
+target_include_directories(STBIMAGE PUBLIC include/)

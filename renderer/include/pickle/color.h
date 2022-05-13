@@ -7,7 +7,16 @@ namespace pickle
     {
         struct Color
         {
-            float r, g, b, a;
+            Color operator*(float value)
+            {
+                return {
+                    static_cast<unsigned char>(r * value),
+                    static_cast<unsigned char>(g * value),
+                    static_cast<unsigned char>(b * value),
+                    a};
+            }
+
+            unsigned char r, g, b, a;
         };
     }
 }

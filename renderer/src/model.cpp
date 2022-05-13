@@ -26,24 +26,37 @@ pickle::renderer::Model::Model(std::string path) : vertices(), faces()
 
             vertices.push_back(vertex);
         }
+        if (!line.compare(0, 4, "vt  "))
+        {
+            stream >> trash;
+            stream >> trash;
+
+            pickle::math::Vector<3, float> textureCoord;
+            stream >> textureCoord.data[0] >> textureCoord.data[1] >> textureCoord.data[2];
+
+            textureCoords.push_back(textureCoord);
+        }
         else if (!line.compare(0, 2, "f "))
         {
             stream >> trash;
 
             int id, texId, normId;
-            pickle::math::Vector<3, int> face;
-            for (int i = 0; i < 3; i++)
+            pickle::math::Vector<9, int> face;
+            for (int i = 0; i < 9; i += 3)
             {
                 stream >> id >> trash >> texId >> trash >> normId;
                 id--;
+                texId--;
+                normId--;
+
                 face.data[i] = id;
+                face.data[i + 1] = texId;
+                face.data[i + 2] = normId;
             }
 
             faces.push_back(face);
         }
     }
-
-    std::cout << "Faces: " << faces.size() << ". Vertices: " << vertices.size() << std::endl;
 }
 
 pickle::math::Vector<3, float> pickle::renderer::Model::getVertex(int i) const
@@ -51,7 +64,12 @@ pickle::math::Vector<3, float> pickle::renderer::Model::getVertex(int i) const
     return vertices[i];
 }
 
-pickle::math::Vector<3, int> pickle::renderer::Model::getFace(int i) const
+pickle::math::Vector<3, float> pickle::renderer::Model::getTextureCoord(int i) const
+{
+    return textureCoords[i];
+}
+
+pickle::math::Vector<9, int> pickle::renderer::Model::getFace(int i) const
 {
     return faces[i];
 }

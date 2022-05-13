@@ -7,6 +7,7 @@
 
 #include <pickle/color.h>
 #include <pickle/model.h>
+#include <pickle/texture.h>
 #include <pickle/math.h>
 #include <pickle/renderer.h>
 
@@ -40,6 +41,7 @@ int main(int argc, char *argv[])
 
     pickle::renderer::Renderer render(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     pickle::renderer::Model model("../resources/head.obj");
+    pickle::renderer::Texture texture("../resources/diffuse.tga");
 
     pickle::math::Vector<3, float> ligthDir({0.0f, 0.0f, -1.0f});
 
@@ -47,10 +49,13 @@ int main(int argc, char *argv[])
     SDL_RenderClear(renderer);
     for (int i = 0; i < model.getFacesCount(); i++)
     {
-        pickle::math::Vector<3, int> face = model.getFace(i);
+        pickle::math::Vector<9, int> face = model.getFace(i);
         pickle::math::Vector<3, float> vertex1 = model.getVertex(face.data[0]);
-        pickle::math::Vector<3, float> vertex2 = model.getVertex(face.data[1]);
-        pickle::math::Vector<3, float> vertex3 = model.getVertex(face.data[2]);
+        pickle::math::Vector<3, float> textCoord1 = model.getTextureCoord(face.data[1]);
+        pickle::math::Vector<3, float> vertex2 = model.getVertex(face.data[3]);
+        pickle::math::Vector<3, float> textCoord2 = model.getTextureCoord(face.data[4]);
+        pickle::math::Vector<3, float> vertex3 = model.getVertex(face.data[6]);
+        pickle::math::Vector<3, float> textCoord3 = model.getTextureCoord(face.data[7]);
 
         pickle::math::Vector<3, float> norm = cross(vertex3 - vertex1, vertex2 - vertex1);
         norm = normalize(norm);
@@ -58,7 +63,15 @@ int main(int argc, char *argv[])
 
         if (intensity > 0)
         {
-            render.drawTriangle(vertex1, vertex2, vertex3, {intensity, intensity, intensity, 1.0});
+            render.drawTriangle(
+                vertex1,
+                textCoord1,
+                vertex2,
+                textCoord2,
+                vertex3,
+                textCoord3,
+                intensity,
+                texture);
         }
     }
 
