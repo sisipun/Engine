@@ -36,6 +36,15 @@ void pickle::renderer::Renderer::drawPoint(math::Vector<3, float> p, Color color
     }
 }
 
+pickle::math::Vector<3, float> pickle::renderer::Renderer::transform(math::Vector<3, float> p, math::Matrix<4, 4, float> transform)
+{
+    math::Vector<4, float> extendedP({p.data[0], p.data[1], p.data[2], 1.0});
+    math::Vector<4, float> transformedP = transform * extendedP;
+    return math::Vector<3, float>({transformedP.data[0] / transformedP.data[3],
+                                   transformedP.data[1] / transformedP.data[3],
+                                   transformedP.data[2] / transformedP.data[3]});
+}
+
 void pickle::renderer::Renderer::drawTriangle(math::Vector<3, float> p1, math::Vector<3, float> p2, math::Vector<3, float> p3, Color color)
 {
     if (p1.data[1] < p2.data[1])
@@ -88,6 +97,7 @@ void pickle::renderer::Renderer::drawTriangle(
     math::Vector<3, float> tc2,
     math::Vector<3, float> p3,
     math::Vector<3, float> tc3,
+    math::Matrix<4, 4, float> model,
     float intensity,
     const Texture &texture)
 {
@@ -138,7 +148,7 @@ void pickle::renderer::Renderer::drawTriangle(
             math::Vector<3, float> current = left + (right - left) * t;
             math::Vector<3, float> currentTc = leftTc + (rightTc - leftTc) * t;
             Color pixel = texture.getPixel(currentTc.data[0], currentTc.data[1]);
-            drawPoint(current, pixel * intensity);
+            drawPoint(transform(current, model), pixel * intensity);
         }
     }
 }

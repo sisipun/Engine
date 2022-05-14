@@ -58,6 +58,10 @@ int main(int argc, char *argv[])
         pickle::math::Vector<3, float> textCoord3 = model.getTextureCoord(face.data[7]);
 
         pickle::math::Vector<3, float> norm = cross(vertex3 - vertex1, vertex2 - vertex1);
+        pickle::math::Matrix<4, 4, float> model({1.0, 0.0, 0.0, 0.5,
+                                                 0.0, 1.0, 0.0, 0.5,
+                                                 0.0, 0.0, 1.0, 0.0,
+                                                 0.0, 0.0, 0.0, 1.0});
         norm = normalize(norm);
         float intensity = dot(norm, ligthDir);
 
@@ -70,6 +74,7 @@ int main(int argc, char *argv[])
                 textCoord2,
                 vertex3,
                 textCoord3,
+                model,
                 intensity,
                 texture);
         }
