@@ -403,3 +403,45 @@ TEST_CASE("Combine transformations", "[matrix][vector][transformation]")
     REQUIRE(combine.data[14] == 0.0f);
     REQUIRE(combine.data[15] == 1.0f);
 }
+
+TEST_CASE("Look at forward matrix", "[matrix][vector][transformation]")
+{
+    Matrix<4, 4, float> lookAtMatrix = lookAt(Vector<3, float>({0.0f, 0.0f, -1.0f}), Vector<3, float>({0.0f, 0.0f, 0.0f}), Vector<3, float>({0.0f, 1.0f, 0.0f}));
+    REQUIRE(lookAtMatrix.data[0] == 1.0f);
+    REQUIRE(lookAtMatrix.data[1] == 0.0f);
+    REQUIRE(lookAtMatrix.data[2] == 0.0f);
+    REQUIRE(lookAtMatrix.data[3] == 0.0f);
+    REQUIRE(lookAtMatrix.data[4] == 0.0f);
+    REQUIRE(lookAtMatrix.data[5] == 1.0f);
+    REQUIRE(lookAtMatrix.data[6] == 0.0f);
+    REQUIRE(lookAtMatrix.data[7] == 0.0f);
+    REQUIRE(lookAtMatrix.data[8] == 0.0f);
+    REQUIRE(lookAtMatrix.data[9] == 0.0f);
+    REQUIRE(lookAtMatrix.data[10] == 1.0f);
+    REQUIRE(lookAtMatrix.data[11] == 1.0f);
+    REQUIRE(lookAtMatrix.data[12] == 0.0f);
+    REQUIRE(lookAtMatrix.data[13] == 0.0f);
+    REQUIRE(lookAtMatrix.data[14] == 0.0f);
+    REQUIRE(lookAtMatrix.data[15] == 1.0f);
+}
+
+TEST_CASE("Look at backward matrix", "[matrix][vector][transformation]")
+{
+    Matrix<4, 4, float> lookAtMatrix = lookAt(Vector<3, float>({0.0f, 0.0f, 1.0f}), Vector<3, float>({0.0f, 0.0f, 0.0f}), Vector<3, float>({0.0f, 1.0f, 0.0f}));
+    REQUIRE(lookAtMatrix.data[0] == -1.0f);
+    REQUIRE(lookAtMatrix.data[1] == 0.0f);
+    REQUIRE(lookAtMatrix.data[2] == 0.0f);
+    REQUIRE(lookAtMatrix.data[3] == 0.0f);
+    REQUIRE(lookAtMatrix.data[4] == 0.0f);
+    REQUIRE(lookAtMatrix.data[5] == 1.0f);
+    REQUIRE(lookAtMatrix.data[6] == 0.0f);
+    REQUIRE(lookAtMatrix.data[7] == 0.0f);
+    REQUIRE(lookAtMatrix.data[8] == 0.0f);
+    REQUIRE(lookAtMatrix.data[9] == 0.0f);
+    REQUIRE(lookAtMatrix.data[10] == -1.0f);
+    REQUIRE(lookAtMatrix.data[11] == -1.0f);
+    REQUIRE(lookAtMatrix.data[12] == 0.0f);
+    REQUIRE(lookAtMatrix.data[13] == 0.0f);
+    REQUIRE(lookAtMatrix.data[14] == 0.0f);
+    REQUIRE(lookAtMatrix.data[15] == 1.0f);
+}
