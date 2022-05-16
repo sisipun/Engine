@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cmath>
 
-pickle::renderer::Renderer::Renderer(SDL_Renderer *renderer, int width, int height) : renderer(renderer), width(width), height(height), depth(100)
+pickle::renderer::Renderer::Renderer(SDL_Renderer *renderer, int width, int height) : renderer(renderer), width(width), height(height), depth(500)
 {
     buffer = new Color[width * height];
     zBuffer = new int[width * height];
@@ -27,22 +27,13 @@ void pickle::renderer::Renderer::drawPoint(math::Vector<3, float> p, Color color
 {
     int x = static_cast<int>((p.data[0] + 1) / 2 * (width - 1));
     int y = static_cast<int>((-p.data[1] + 1) / 2 * (height - 1));
-    int z = static_cast<int>((-p.data[2] + 1) / 2 * (depth - 1));
+    int z = static_cast<int>((p.data[2] + 1) / 2 * (depth - 1));
 
-    if (x >= 0 && x < width && y >= 0 && y < height && z >= 0 && z < depth && zBuffer[x * width + y] > z)
+    if (x >= 0 && x < width && y >= 0 && y < height && zBuffer[x * width + y] > z)
     {
         zBuffer[x * width + y] = z;
         buffer[x * width + y] = color;
     }
-}
-
-pickle::math::Vector<3, float> pickle::renderer::Renderer::transform(math::Vector<3, float> p, math::Matrix<4, 4, float> transform)
-{
-    math::Vector<4, float> extendedP({p.data[0], p.data[1], p.data[2], 1.0});
-    math::Vector<4, float> transformedP = transform * extendedP;
-    return math::Vector<3, float>({transformedP.data[0] / transformedP.data[3],
-                                   transformedP.data[1] / transformedP.data[3],
-                                   transformedP.data[2] / transformedP.data[3]});
 }
 
 void pickle::renderer::Renderer::drawTriangle(math::Vector<3, float> p1, math::Vector<3, float> p2, math::Vector<3, float> p3, Color color)
@@ -97,7 +88,6 @@ void pickle::renderer::Renderer::drawTriangle(
     math::Vector<3, float> tc2,
     math::Vector<3, float> p3,
     math::Vector<3, float> tc3,
-    math::Matrix<4, 4, float> model,
     float intensity,
     const Texture &texture)
 {
@@ -148,7 +138,7 @@ void pickle::renderer::Renderer::drawTriangle(
             math::Vector<3, float> current = left + (right - left) * t;
             math::Vector<3, float> currentTc = leftTc + (rightTc - leftTc) * t;
             Color pixel = texture.getPixel(currentTc.data[0], currentTc.data[1]);
-            drawPoint(transform(current, model), pixel * intensity);
+            drawPoint(current, pixel * intensity);
         }
     }
 }

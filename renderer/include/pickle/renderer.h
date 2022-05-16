@@ -22,8 +22,6 @@ namespace pickle
 
             void drawPoint(math::Vector<3, float> p, Color color);
 
-            math::Vector<3, float> transform(math::Vector<3, float> p, math::Matrix<4, 4, float> transform);
-
             void drawTriangle(math::Vector<3, float> p1, math::Vector<3, float> p2, math::Vector<3, float> p3, Color color);
 
             void drawTriangle(
@@ -33,7 +31,6 @@ namespace pickle
                 math::Vector<3, float> tc2,
                 math::Vector<3, float> p3,
                 math::Vector<3, float> tc3,
-                math::Matrix<4, 4, float> model,
                 float intensity,
                 const Texture &texture);
 

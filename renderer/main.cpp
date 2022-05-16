@@ -14,6 +14,15 @@
 #define SCREEN_WIDTH 600
 #define SCREEN_HEIGHT 600
 
+pickle::math::Vector<3, float> transform(pickle::math::Vector<3, float> p, pickle::math::Matrix<4, 4, float> transform)
+{
+    pickle::math::Vector<4, float> extendedP({p.data[0], p.data[1], p.data[2], 1.0});
+    pickle::math::Vector<4, float> transformedP = transform * extendedP;
+    return pickle::math::Vector<3, float>({transformedP.data[0] / transformedP.data[3],
+                                           transformedP.data[1] / transformedP.data[3],
+                                           transformedP.data[2] / transformedP.data[3]});
+}
+
 int main(int argc, char *argv[])
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -43,6 +52,13 @@ int main(int argc, char *argv[])
     pickle::renderer::Model model("../resources/head.obj");
     pickle::renderer::Texture texture("../resources/diffuse.tga");
 
+    pickle::math::Matrix<4, 4, float> lookAtMat = pickle::math::lookAt(
+        pickle::math::Vector<3, float>({0.0, 0.0, -1.0}),
+        pickle::math::Vector<3, float>({0.0, 0.0, 0.0}),
+        pickle::math::Vector<3, float>({0.0, 1.0, 0.0}));
+    pickle::math::Matrix<4, 4, float> orthoMat = pickle::math::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 20.0f);
+    pickle::math::Matrix<4, 4, float> transformMat = orthoMat * lookAtMat * pickle::math::identity<4, float>();
+
     pickle::math::Vector<3, float> ligthDir({0.0f, 0.0f, -1.0f});
 
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
@@ -58,23 +74,18 @@ int main(int argc, char *argv[])
         pickle::math::Vector<3, float> textCoord3 = model.getTextureCoord(face.data[7]);
 
         pickle::math::Vector<3, float> norm = cross(vertex3 - vertex1, vertex2 - vertex1);
-        pickle::math::Matrix<4, 4, float> model({1.0, 0.0, 0.0, 0.5,
-                                                 0.0, 1.0, 0.0, 0.5,
-                                                 0.0, 0.0, 1.0, 0.0,
-                                                 0.0, 0.0, 0.0, 1.0});
         norm = normalize(norm);
         float intensity = dot(norm, ligthDir);
 
         if (intensity > 0)
         {
             render.drawTriangle(
-                vertex1,
+                transform(vertex1, transformMat),
                 textCoord1,
-                vertex2,
+                transform(vertex2, transformMat),
                 textCoord2,
-                vertex3,
+                transform(vertex3, transformMat),
                 textCoord3,
-                model,
                 intensity,
                 texture);
         }
