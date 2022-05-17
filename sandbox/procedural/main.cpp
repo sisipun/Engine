@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     }
 
     std::ifstream vertexShaderFile("../resource/shader.vert");
-    std::ifstream fragmentShaderFile("../resource/2d_shader.frag");
+    std::ifstream fragmentShaderFile("../resource/3d_shader.frag");
 
     if (!vertexShaderFile)
     {

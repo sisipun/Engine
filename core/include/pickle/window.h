@@ -1,9 +1,8 @@
 #ifndef PICKLE_WINDOW
 #define PICKLE_WINDOW
 
-#include "renderer.h"
-
 #include <memory>
+#include <pickle/renderer.h>
 
 namespace pickle
 {
@@ -16,11 +15,11 @@ namespace pickle
         Window(const Window &window) = delete;
         Window &operator=(const Window &window) = delete;
 
-        Renderer &getRenderer() const;
+        renderer::Renderer &getRenderer() const;
         bool isClosed() const;
 
     private:
-        std::unique_ptr<Renderer> renderer;
+        std::unique_ptr<renderer::Renderer> renderer;
     };
 }
 

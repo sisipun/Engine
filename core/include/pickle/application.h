@@ -2,6 +2,7 @@
 #define PICKLE_APPLICATION
 
 #include <pickle/window.h>
+
 namespace pickle
 {
     class Application
