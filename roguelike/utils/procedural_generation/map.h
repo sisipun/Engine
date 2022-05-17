@@ -53,7 +53,7 @@ private:
 class MapGeneratorUtils
 {
 public:
-    static void squareToMap(int startX, int endX, int startY, int endY, int *map, int mapWidht, int mapHeight, int value)
+    static void squareToMap(int startX, int endX, int startY, int endY, int *map, int mapWidth, int mapHeight, int value)
     {
         for (int i = startX; i <= endX; i++)
         {
@@ -67,7 +67,7 @@ public:
         }
     }
 
-    static void boxToMap(int startX, int endX, int startY, int endY, int *map, int mapWidht, int mapHeight, int value)
+    static void boxToMap(int startX, int endX, int startY, int endY, int *map, int mapWidth, int mapHeight, int value)
     {
         for (int i = startX; i <= endX; i++)
         {
