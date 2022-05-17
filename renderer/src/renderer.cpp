@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cmath>
 
-pickle::renderer::Renderer::Renderer(SDL_Renderer *renderer, int width, int height) : renderer(renderer), width(width), height(height), depth(500)
+pickle::renderer::Renderer::Renderer(SDL_Renderer *renderer, int width, int height) : renderer(renderer), width(width), height(height), depth(256)
 {
     buffer = new Color[width * height];
     zBuffer = new int[width * height];
@@ -27,9 +27,9 @@ void pickle::renderer::Renderer::drawPoint(math::Vector<3, float> p, Color color
 {
     int x = static_cast<int>((p.data[0] + 1) / 2 * (width - 1));
     int y = static_cast<int>((-p.data[1] + 1) / 2 * (height - 1));
-    int z = static_cast<int>((p.data[2] + 1) / 2 * (depth - 1));
+    int z = static_cast<int>((-p.data[2] + 1) / 2 * (depth - 1));
 
-    if (x >= 0 && x < width && y >= 0 && y < height && zBuffer[x * width + y] > z)
+    if (x >= 0 && x < width && y >= 0 && y < height && z > 0 && z < depth && zBuffer[x * width + y] > z)
     {
         zBuffer[x * width + y] = z;
         buffer[x * width + y] = color;

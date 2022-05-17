@@ -52,12 +52,7 @@ int main(int argc, char *argv[])
     pickle::renderer::Model model("../resources/head.obj");
     pickle::renderer::Texture texture("../resources/diffuse.tga");
 
-    pickle::math::Matrix<4, 4, float> lookAtMat = pickle::math::lookAt(
-        pickle::math::Vector<3, float>({0.0, 0.0, -1.0}),
-        pickle::math::Vector<3, float>({0.0, 0.0, 0.0}),
-        pickle::math::Vector<3, float>({0.0, 1.0, 0.0}));
-    pickle::math::Matrix<4, 4, float> orthoMat = pickle::math::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 20.0f);
-    pickle::math::Matrix<4, 4, float> transformMat = orthoMat * lookAtMat * pickle::math::identity<4, float>();
+    pickle::math::Matrix<4, 4, float> transformMat = pickle::math::identity<4, float>();
 
     pickle::math::Vector<3, float> ligthDir({0.0f, 0.0f, -1.0f});
 
