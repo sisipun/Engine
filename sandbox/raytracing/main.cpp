@@ -1,5 +1,4 @@
-#include "geometry.h"
-#include "raytracing.h"
+#include <raytracing/renderer.h>
 
 int main(int argc, char *argv[])
 {
@@ -28,19 +27,16 @@ int main(int argc, char *argv[])
     SDL_Event *event = new SDL_Event();
 
     bool quit = false;
-    Raytracing raycasting;
 
-    std::vector<Sphere> spheres;
-    spheres.push_back(Sphere(Vec3f(-3, 0, -16), 2));
-    spheres.push_back(Sphere(Vec3f(-1.0, -1.5, -12), 2));
-    spheres.push_back(Sphere(Vec3f(7, 5, -18), 4));
+    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+    SDL_RenderClear(renderer);
+
+    // Render
+
+    SDL_RenderPresent(renderer);
 
     while (!quit)
     {
-        SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
-        SDL_RenderClear(renderer);
-        raycasting.render(renderer, Vec3f(0, 0, 0), spheres, width, height, fov);
-        SDL_RenderPresent(renderer);
         if (SDL_PollEvent(event) != 0)
         {
             if (event->type == SDL_QUIT)
