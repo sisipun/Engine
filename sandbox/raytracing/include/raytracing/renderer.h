@@ -12,17 +12,20 @@
 class Renderer
 {
 public:
-    Renderer(float screenWidth, float screenHeight);
+    Renderer(float screenWidth, float screenHeight, Color background);
 
-    void render(SDL_Renderer *renderer, const std::vector<std::unique_ptr<Shape> > &shapes);
+    void setViewport(float viewportWidth, float viewportHeight, float viewportDistance);
+
+    void render(SDL_Renderer *renderer, const std::vector<std::unique_ptr<Shape> > &shapes) const;
 
 private:
-    void viewport(float viewportWidth, float viewportHeight, float viewportDistance);
+    pickle::math::Vector<3, float> screenToViewport(float x, float y) const;
 
-    Color traceRay(pickle::math::Vector<3, float> origin, pickle::math::Vector<3, float> ray, float minDist, float maxDist);
+    Color traceRay(pickle::math::Vector<3, float> origin, pickle::math::Vector<3, float> ray, float minDist, float maxDist, const std::vector<std::unique_ptr<Shape> > &shapes) const;
 
-    void drawPoint(SDL_Renderer *renderer, float x, float y, Color color);
+    void drawPoint(SDL_Renderer *renderer, float x, float y, Color color) const;
 
+    Color background;
     float screenWidth;
     float screenHeight;
     float viewportWidth;

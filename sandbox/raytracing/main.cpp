@@ -28,8 +28,11 @@ int main(int argc, char *argv[])
     }
 
     std::vector<std::unique_ptr<Shape> > shapes;
-    shapes.push_back(std::make_unique<Sphere>(pickle::math::Vector<3, float>({0.0f, -1.0f, 3.0f}), 1.0f, Color{0xFF, 0x00, 0x00, 0xFF}));
-    Renderer renderer(width, height);
+    shapes.push_back(std::make_unique<Sphere>(pickle::math::Vector<3, float>({2.0f, 0.0f, 4.0f}), 1.0f, Color{0x00, 0x00, 0xFF, 0xFF}));
+    shapes.push_back(std::make_unique<Sphere>(pickle::math::Vector<3, float>({-2.0f, 0.0f, 4.0f}), 1.0f, Color{0x00, 0xFF, 0x00, 0xFF}));
+    shapes.push_back(std::make_unique<Sphere>(pickle::math::Vector<3, float>({0.0f, 1.0f, 3.0f}), 1.0f, Color{0xFF, 0x00, 0x00, 0xFF}));
+    Renderer renderer(width, height, {0xFF, 0xFF, 0xFF, 0xFF});
+    renderer.setViewport(1.0f, 1.0f, 1.0f);
 
     SDL_Event *event = new SDL_Event();
 

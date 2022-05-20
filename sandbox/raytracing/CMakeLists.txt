@@ -8,7 +8,7 @@ add_subdirectory(../../math ./build)
 
 add_library(Raytracing STATIC   
     include/raytracing/color.h
-    include/raytracing/shape.h
+    include/raytracing/shape.h src/shape.cpp
     include/raytracing/sphere.h src/sphere.cpp
     include/raytracing/renderer.h src/renderer.cpp
 )
