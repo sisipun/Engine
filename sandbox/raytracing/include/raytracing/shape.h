@@ -7,12 +7,20 @@
 class Shape
 {
 public:
-    Shape(Color color);
-    virtual ~Shape();
+    Shape(Color color) : color(color)
+    {
+    }
+
+    virtual ~Shape() = default;
 
     virtual pickle::math::Vector<2, float> intersect(pickle::math::Vector<3, float> origin, pickle::math::Vector<3, float> ray) const = 0;
 
-    Color getColor() const;
+    virtual pickle::math::Vector<3, float> getNormal(pickle::math::Vector<3, float> point) const = 0;
+
+    Color getColor() const
+    {
+        return color;
+    }
 
 private:
     Color color;

@@ -1,11 +1,6 @@
 #include <raytracing/sphere.h>
 
-#include <iostream>
 #include <cmath>
-
-Sphere::Sphere(pickle::math::Vector<3, float> center, float radius, Color color) : Shape(color), center(center), radius(radius)
-{
-}
 
 pickle::math::Vector<2, float> Sphere::intersect(pickle::math::Vector<3, float> origin, pickle::math::Vector<3, float> ray) const
 {
@@ -24,4 +19,9 @@ pickle::math::Vector<2, float> Sphere::intersect(pickle::math::Vector<3, float> 
 
     return pickle::math::Vector<2, float>({(-k2 - std::sqrt(descriminant)) / (2 * k1),
                                            (-k2 + std::sqrt(descriminant)) / (2 * k1)});
+}
+
+pickle::math::Vector<3, float> Sphere::getNormal(pickle::math::Vector<3, float> point) const
+{
+    return normalize(point - center);
 }
