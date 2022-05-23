@@ -7,7 +7,7 @@
 class Shape
 {
 public:
-    Shape(Color color) : color(color)
+    Shape(Color color, float shininess) : color(color), shininess(shininess)
     {
     }
 
@@ -22,8 +22,14 @@ public:
         return color;
     }
 
+    float getShininess() const
+    {
+        return shininess;
+    }
+
 private:
     Color color;
+    float shininess;
 };
 
 #endif

@@ -64,15 +64,15 @@ Color Renderer::traceRay(pickle::math::Vector<3, float> origin, pickle::math::Ve
     }
 
     pickle::math::Vector<3, float> point = origin + (ray * closestT);
-    return calculateLight(point, closestShape->getNormal(point), closestShape->getColor(), lights);
+    return calculateLight(point, closestShape->getNormal(point), origin, closestShape->getColor(), closestShape->getShininess(), lights);
 }
 
-Color Renderer::calculateLight(pickle::math::Vector<3, float> point, pickle::math::Vector<3, float> normal, Color color, const std::vector<std::unique_ptr<Light> > &lights) const
+Color Renderer::calculateLight(pickle::math::Vector<3, float> point, pickle::math::Vector<3, float> normal, pickle::math::Vector<3, float> view, Color color, float shininess, const std::vector<std::unique_ptr<Light> > &lights) const
 {
     float intensity = 0.0f;
     for (const std::unique_ptr<Light> &light : lights)
     {
-        intensity += light->getIntensity(point, normal);
+        intensity += light->getIntensity(point, normal, view, shininess);
     }
 
     return color * std::clamp(intensity, 0.0f, 1.0f);

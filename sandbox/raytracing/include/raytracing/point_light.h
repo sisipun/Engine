@@ -13,9 +13,16 @@ public:
     {
     }
 
-    virtual float getIntensity(pickle::math::Vector<3, float> point, pickle::math::Vector<3, float> normal) const override
+    virtual float getIntensity(pickle::math::Vector<3, float> point, pickle::math::Vector<3, float> normal, pickle::math::Vector<3, float> view, float shininess) const override
     {
-        return std::clamp(dot(-normalize(point - position), normal) * maxIntensity, 0.0f, 1.0f);
+        pickle::math::Vector<3, float> lightDirection = normalize(point - position);
+        float diffuse = std::clamp(dot(-lightDirection, normal) * maxIntensity, 0.0f, 1.0f);
+
+        pickle::math::Vector<3, float> viewDirection = normalize(point - view);
+        pickle::math::Vector<3, float> reflectDirection = reflect(lightDirection, normal);
+        float specular = maxIntensity * std::pow(std::clamp(dot(-viewDirection, reflectDirection), 0.0f, 1.0f), shininess);
+
+        return diffuse + specular;
     }
 
 private:
