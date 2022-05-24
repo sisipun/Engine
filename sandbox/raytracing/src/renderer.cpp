@@ -1,7 +1,7 @@
 #include <raytracing/renderer.h>
 
-#include <limits>
 #include <algorithm>
+#include <limits>
 
 Renderer::Renderer(float screenWidth, float screenHeight, Color background) : screenWidth(screenWidth), screenHeight(screenHeight), viewportWidth(screenWidth), viewportHeight(screenHeight), viewportDistance(1.0f), background(background)
 {
@@ -45,7 +45,7 @@ Color Renderer::traceRay(pickle::math::Vector<3, float> origin, pickle::math::Ve
 
     for (const std::unique_ptr<Shape> &shape : shapes)
     {
-        pickle::math::Vector<2, float> t = shape->intersect(origin, ray);
+        pickle::math::Vector<2, float> t = shape->intersect(origin, ray - origin);
         if (t.data[0] > minDist && t.data[0] < maxDist && t.data[0] < closestT)
         {
             closestT = t.data[0];
@@ -64,15 +64,15 @@ Color Renderer::traceRay(pickle::math::Vector<3, float> origin, pickle::math::Ve
     }
 
     pickle::math::Vector<3, float> point = origin + (ray * closestT);
-    return calculateLight(point, closestShape->getNormal(point), origin, closestShape->getColor(), closestShape->getShininess(), lights);
+    return calculateLight(point, closestShape->getNormal(point), origin, closestShape->getColor(), closestShape->getShininess(), shapes, lights);
 }
 
-Color Renderer::calculateLight(pickle::math::Vector<3, float> point, pickle::math::Vector<3, float> normal, pickle::math::Vector<3, float> view, Color color, float shininess, const std::vector<std::unique_ptr<Light> > &lights) const
+Color Renderer::calculateLight(pickle::math::Vector<3, float> point, pickle::math::Vector<3, float> normal, pickle::math::Vector<3, float> view, Color color, float shininess, const std::vector<std::unique_ptr<Shape> > &shapes, const std::vector<std::unique_ptr<Light> > &lights) const
 {
     float intensity = 0.0f;
     for (const std::unique_ptr<Light> &light : lights)
     {
-        intensity += light->getIntensity(point, normal, view, shininess);
+        intensity += light->getIntensity(point, normal, view, shininess, shapes);
     }
 
     return color * std::clamp(intensity, 0.0f, 1.0f);

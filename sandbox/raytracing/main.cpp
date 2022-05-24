@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     shapes.push_back(std::make_unique<Sphere>(pickle::math::Vector<3, float>({0.0f, -1.0f, 3.0f}), 1.0f, Color{0xFF, 0x00, 0x00, 0xFF}, 500.0f));
     shapes.push_back(std::make_unique<Sphere>(pickle::math::Vector<3, float>({-2.0f, 0.0f, 4.0f}), 1.0f, Color{0x00, 0xFF, 0x00, 0xFF}, 10.0f));
     shapes.push_back(std::make_unique<Sphere>(pickle::math::Vector<3, float>({2.0f, 0.0f, 4.0f}), 1.0f, Color{0x00, 0x00, 0xFF, 0xFF}, 500.0f));
-    shapes.push_back(std::make_unique<Sphere>(pickle::math::Vector<3, float>({0.0f, -5001.0f, 3.0f}), 5000.0f, Color{0xFF, 0xFF, 0x00, 0xFF}, 1000.0f));
+    shapes.push_back(std::make_unique<Sphere>(pickle::math::Vector<3, float>({0.0f, -5001.0f, 0.0f}), 5000.0f, Color{0xFF, 0xFF, 0x00, 0xFF}, 1000.0f));
     std::vector<std::unique_ptr<Light> > lights;
     lights.push_back(std::make_unique<AmbientLight>(0.2));
     lights.push_back(std::make_unique<PointLight>(0.6, pickle::math::Vector<3, float>({2.0, 1.0, 0.0})));

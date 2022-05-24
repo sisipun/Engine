@@ -39,6 +39,7 @@ private:
         pickle::math::Vector<3, float> view,
         Color color,
         float shininess,
+        const std::vector<std::unique_ptr<Shape> > &shapes,
         const std::vector<std::unique_ptr<Light> > &lights) const;
 
     void drawPoint(SDL_Renderer *renderer, float x, float y, Color color) const;

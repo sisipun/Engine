@@ -12,7 +12,7 @@ public:
     {
     }
 
-    virtual float getIntensity(pickle::math::Vector<3, float> point, pickle::math::Vector<3, float> normal, pickle::math::Vector<3, float> view, float shininess) const override
+    virtual float getIntensity(pickle::math::Vector<3, float> point, pickle::math::Vector<3, float> normal, pickle::math::Vector<3, float> view, float shininess, const std::vector<std::unique_ptr<Shape> > &shapes) const override
     {
         return maxIntensity;
     }
