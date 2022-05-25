@@ -4,11 +4,10 @@
 
 pickle::math::Vector<2, float> Sphere::intersect(pickle::math::Vector<3, float> origin, pickle::math::Vector<3, float> ray) const
 {
-    pickle::math::Vector<3, float> rayDirection = ray;
     pickle::math::Vector<3, float> originToCenter = origin - center;
 
-    float k1 = dot(rayDirection, rayDirection);
-    float k2 = 2.0f * dot(rayDirection, originToCenter);
+    float k1 = dot(ray, ray);
+    float k2 = 2.0f * dot(ray, originToCenter);
     float k3 = dot(originToCenter, originToCenter) - radius * radius;
 
     float descriminant = k2 * k2 - 4 * k1 * k3;

@@ -13,7 +13,7 @@
 class Renderer
 {
 public:
-    Renderer(float screenWidth, float screenHeight, Color background);
+    Renderer(float screenWidth, float screenHeight, Color background, int maxDepth);
     Renderer(const Renderer &renderer) = delete;
     Renderer &operator=(const Renderer &renderer) = delete;
 
@@ -30,6 +30,7 @@ private:
                    pickle::math::Vector<3, float> ray,
                    float minDist,
                    float maxDist,
+                   int depth,
                    const std::vector<std::unique_ptr<Shape> > &shapes,
                    const std::vector<std::unique_ptr<Light> > &lights) const;
 
@@ -50,6 +51,7 @@ private:
     float viewportWidth;
     float viewportHeight;
     float viewportDistance;
+    int maxDepth;
 };
 
 #endif

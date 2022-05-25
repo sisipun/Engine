@@ -8,7 +8,7 @@
 class Sphere : public Shape
 {
 public:
-    Sphere(pickle::math::Vector<3, float> center, float radius, Color color, float shininess) : Shape(color, shininess), center(center), radius(radius)
+    Sphere(pickle::math::Vector<3, float> center, float radius, Color color, float shininess, float reflective) : Shape(color, shininess, reflective), center(center), radius(radius)
     {
     }
 

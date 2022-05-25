@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <limits>
 
-Renderer::Renderer(float screenWidth, float screenHeight, Color background) : screenWidth(screenWidth), screenHeight(screenHeight), viewportWidth(screenWidth), viewportHeight(screenHeight), viewportDistance(1.0f), background(background)
+Renderer::Renderer(float screenWidth, float screenHeight, Color background, int maxDepth) : screenWidth(screenWidth), screenHeight(screenHeight), viewportWidth(screenWidth), viewportHeight(screenHeight), viewportDistance(1.0f), background(background), maxDepth(maxDepth)
 {
 }
 
@@ -15,7 +15,7 @@ void Renderer::render(SDL_Renderer *renderer, const std::vector<std::unique_ptr<
         for (float y = -screenHeight / 2; y < screenHeight / 2; y++)
         {
             pickle::math::Vector<3, float> ray = screenToViewport(x, y);
-            Color color = traceRay(origin, ray, 1.0f, std::numeric_limits<float>::max(), shapes, lights);
+            Color color = traceRay(origin, ray, 1.0f, std::numeric_limits<float>::max(), maxDepth, shapes, lights);
             drawPoint(renderer, x, y, color);
         }
     }
@@ -33,7 +33,7 @@ pickle::math::Vector<3, float> Renderer::screenToViewport(float x, float y) cons
     return pickle::math::Vector<3, float>({x * viewportWidth / screenWidth, y * viewportHeight / screenHeight, viewportDistance});
 }
 
-Color Renderer::traceRay(pickle::math::Vector<3, float> origin, pickle::math::Vector<3, float> ray, float minDist, float maxDist, const std::vector<std::unique_ptr<Shape> > &shapes, const std::vector<std::unique_ptr<Light> > &lights) const
+Color Renderer::traceRay(pickle::math::Vector<3, float> origin, pickle::math::Vector<3, float> ray, float minDist, float maxDist, int depth, const std::vector<std::unique_ptr<Shape> > &shapes, const std::vector<std::unique_ptr<Light> > &lights) const
 {
     if (shapes.empty())
     {
@@ -45,7 +45,7 @@ Color Renderer::traceRay(pickle::math::Vector<3, float> origin, pickle::math::Ve
 
     for (const std::unique_ptr<Shape> &shape : shapes)
     {
-        pickle::math::Vector<2, float> t = shape->intersect(origin, ray - origin);
+        pickle::math::Vector<2, float> t = shape->intersect(origin, ray);
         if (t.data[0] > minDist && t.data[0] < maxDist && t.data[0] < closestT)
         {
             closestT = t.data[0];
@@ -64,7 +64,17 @@ Color Renderer::traceRay(pickle::math::Vector<3, float> origin, pickle::math::Ve
     }
 
     pickle::math::Vector<3, float> point = origin + (ray * closestT);
-    return calculateLight(point, closestShape->getNormal(point), origin, closestShape->getColor(), closestShape->getShininess(), shapes, lights);
+    pickle::math::Vector<3, float> normal = closestShape->getNormal(point);
+    Color localColor = calculateLight(point, normal, origin, closestShape->getColor(), closestShape->getShininess(), shapes, lights);
+
+    float reflective = closestShape->getReflective();
+    if (depth <= 0 || reflective <= 0.0f)
+    {
+        return localColor;
+    }
+
+    Color reflectColor = traceRay(point, reflect(ray, normal), 0.1f, maxDist, depth - 1, shapes, lights);
+    return localColor * (1 - reflective) + reflectColor * reflective;
 }
 
 Color Renderer::calculateLight(pickle::math::Vector<3, float> point, pickle::math::Vector<3, float> normal, pickle::math::Vector<3, float> view, Color color, float shininess, const std::vector<std::unique_ptr<Shape> > &shapes, const std::vector<std::unique_ptr<Light> > &lights) const

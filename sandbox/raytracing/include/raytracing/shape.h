@@ -1,13 +1,16 @@
 #ifndef RAYTRACING_SHAPE_H
 #define RAYTRACING_SHAPE_H
 
+#include <algorithm>
+
 #include <pickle/math.h>
+
 #include "color.h"
 
 class Shape
 {
 public:
-    Shape(Color color, float shininess) : color(color), shininess(shininess)
+    Shape(Color color, float shininess, float reflective) : color(color), shininess(shininess), reflective(std::clamp(reflective, 0.0f, 1.0f))
     {
     }
 
@@ -27,9 +30,15 @@ public:
         return shininess;
     }
 
+    float getReflective() const
+    {
+        return reflective;
+    }
+
 private:
     Color color;
     float shininess;
+    float reflective;
 };
 
 #endif
