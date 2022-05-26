@@ -9,6 +9,7 @@
 #include "shape.h"
 #include "light.h"
 #include "color.h"
+#include "camera.h"
 
 class Renderer
 {
@@ -21,7 +22,8 @@ public:
 
     void render(SDL_Renderer *renderer,
                 const std::vector<std::unique_ptr<Shape> > &shapes,
-                const std::vector<std::unique_ptr<Light> > &lights) const;
+                const std::vector<std::unique_ptr<Light> > &lights,
+                const Camera &camera) const;
 
 private:
     pickle::math::Vector<3, float> screenToViewport(float x, float y) const;

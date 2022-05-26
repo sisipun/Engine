@@ -1,9 +1,12 @@
 #include <memory>
 
+#include <pickle/math.h>
+
 #include <raytracing/sphere.h>
 #include <raytracing/point_light.h>
 #include <raytracing/direct_light.h>
 #include <raytracing/ambient_light.h>
+#include <raytracing/camera.h>
 #include <raytracing/renderer.h>
 
 int main(int argc, char *argv[])
@@ -40,6 +43,8 @@ int main(int argc, char *argv[])
     lights.push_back(std::make_unique<PointLight>(0.6, pickle::math::Vector<3, float>({2.0, 1.0, 0.0})));
     lights.push_back(std::make_unique<DirectLight>(0.2, pickle::math::Vector<3, float>({-1.0, -4.0, -4.0})));
 
+    Camera camera(pickle::math::Vector<3, float>({3.0f, 0.0f, 1.0f}), pickle::math::rotate<float>(pickle::math::identity<4, float>(), -3.14f / 4.0f, pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f})));
+
     Renderer renderer(width, height, {0x00, 0x00, 0x00, 0x00}, 3);
     renderer.setViewport(1.0f, 1.0f, 1.0f);
 
@@ -51,7 +56,7 @@ int main(int argc, char *argv[])
     SDL_RenderClear(sdlRenderer);
 
     // Render
-    renderer.render(sdlRenderer, shapes, lights);
+    renderer.render(sdlRenderer, shapes, lights, camera);
 
     SDL_RenderPresent(sdlRenderer);
 
