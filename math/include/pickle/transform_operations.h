@@ -2,6 +2,7 @@
 #define PICKLE_MATH_COMMON_OPERATIONS
 
 #include <cmath>
+#include <numbers>
 
 #include "vector.h"
 #include "vector_operations.h"
@@ -11,6 +12,12 @@ namespace pickle
 {
     namespace math
     {
+        template <typename T>
+        T radians(const T degrees)
+        {
+            return static_cast<T>((std::numbers::pi / 180.0) * degrees);
+        }
+
         template <typename T>
         Matrix<4, 4, T> translate(const Matrix<4, 4, T> &base, const Vector<3, T> &translation)
         {
@@ -30,7 +37,7 @@ namespace pickle
         }
 
         template <typename T>
-        Matrix<4, 4, T> rotate(const Matrix<4, 4, T> &base, T angle, const Vector<3, T> &axis)
+        Matrix<4, 4, T> rotate(const Matrix<4, 4, T> &base, const T angle, const Vector<3, T> &axis)
         {
             T x = axis.data[0];
             T y = axis.data[1];

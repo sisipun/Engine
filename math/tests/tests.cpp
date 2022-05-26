@@ -8,9 +8,10 @@
 
 using namespace pickle::math;
 
-float roundTwoDigets(float value)
+template <typename T>
+T roundTwoDigets(T value)
 {
-    return round(value * 100) / 100.0f;
+    return static_cast<T>(round(value * 100.0) / 100.0);
 }
 
 TEST_CASE("Vector Copy", "[vector]")
@@ -402,4 +403,13 @@ TEST_CASE("Combine transformations", "[matrix][vector][transformation]")
     REQUIRE(combine.data[13] == 0.0f);
     REQUIRE(combine.data[14] == 0.0f);
     REQUIRE(combine.data[15] == 1.0f);
+}
+
+TEST_CASE("Convert To Radians", "[angle][transformation]")
+{
+    REQUIRE(roundTwoDigets(radians(180.0)) == 3.14);
+    REQUIRE(roundTwoDigets(radians(360.0f)) == 6.28f);
+    REQUIRE(roundTwoDigets(radians(30.0)) == 0.52);
+    REQUIRE(roundTwoDigets(radians(-30.0f)) == -0.52f);
+    REQUIRE(roundTwoDigets(radians(-180.0)) == -3.14);
 }

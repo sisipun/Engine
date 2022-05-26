@@ -97,6 +97,16 @@ namespace pickle
                 return div;
             }
 
+            Vector<D - 1, T> cutDimension()
+            {
+                Vector<D - 1, T> cutted;
+                for (size_t i = 0; i < D - 1; i++)
+                {
+                    cutted.data[i] = data[i];
+                }
+                return cutted;
+            }
+
         public:
             T data[D];
         };
