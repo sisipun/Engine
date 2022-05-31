@@ -22,10 +22,11 @@ void drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, int> start, pickle
         std::swap(start, end);
     }
     float a = float(end.data[1] - start.data[1]) / float(end.data[0] - start.data[0]);
-    float b = start.data[0] - a * start.data[1];
+    float b = start.data[1] - a * start.data[0];
+    float y = start.data[1];
     for (int x = start.data[0]; x < end.data[0]; x++)
     {
-        int y = a * x + b;
+        y += a;
         if (swapped)
         {
             drawPoint(renderer, y, x);
@@ -35,6 +36,13 @@ void drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, int> start, pickle
             drawPoint(renderer, x, y);
         }
     }
+}
+
+void drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<2, int> p1, pickle::math::Vector<2, int> p2, pickle::math::Vector<2, int> p3)
+{
+    drawLine(renderer, p1, p2);
+    drawLine(renderer, p2, p3);
+    drawLine(renderer, p3, p1);
 }
 
 int main(int argc, char *argv[])
@@ -73,6 +81,7 @@ int main(int argc, char *argv[])
     drawLine(sdlRenderer, pickle::math::Vector<2, int>({400, 300}), pickle::math::Vector<2, int>({200, 200}));
     drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 500}), pickle::math::Vector<2, int>({500, 500}));
     drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 100}), pickle::math::Vector<2, int>({100, 500}));
+    drawTriangle(sdlRenderer, pickle::math::Vector<2, int>({200, 400}), pickle::math::Vector<2, int>({300, 200}), pickle::math::Vector<2, int>({400, 400}));
 
     SDL_RenderPresent(sdlRenderer);
 
