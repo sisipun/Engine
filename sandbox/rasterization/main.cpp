@@ -1,5 +1,8 @@
 #include <SDL.h>
+
 #include <pickle/math.h>
+
+#include <rasterization/renderer.h>
 
 void drawPoint(SDL_Renderer *renderer, int x, int y)
 {
@@ -73,15 +76,17 @@ int main(int argc, char *argv[])
 
     bool quit = false;
 
+    Renderer renderer(width, height);
+
     SDL_SetRenderDrawColor(sdlRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sdlRenderer);
 
     // Render
-    drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 100}), pickle::math::Vector<2, int>({500, 500}));
-    drawLine(sdlRenderer, pickle::math::Vector<2, int>({400, 300}), pickle::math::Vector<2, int>({200, 200}));
-    drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 500}), pickle::math::Vector<2, int>({500, 500}));
-    drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 100}), pickle::math::Vector<2, int>({100, 500}));
-    drawTriangle(sdlRenderer, pickle::math::Vector<2, int>({200, 400}), pickle::math::Vector<2, int>({300, 200}), pickle::math::Vector<2, int>({400, 400}));
+    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 100}), pickle::math::Vector<2, int>({500, 500}), {0xFF, 0xFF, 0xFF, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, int>({400, 300}), pickle::math::Vector<2, int>({200, 200}), {0xFF, 0xFF, 0xFF, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 500}), pickle::math::Vector<2, int>({500, 500}), {0xFF, 0xFF, 0xFF, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 100}), pickle::math::Vector<2, int>({100, 500}), {0xFF, 0x00, 0x00, 0xFF});
+    renderer.drawTriangle(sdlRenderer, pickle::math::Vector<2, int>({200, 400}), pickle::math::Vector<2, int>({300, 200}), pickle::math::Vector<2, int>({400, 400}), {0x00, 0x00, 0xFF, 0xFF});
 
     SDL_RenderPresent(sdlRenderer);
 
