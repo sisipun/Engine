@@ -43,9 +43,9 @@ int main(int argc, char *argv[])
     lights.push_back(std::make_unique<PointLight>(0.6, pickle::math::Vector<3, float>({2.0, 1.0, 0.0})));
     lights.push_back(std::make_unique<DirectLight>(0.2, pickle::math::Vector<3, float>({-1.0, -4.0, -4.0})));
 
-    Camera camera(pickle::math::Vector<3, float>({3.0f, 0.0f, 1.0f}), pickle::math::rotate<float>(pickle::math::identity<4, float>(), -3.14f / 4.0f, pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f})));
+    Camera camera(pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}), pickle::math::rotate<float>(pickle::math::identity<4, float>(), 0.0f, pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f})));
 
-    Renderer renderer(width, height, {0x00, 0x00, 0x00, 0x00}, 3);
+    Renderer renderer(width, height, {0x00, 0x00, 0x00, 0x00}, 5);
     renderer.setViewport(1.0f, 1.0f, 1.0f);
 
     SDL_Event *event = new SDL_Event();
