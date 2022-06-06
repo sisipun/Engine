@@ -24,12 +24,11 @@ void Renderer::drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, int> sta
     {
         std::swap(start, end);
     }
-    float a = float(end.data[1] - start.data[1]) / float(end.data[0] - start.data[0]);
-    float b = start.data[1] - a * start.data[0];
-    float y = start.data[1];
+
+    std::vector<int> sequence = interpolate(start.data[0], start.data[1], end.data[0], end.data[1]);
     for (int x = start.data[0]; x < end.data[0]; x++)
     {
-        y += a;
+        int y = sequence[x - start.data[0]];
         if (swapped)
         {
             drawPoint(renderer, y, x, color);
@@ -43,7 +42,55 @@ void Renderer::drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, int> sta
 
 void Renderer::drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<2, int> p1, pickle::math::Vector<2, int> p2, pickle::math::Vector<2, int> p3, Color color)
 {
-    drawLine(renderer, p1, p2, color);
-    drawLine(renderer, p2, p3, color);
-    drawLine(renderer, p3, p1, color);
+    if (p1.data[1] < p2.data[1])
+    {
+        std::swap(p1, p2);
+    }
+    if (p1.data[1] < p3.data[1])
+    {
+        std::swap(p1, p3);
+    }
+    if (p2.data[1] < p3.data[1])
+    {
+        std::swap(p2, p3);
+    }
+
+    std::vector<int> longSide = interpolate(p3.data[1], p3.data[0], p1.data[1], p1.data[0]);
+    std::vector<int> topSide = interpolate(p2.data[1], p2.data[0], p1.data[1], p1.data[0]);
+    std::vector<int> bottomSide = interpolate(p3.data[1], p3.data[0], p2.data[1], p2.data[0]);
+
+    for (int y = p3.data[1]; y < p1.data[1]; y++)
+    {
+        int index = y - p3.data[1];
+        pickle::math::Vector<2, int> leftSide({longSide[index], y});
+        pickle::math::Vector<2, int> rightSide({y < topSide.size() ? topSide[index] : bottomSide[index - topSide.size() + 1], y});
+        drawLine(renderer, leftSide, rightSide, color);
+    }
+}
+
+std::vector<int> Renderer::interpolate(int x1, int y1, int x2, int y2)
+{
+    std::vector<int> values;
+    if (x1 == x2)
+    {
+        values.push_back(y1);
+        return values;
+    }
+    if (x1 > x2)
+    {
+        std::swap(x1, x2);
+        std::swap(y1, y2);
+    }
+
+    float a = float(y2 - y1) / float(x2 - x1);
+    float b = y1 - a * x1;
+    float y = y1;
+
+    for (int x = x1; x < x2; x++)
+    {
+        y += a;
+        values.push_back(y);
+    }
+
+    return values;
 }
