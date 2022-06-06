@@ -97,6 +97,24 @@ namespace pickle
                 return div;
             }
 
+            bool operator==(Vector<D, T> vector)
+            {
+                for (size_t i = 0; i < D; i++)
+                {
+                    if (data[i] != vector.data[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            bool operator!=(Vector<D, T> vector)
+            {
+                return !(*this == vector);
+            }
+
             Vector<D - 1, T> cutDimension()
             {
                 Vector<D - 1, T> cutted;
