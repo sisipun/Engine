@@ -62,9 +62,20 @@ void Renderer::drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<2, int>
     for (int y = p3.data[1]; y < p1.data[1]; y++)
     {
         int index = y - p3.data[1];
-        pickle::math::Vector<2, int> leftSide({longSide[index], y});
-        pickle::math::Vector<2, int> rightSide({y < topSide.size() ? topSide[index] : bottomSide[index - topSide.size() + 1], y});
-        drawLine(renderer, leftSide, rightSide, color);
+        int leftX = longSide[index];
+        int rightX = y < topSide.size() 
+            ? topSide[index] 
+            : bottomSide[index - topSide.size() + 1];
+        
+        if (leftX > rightX)
+        {
+            std::swap(leftX, rightX);
+        }
+
+        for (int x = leftX; x < rightX; x++) 
+        {
+            drawPoint(renderer, x, y, color);
+        }
     }
 }
 
