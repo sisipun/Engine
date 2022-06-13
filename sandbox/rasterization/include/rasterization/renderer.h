@@ -1,7 +1,7 @@
 #ifndef RASTERIZATION_RENDERER_H
 #define RASTERIZATION_RENDERER_H
 
-#include <vector>
+#include <unordered_map>
 #include <SDL.h>
 
 #include <pickle/math.h>
@@ -13,18 +13,20 @@ class Renderer
 public:
     Renderer(float width, float height);
 
-    void drawPoint(SDL_Renderer *renderer, int x, int y, Color color);
+    void drawPoint(SDL_Renderer *renderer, float x, float y, Color color);
 
-    void drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, int> start, pickle::math::Vector<2, int> end, Color color);
+    void drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, float> start, pickle::math::Vector<2, float> end, Color color);
 
-    void drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<2, int> p1, pickle::math::Vector<2, int> p2, pickle::math::Vector<2, int> p3, Color color);
+    void drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<2, float> p1, float h1, pickle::math::Vector<2, float> p2, float h2, pickle::math::Vector<2, float> p3, float h3, Color color);
 
 private:
-    std::vector<int> interpolate(int x1, int y1, int x2, int y2);
+    std::unordered_map<float, float> interpolate(float x1, float y1, float x2, float y2);
 
 private:
     float width;
     float height;
+    float widthStep;
+    float heightStep;
 };
 
 #endif

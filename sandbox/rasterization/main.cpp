@@ -38,11 +38,11 @@ int main(int argc, char *argv[])
     SDL_RenderClear(sdlRenderer);
 
     // Render
-    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 100}), pickle::math::Vector<2, int>({500, 500}), {0xFF, 0xFF, 0xFF, 0xFF});
-    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, int>({400, 300}), pickle::math::Vector<2, int>({200, 200}), {0xFF, 0xFF, 0xFF, 0xFF});
-    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 500}), pickle::math::Vector<2, int>({500, 500}), {0xFF, 0xFF, 0xFF, 0xFF});
-    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, int>({100, 100}), pickle::math::Vector<2, int>({100, 500}), {0xFF, 0x00, 0x00, 0xFF});
-    renderer.drawTriangle(sdlRenderer, pickle::math::Vector<2, int>({200, 400}), pickle::math::Vector<2, int>({300, 200}), pickle::math::Vector<2, int>({400, 400}), {0x00, 0x00, 0xFF, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, float>({-0.65f, -0.65f}), pickle::math::Vector<2, float>({0.65, 0.65}), {0xFF, 0xFF, 0xFF, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, float>({0.35f, 0.0f}), pickle::math::Vector<2, float>({-0.35, -0.35}), {0xFF, 0xFF, 0xFF, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, float>({-0.65, 0.65}), pickle::math::Vector<2, float>({0.65, 0.65}), {0xFF, 0xFF, 0xFF, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, float>({-0.65, -0.65}), pickle::math::Vector<2, float>({-0.65, 0.65}), {0xFF, 0x00, 0x00, 0xFF});
+    renderer.drawTriangle(sdlRenderer, pickle::math::Vector<2, float>({-0.35, 0.35}), 1.0f, pickle::math::Vector<2, float>({0.0, -0.35}), 0.0f, pickle::math::Vector<2, float>({0.35, 0.35}), 0.2f, {0x00, 0x00, 0xFF, 0xFF});
 
     SDL_RenderPresent(sdlRenderer);
 
