@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void pickle::Logger::log(std::string text)
+void pickle::Logger::log(const char* text)
 {
     std::cout << text << std::endl;
 }

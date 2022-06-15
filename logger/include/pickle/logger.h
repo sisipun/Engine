@@ -8,7 +8,7 @@ namespace pickle
     class Logger
     {
     public:
-        static void log(std::string text);
+        static void log(const char* text);
     };
 }
 

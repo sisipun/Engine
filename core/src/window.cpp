@@ -1,17 +1,15 @@
 #include <pickle/window.h>
 
-#include <iostream>
-
 #include <SDL.h>
 
 #include <pickle/opengl_renderer.h>
+#include <pickle/logger.h>
 
 pickle::Window::Window(int width, int height)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        // Todo use logger
-        std::cout << "Can't load SDL module" << std::endl;
+        Logger::log("Can't load SDL module");
     }
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -21,8 +19,7 @@ pickle::Window::Window(int width, int height)
     SDL_Window *window = SDL_CreateWindow("OpenGL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
     if (window == nullptr)
     {
-        // Todo use logger
-        std::cout << "Can't create window" << std::endl;
+        Logger::log("Can't create window");
     }
 
     renderer = std::make_unique<pickle::renderer::OpenGLRenderer>(window);

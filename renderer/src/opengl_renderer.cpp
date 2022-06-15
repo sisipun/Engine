@@ -1,16 +1,15 @@
 #include <pickle/opengl_renderer.h>
 
-#include <iostream>
-
 #include <glad/glad.h>
+
+#include <pickle/logger.h>
 
 pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window)
 {
     context = SDL_GL_CreateContext(window);
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {
-        // Todo use logger
-        std::cout << "Can't load glad module" << std::endl;
+        Logger::log("Can't load glad module");
     }
 }
 
@@ -21,6 +20,5 @@ pickle::renderer::OpenGLRenderer::~OpenGLRenderer()
 
 void pickle::renderer::OpenGLRenderer::render() const
 {
-    // Todo use logger
-    std::cout << "Render OpenGL" << std::endl;
+    Logger::log("Render OpenGL");
 }

@@ -1,8 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #define PI 3.14159265f
 
-#include <iostream>
-
 #include <catch2/catch.hpp>
 #include <pickle/math.h>
 

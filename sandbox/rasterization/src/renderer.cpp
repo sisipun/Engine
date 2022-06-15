@@ -4,7 +4,7 @@ Renderer::Renderer(float width, float height) : width(width), height(height), wi
 {
 }
 
-void Renderer::drawPoint(SDL_Renderer *renderer, float x, float y, Color color)
+void Renderer::drawPoint(SDL_Renderer *renderer, pickle::math::Vector<3, float> p, Color color)
 {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_Rect rect = {

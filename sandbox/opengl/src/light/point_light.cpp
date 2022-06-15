@@ -1,7 +1,5 @@
 #include "point_light.h"
 
-#include <iostream>
-
 void PointLight::bind(Shader const &shader) const
 {
     Light::bind(shader);
