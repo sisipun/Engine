@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     }
 
     std::ifstream vertexShaderFile("../resource/shader.vert");
-    std::ifstream fragmentShaderFile("../resource/shader.frag");
+    std::ifstream fragmentShaderFile("../resource/star_sky.frag");
 
     if (!vertexShaderFile)
     {
@@ -143,6 +143,14 @@ int main(int argc, char *argv[])
     bool quit = false;
     SDL_Event event;
     int mouseX, mouseY;
+
+    std::vector<pickle::math::Vector<3, float>> stars;
+    for (int i = 0; i < 100; i++)
+    {
+        stars.push_back(pickle::math::Vector<3, float>({randomFloatNegative(), randomFloatNegative(), randomFloat()}));
+    }
+
+    float speed = 0.005f;
     while (!quit)
     {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -150,13 +158,27 @@ int main(int argc, char *argv[])
         SDL_GetMouseState(&mouseX, &mouseY);
 
         glUseProgram(shaderProgramId);
-
         int resolutionUniformId = glGetUniformLocation(shaderProgramId, "u_resolution");
         glUniform2f(resolutionUniformId, width, height);
         int timeUniformId = glGetUniformLocation(shaderProgramId, "u_time");
         glUniform1f(timeUniformId, SDL_GetTicks());
         int mouseUniformId = glGetUniformLocation(shaderProgramId, "u_mouse");
         glUniform2f(mouseUniformId, mouseX, mouseY);
+
+        for (int i = 0; i < stars.size(); i++)
+        {
+            pickle::math::Vector<3, float> &star = stars[i];
+            star.data[2] -= speed;
+            if (star.data[2] < 0.0f)
+            {
+                star.data[0] = randomFloatNegative();
+                star.data[1] = randomFloatNegative();
+                star.data[2] = 1.0f;
+            }
+
+            int starId = glGetUniformLocation(shaderProgramId, ("u_stars[" + std::to_string(i) + "]").c_str());
+            glUniform3f(starId, star.data[0], star.data[1], star.data[2]);
+        }
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
