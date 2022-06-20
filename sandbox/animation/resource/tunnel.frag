@@ -15,7 +15,8 @@ uniform vec2 u_mouse;
 uniform float u_time;
 uniform vec3 u_circles[TUNNEL_SIZE];
 
-void main() {
+void main() 
+{
 	vec4 color = vec4(0.0f);
 
 	for (int i = 0; i < TUNNEL_SIZE; i++)

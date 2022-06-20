@@ -12,7 +12,8 @@ uniform vec2 u_mouse;
 uniform float u_time;
 uniform vec3 u_stars[STARS_COUNT];
 
-void main() {
+void main() 
+{
 	fragColor = vec4(0.0f);
 
 	for (int i = 0; i < STARS_COUNT; i++)

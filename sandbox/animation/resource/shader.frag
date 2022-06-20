@@ -8,6 +8,7 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
 
-void main() {
+void main() 
+{
 	fragColor = vec4(0.0f);
 }
