@@ -40,17 +40,17 @@ void main() {
     vec2 i = floor(st * 3.0);
 	vec2 f = fract(st);
     
-	float n = noise(st * (10.0 + 5.0 * random(i.x)));
+	float n = noise(st * (10.0 + 5.0 * random(i.x + 1.0f)));
     
     vec3 leftColor = mix(vec3(1.0, 0.0, 0.0), vec3(0.6, 0.0, 0.0), n);
     vec3 middleColor = mix(vec3(0.6, 0.0, 0.0), vec3(0.4,0.0,0.0), n);
     vec3 rightColor = mix(vec3(0.840,0.818,0.525), vec3(0.625,0.609,0.391), n);
     vec3 backgroundColor = mix(vec3(0.510,0.284,0.160), vec3(0.490,0.205,0.134), noise(st * 20.0));
     
-    float offsetValue = (noise(st * (20.0 + 5.0 * random(i.x))) - 0.5) * 0.02;
+    float offsetValue = (noise(st * (20.0 + 5.0 * random(i.x + 1.0f) * sin(u_time / 3600.0f))) - 0.5) * 0.02;
     
-    vec3 leftArt = step(0.03 + offsetValue, st.y) * step(st.y + offsetValue, 0.97) * step(0.03 + offsetValue, st.x) * step(st.x + offsetValue, 0.32) * leftColor;
-    vec3 middleArt = step(0.02 + offsetValue, st.y) * step(st.y + offsetValue, 0.98) * step(0.34 + offsetValue, st.x) * step(st.x, 0.65 + offsetValue) * middleColor;
+    vec3 leftArt = step(0.03 + offsetValue, st.y) * step(st.y + offsetValue, 0.97) * step(0.03 + offsetValue, st.x) * step(st.x + offsetValue, 0.31) * leftColor;
+    vec3 middleArt = step(0.02 + offsetValue, st.y) * step(st.y + offsetValue, 0.98) * step(0.35 + offsetValue, st.x) * step(st.x, 0.65 + offsetValue) * middleColor;
     vec3 rightArt = step(0.05 + offsetValue, st.y) * step(st.y, 0.94 + offsetValue) * step(0.68 + offsetValue, st.x) * step(st.x + offsetValue, 0.98) * rightColor;
     
     vec3 completeArt = leftArt + middleArt + rightArt;

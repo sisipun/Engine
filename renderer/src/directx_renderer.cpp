@@ -4,7 +4,7 @@
 
 pickle::renderer::DirectXRenderer::DirectXRenderer()
 {
-    Logger::log("Init DirectX");
+    LOG_INFO("Init DirectX");
 }
 
 pickle::renderer::DirectXRenderer::~DirectXRenderer()
@@ -13,5 +13,5 @@ pickle::renderer::DirectXRenderer::~DirectXRenderer()
 
 void pickle::renderer::DirectXRenderer::render() const
 {
-    Logger::log("Render DirectX");
+    LOG_INFO("Render DirectX");
 }
