@@ -49,6 +49,24 @@ namespace pickle
                                            (1 - cosAngle) * x * z - sinAngle * y, (1 - cosAngle) * y * z + sinAngle * x, cosAngle + (1 - cosAngle) * z * z, 0,
                                            0, 0, 0, 1});
         }
+
+        template <typename T>
+        Matrix<4, 4, T> ortho(T xMin, T xMax, T yMin, T yMax, T zMin, T zMax)
+        {
+            return Matrix<4, 4, T>({2.0f / (xMax - xMin), 0.0f, 0.0f, -(xMax + xMin) / (xMax - xMin),
+                                    0.0f, 2.0f / (yMax - yMin), 0.0f, -(yMax + yMin) / (yMax - yMin),
+                                    0.0f, 0.0f, -2.0f / (zMax - zMin), -(zMax + zMin) / (zMax - zMin),
+                                    0.0f, 0.0f, 0.0f, 1.0f});
+        }
+
+        template <typename T>
+        Matrix<4, 4, T> perspective(float fov, float aspect, T near, T far)
+        {
+            return Matrix<4, 4, T>({1.0f / (aspect * tan(fov / 2.0f)), 0.0f, 0.0f, 0.0f,
+                                    0.0f, 1.0f / tan(fov / 2.0f), 0.0f, 0.0f,
+                                    0.0f, 0.0f, -(far + near) / (far - near), -2.0f * far * near / (far - near),
+                                    0.0f, 0.0f, -1.0f, 0.0f});
+        }
     }
 }
 #endif
