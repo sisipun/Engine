@@ -9,7 +9,7 @@ pickle::Window::Window(int width, int height)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        Logger::log("Can't load SDL module");
+        LOG_ERROR("Can't load SDL module");
     }
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -19,7 +19,7 @@ pickle::Window::Window(int width, int height)
     SDL_Window *window = SDL_CreateWindow("OpenGL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
     if (window == nullptr)
     {
-        Logger::log("Can't create window");
+        LOG_ERROR("Can't create window");
     }
 
     renderer = std::make_unique<pickle::renderer::OpenGLRenderer>(window);

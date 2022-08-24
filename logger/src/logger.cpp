@@ -2,7 +2,10 @@
 
 #include <iostream>
 
-void pickle::Logger::log(const char* text)
+#include <pickle/text_modifier.h>
+
+void pickle::logger::Logger::log(TextModifier modifier, const char* text)
 {
-    std::cout << text << std::endl;
+    TextModifier defaultModifier(TextColor::FG_DEFAULT);
+    std::cout << modifier << text << defaultModifier << std::endl;
 }

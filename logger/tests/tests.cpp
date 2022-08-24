@@ -2,5 +2,5 @@
 
 int main()
 {
-    pickle::Logger::log("Log is working");
+    LOG_INFO("Log is working");
 }

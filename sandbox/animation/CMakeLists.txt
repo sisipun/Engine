@@ -13,6 +13,6 @@ add_subdirectory(../../math ./mathBuild)
 add_subdirectory(lib/glad/)
 add_subdirectory(lib/stbimage/)
 
-add_executable(Animation fireball.cpp)
+add_executable(Animation art.cpp)
 
 target_link_libraries(Animation PickleMath GLAD STBIMAGE ${assimp_LIBRARIES} ${GLM_LIBRARIES} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_MIXER_LIBRARIES})

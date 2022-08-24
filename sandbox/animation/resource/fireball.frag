@@ -57,25 +57,32 @@ float noise( in vec2 val )
 }
 
 #define OCTAVES 8.0f
-#define FIRE_SPEED 0.003f
+
+vec3 fire(vec2 position, vec3 outherColor, vec3 middleColor, vec3 innerColor, float fireSpeed)
+{
+    float noiseValue = noise(position * OCTAVES + vec2(0.0f, u_time * -fireSpeed));
+    
+    float noiseDistributionY = clamp(position.y, 0.0f, 1.0f);
+    float noiseDistributionX = 0.1f;
+    vec2 noiseDistribution = noiseValue * vec2(noiseDistributionX, noiseDistributionY);
+
+    vec2 outherPoint = (position) + noiseDistribution;
+	vec2 middlePoint = (position + vec2(0.0f, 0.05f)) + noiseDistribution;
+	vec2 innerPoint = (position + vec2(0.0f, 0.1f)) + noiseDistribution;
+
+    float outherSphere = step(sdlSphere(outherPoint, 0.20f), 0.0f);
+	float middleSphere = step(sdlSphere(middlePoint, 0.10f), 0.0f);
+	float innerSphere = step(sdlSphere(innerPoint, 0.05f), 0.0f);
+
+    return outherSphere * outherColor + middleSphere * middleColor + innerSphere * innerColor;
+}
 
 void main() 
 {
 	vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-	float noise = noise(uv * OCTAVES + vec2(0.0f, u_time * -FIRE_SPEED));
-	float yGradient = clamp(uv.y - 0.3f, 0.0f, 1.0f);
-	vec2 noiseAmount = vec2(noise * 0.1f, noise * yGradient);
-	vec2 point1 = (uv - vec2(0.5f, 0.3f)) + noiseAmount;
-	vec2 point2 = (uv - vec2(0.5f, 0.25f)) + noiseAmount;
-	vec2 point3 = (uv - vec2(0.5f, 0.2f)) + noiseAmount;
-	
-	float sphere1 = step(sdlSphere(point1, 0.25f), 0.0f);
-	float sphere2 = step(sdlSphere(point2, 0.15f), 0.0f);
-	float sphere3 = step(sdlSphere(point3, 0.05f), 0.0f);
 
-	vec3 color1 = sphere1 * vec3(1.0f, 0.5f, 0.0f);
-	vec3 color2 = sphere2 * vec3(1.0f, 1.0f, 0.0f);
-	vec3 color3 = sphere3 * vec3(1.0f, 1.0f, 1.0f);
-
-	fragColor = vec4(color1 + color2 + color3, 0.0f);
+    vec3 fire1 = fire(uv - vec2(0.8f, 0.5f), vec3(1.0f, 0.5f, 0.0f), vec3(1.0f, 1.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f), 0.003f);
+    vec3 fire2 = fire(uv - vec2(0.2f, 0.5f), vec3(0.0f, 0.0f, 1.0f), vec3(0.0f, 0.5f, 1.0f), vec3(1.0f, 1.0f, 1.0f), 0.005f);
+    vec3 fire3 = fire(uv - vec2(0.5f, 0.2f), vec3(0.0f, 1.0f, 0.0f), vec3(1.0f, 1.0f, 0.5f), vec3(1.0f, 1.0f, 1.0f), 0.005f);
+	fragColor = vec4(fire1 + fire2 + fire3, 0.0f);
 }
