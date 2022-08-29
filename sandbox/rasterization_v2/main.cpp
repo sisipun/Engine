@@ -38,6 +38,10 @@ int main(int argc, char *argv[])
     SDL_RenderClear(sdlRenderer);
 
     // Render
+    renderer.drawLine(sdlRenderer, pickle::math::Vector({100.0f, 100.0f}), pickle::math::Vector({500.0f, 500.0f}), {0xFF, 0x00, 0x00, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector({100.0f, 300.0f}), pickle::math::Vector({500.0f, 300.0f}), {0x00, 0xFF, 0x00, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector({300.0f, 100.0f}), pickle::math::Vector({300.0f, 500.0f}), {0x00, 0x00, 0xFF, 0xFF});
+    renderer.drawLine(sdlRenderer, pickle::math::Vector({500.0f, 100.0f}), pickle::math::Vector({100.0f, 500.0f}), {0xFF, 0x00, 0xFF, 0xFF});
 
     SDL_RenderPresent(sdlRenderer);
 

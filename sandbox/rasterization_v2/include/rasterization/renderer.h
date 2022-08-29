@@ -1,7 +1,7 @@
 #ifndef RASTERIZATION_RENDERER_H
 #define RASTERIZATION_RENDERER_H
 
-#include <unordered_map>
+#include <vector>
 #include <SDL.h>
 
 #include <pickle/math.h>
@@ -18,7 +18,7 @@ public:
     void drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, float> start, pickle::math::Vector<2, float> end, Color color);
 
 private:
-    std::unordered_map<float, float> interpolate(float x1, float y1, float x2, float y2);
+    std::vector<pickle::math::Vector<2, float>> interpolate(pickle::math::Vector<2, float> start, pickle::math::Vector<2, float> end);
 
 private:
     float width;
