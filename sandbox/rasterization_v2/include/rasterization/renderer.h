@@ -17,8 +17,10 @@ public:
 
     void drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, float> start, pickle::math::Vector<2, float> end, Color color);
 
+    void drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<2, float> p1, pickle::math::Vector<2, float> p2, pickle::math::Vector<2, float> p3, Color color);
+
 private:
-    std::vector<pickle::math::Vector<2, float>> interpolate(pickle::math::Vector<2, float> start, pickle::math::Vector<2, float> end);
+    std::vector<float> interpolate(float x0, float y0, float x1, float y1);
 
 private:
     float width;
