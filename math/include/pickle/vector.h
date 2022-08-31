@@ -125,6 +125,11 @@ namespace pickle
                 return cutted;
             }
 
+            size_t size() const
+            {
+                return D;
+            }
+
         public:
             T data[D];
         };
