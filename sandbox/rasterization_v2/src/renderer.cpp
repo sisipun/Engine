@@ -6,89 +6,80 @@ Renderer::Renderer(float width, float height) : width(width), height(height)
 {
 }
 
-void Renderer::drawPoint(SDL_Renderer *renderer, pickle::math::Vector<2, float> point, Color color)
+void Renderer::drawPoint(SDL_Renderer *renderer, pickle::math::Vector<5, float> point)
 {
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_SetRenderDrawColor(renderer, point.data[2] * 0xFF, point.data[3] * 0xFF, point.data[4] * 0xFF, 0xFF);
     SDL_Rect rect = {static_cast<int>(point.data[0]), static_cast<int>(point.data[1]), 1, 1};
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void Renderer::drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, float> start, pickle::math::Vector<2, float> end, Color color)
+void Renderer::drawLine(SDL_Renderer *renderer, pickle::math::Vector<5, float> p0, pickle::math::Vector<5, float> p1)
 {
-    bool swapped = false;
-    if (std::abs(end.data[0] - start.data[0]) < std::abs(end.data[1] - start.data[1]))
+    if (p0.data[0] > p1.data[0])
     {
-        std::swap(start.data[0], start.data[1]);
-        std::swap(end.data[0], end.data[1]);
-        swapped = true;
-    }
-    if (start.data[0] > end.data[0])
-    {
-        std::swap(start, end);
+        std::swap(p0, p1);
     }
 
-    std::vector<float> line = interpolate(start.data[0], start.data[1], end.data[0], end.data[1]);
-    for (float x = start.data[0]; x < end.data[0]; x++)
+    int aIndex = std::abs(p1.data[0] - p0.data[0]) < std::abs(p1.data[1] - p0.data[1]) ? 1 : 0;
+    float a0 = p0.data[aIndex];
+    float a1 = p1.data[aIndex];
+
+    std::vector<pickle::math::Vector<5, float>> line = interpolate(a0, p0, a1, p1);
+    for (const pickle::math::Vector<5, float> &point : line)
     {
-        int index = x - start.data[0];
-        if (swapped)
-        {
-            drawPoint(renderer, pickle::math::Vector<2, float>({line[index], x}), color);
-        }
-        else
-        {
-            drawPoint(renderer, pickle::math::Vector<2, float>({x, line[index]}), color);
-        }
+        drawPoint(renderer, point);
     }
 }
 
-void Renderer::drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<2, float> p1, pickle::math::Vector<2, float> p2, pickle::math::Vector<2, float> p3, Color color)
+void Renderer::drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<5, float> p0, pickle::math::Vector<5, float> p1, pickle::math::Vector<5, float> p2)
 {
-    if (p2.data[1] > p3.data[1])
-    {
-        std::swap(p2, p3);
-    }
-    if (p1.data[1] > p3.data[1])
-    {
-        std::swap(p1, p3);
-    }
     if (p1.data[1] > p2.data[1])
     {
         std::swap(p1, p2);
     }
+    if (p0.data[1] > p2.data[1])
+    {
+        std::swap(p0, p2);
+    }
+    if (p0.data[1] > p1.data[1])
+    {
+        std::swap(p0, p1);
+    }
 
-    std::vector<float> longSide = interpolate(p1.data[1], p1.data[0], p3.data[1], p3.data[0]);
-    std::vector<float> shortSide;
+    std::vector<pickle::math::Vector<5, float>> longSide = interpolate(p0.data[1], p0, p2.data[1], p2);
+    std::vector<pickle::math::Vector<5, float>> shortSide;
 
-    std::vector<float> shortSideFirtsPart = interpolate(p1.data[1], p1.data[0], p2.data[1], p2.data[0]);
-    std::vector<float> shortSideSecondPart = interpolate(p2.data[1], p2.data[0], p3.data[1], p3.data[0]);
+    std::vector<pickle::math::Vector<5, float>> shortSideFirtsPart = interpolate(p0.data[1], p0, p1.data[1], p1);
+    std::vector<pickle::math::Vector<5, float>> shortSideSecondPart = interpolate(p1.data[1], p1, p2.data[1], p2);
 
     shortSide.insert(shortSide.end(), shortSideFirtsPart.begin(), shortSideFirtsPart.end());
     shortSide.pop_back();
     shortSide.insert(shortSide.end(), shortSideSecondPart.begin(), shortSideSecondPart.end());
 
-    for (float y = p1.data[1]; y < p3.data[1]; y++)
+    for (float y = p0.data[1]; y < p2.data[1]; y++)
     {
-        int index = y - p1.data[1];
-        drawLine(renderer, pickle::math::Vector<2, float>({shortSide[index], y}), pickle::math::Vector<2, float>({longSide[index], y}), color);
+        int index = y - p0.data[1];
+        drawLine(renderer, shortSide[index], longSide[index]);
     }
 }
 
-std::vector<float> Renderer::interpolate(float x0, float y0, float x1, float y1)
+std::vector<pickle::math::Vector<5, float>> Renderer::interpolate(float a0, pickle::math::Vector<5, float> p0, float a1, pickle::math::Vector<5, float> p1)
 {
-    std::vector<float> values;
-    values.push_back(y0);
-    if (x0 == x1)
+    std::vector<pickle::math::Vector<5, float>> values;
+    values.push_back(p0);
+    if (a0 == a1)
     {
         return values;
     }
 
-    float a = (y1 - y0) / (x1 - x0);
-    float y = y0;
-    for (float x = x0; x < x1; x++)
+    pickle::math::Vector<5, float> p = p0;
+    for (float a = a0; a < a1; a++)
     {
-        y += a;
-        values.push_back(y);
+        for (int i = 0; i < p.size(); i++)
+        {
+            p.data[i] += (p1.data[i] - p0.data[i]) / (a1 - a0);
+        }
+        values.push_back(p);
     }
 
     return values;
