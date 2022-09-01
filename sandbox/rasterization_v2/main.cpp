@@ -32,19 +32,36 @@ int main(int argc, char *argv[])
 
     bool quit = false;
 
-    Renderer renderer(width, height);
+    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f);
 
     SDL_SetRenderDrawColor(sdlRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sdlRenderer);
 
     // Render
-    // renderer.drawLine(sdlRenderer, pickle::math::Vector({100.0f, 100.0f, 1.0f, 0.0f, 0.0f}), pickle::math::Vector({500.0f, 500.0f, 0.0f, 0.0f, 1.0f}));
-    // renderer.drawLine(sdlRenderer, pickle::math::Vector({100.0f, 300.0f, 0.0f, 1.0f, 0.0f}), pickle::math::Vector({500.0f, 300.0f, 1.0f, 0.0f, 0.0f}));
-    // renderer.drawLine(sdlRenderer, pickle::math::Vector({300.0f, 100.0f, 0.0f, 0.0f, 1.0f}), pickle::math::Vector({300.0f, 500.0f, 0.0f, 1.0f, 0.0f}));
-    // renderer.drawLine(sdlRenderer, pickle::math::Vector({500.0f, 100.0f, 1.0f, 0.0f, 1.0f}), pickle::math::Vector({100.0f, 500.0f, 0.0f, 1.0f, 0.0f}));
-    renderer.drawTriangle(sdlRenderer, pickle::math::Vector({100.0f, 100.0f, 1.0f, 0.0f, 0.0f}), pickle::math::Vector({200.0f, 200.0f, 0.0f, 1.0f, 0.0f}), pickle::math::Vector({100.0f, 300.0f, 0.0f, 0.0f, 1.0f}));
-    renderer.drawTriangle(sdlRenderer, pickle::math::Vector({300.0f, 500.0f, 0.0f, 1.0f, 0.0f}), pickle::math::Vector({400.0f, 400.0f, 0.0f, 1.0f, 0.0f}), pickle::math::Vector({500.0f, 550.0f, 0.0f, 1.0f, 0.0f}));
-    renderer.drawTriangle(sdlRenderer, pickle::math::Vector({450.0f, 50.0f, 0.0f, 0.0f, 1.0f}), pickle::math::Vector({400.0f, 300.0f, 0.0f, 0.0f, 1.0f}), pickle::math::Vector({550.0f, 100.0f, 0.0f, 0.0f, 1.0f}));
+    pickle::math::Vector<6, float> va = pickle::math::Vector({-2.0f, -0.5f, 5.0f, 1.0f, 0.0f, 0.0f});
+    pickle::math::Vector<6, float> vb = pickle::math::Vector({-2.0f, 0.5f, 5.0f, 0.0f, 1.0f, 0.0f});
+    pickle::math::Vector<6, float> vc = pickle::math::Vector({-1.0f, 0.5f, 5.0f, 0.0f, 0.0f, 1.0f});
+    pickle::math::Vector<6, float> vd = pickle::math::Vector({-1.0f, -0.5f, 5.0f, 1.0f, 1.0f, 1.0f});
+
+    pickle::math::Vector<6, float> vab = pickle::math::Vector({-2.0f, -0.5f, 6.0f, 0.0f, 1.0f, 1.0f});
+    pickle::math::Vector<6, float> vbb = pickle::math::Vector({-2.0f, 0.5f, 6.0f, 1.0f, 0.0f, 1.0f});
+    pickle::math::Vector<6, float> vcb = pickle::math::Vector({-1.0f, 0.5f, 6.0f, 1.0f, 1.0f, 0.0f});
+    pickle::math::Vector<6, float> vdb = pickle::math::Vector({-1.0f, -0.5f, 6.0f, 0.5f, 0.5f, 0.5f});
+
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(va), renderer.projectVertex(vb));
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vb), renderer.projectVertex(vc));
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vc), renderer.projectVertex(vd));
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vd), renderer.projectVertex(va));
+
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vab), renderer.projectVertex(vbb));
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vbb), renderer.projectVertex(vcb));
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vcb), renderer.projectVertex(vdb));
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vdb), renderer.projectVertex(vab));
+
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(va), renderer.projectVertex(vab));
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vb), renderer.projectVertex(vbb));
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vc), renderer.projectVertex(vcb));
+    renderer.drawLine(sdlRenderer, renderer.projectVertex(vd), renderer.projectVertex(vdb));
 
     SDL_RenderPresent(sdlRenderer);
 

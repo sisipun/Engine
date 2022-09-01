@@ -9,20 +9,27 @@
 class Renderer
 {
 public:
-    Renderer(float width, float height);
+    Renderer(float screenWidth, float screenHeight, float viewportWidth, float viewportHeight, float distanceToViewport);
 
-    void drawPoint(SDL_Renderer *renderer, pickle::math::Vector<5, float> point);
+    void drawPoint(SDL_Renderer *renderer, pickle::math::Vector<6, float> point);
 
-    void drawLine(SDL_Renderer *renderer, pickle::math::Vector<5, float> p0, pickle::math::Vector<5, float> p1);
+    void drawLine(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1);
 
-    void drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<5, float> p0, pickle::math::Vector<5, float> p1, pickle::math::Vector<5, float> p2);
+    void drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2);
+
+    pickle::math::Vector<6, float> projectVertex(pickle::math::Vector<6, float> vertex);
+
+    pickle::math::Vector<6, float> viewportToScreen(pickle::math::Vector<6, float> vertex);
 
 private:
-    std::vector<pickle::math::Vector<5, float>> interpolate(float a0, pickle::math::Vector<5, float> p0, float a1, pickle::math::Vector<5, float> p1);
+    std::vector<pickle::math::Vector<6, float>> interpolate(float a0, pickle::math::Vector<6, float> p0, float a1, pickle::math::Vector<6, float> p1);
 
 private:
-    float width;
-    float height;
+    float screenWidth;
+    float screenHeight;
+    float viewportWidth;
+    float viewportHeight;
+    float distanceToViewport;
 };
 
 #endif
