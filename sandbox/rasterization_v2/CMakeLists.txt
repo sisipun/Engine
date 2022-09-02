@@ -6,7 +6,9 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 add_subdirectory(../../math ./build)
 
-add_library(Rasterization STATIC   
+add_library(Rasterization STATIC
+    include/rasterization/model.h
+    include/rasterization/model_instance.h
     include/rasterization/renderer.h src/renderer.cpp
 )
 add_executable(RasterizationTest main.cpp)

@@ -40,6 +40,13 @@ void Renderer::drawLine(SDL_Renderer *renderer, pickle::math::Vector<6, float> p
     }
 }
 
+void Renderer::drawWireTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2)
+{
+    drawLine(renderer, p0, p1);
+    drawLine(renderer, p1, p2);
+    drawLine(renderer, p2, p0);
+}
+
 void Renderer::drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2)
 {
     if (p1.data[1] > p2.data[1])
@@ -70,6 +77,28 @@ void Renderer::drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, floa
         int index = y - p0.data[1];
         drawLine(renderer, shortSide[index], longSide[index]);
     }
+}
+
+void Renderer::drawModelInstance(SDL_Renderer *renderer, const ModelInstance &instance)
+{
+    std::vector<pickle::math::Vector<6, float>> projectedVertices;
+    for (const pickle::math::Vector<6, float> &vertex : instance.model.vertices)
+    {
+        projectedVertices.push_back(projectVertex(transformVertex(vertex, instance.transform)));
+    }
+
+    for (const pickle::math::Vector<3, int> &triangle : instance.model.triangles)
+    {
+        drawWireTriangle(renderer, projectedVertices[triangle.data[0]], projectedVertices[triangle.data[1]], projectedVertices[triangle.data[2]]);
+    }
+}
+
+pickle::math::Vector<6, float> Renderer::transformVertex(pickle::math::Vector<6, float> vertex, const pickle::math::Matrix<4, 4, float> &transform)
+{
+    vertex.data[0] = vertex.data[0] + transform.data[0 * transform.columns() + 3];
+    vertex.data[1] = vertex.data[1] + transform.data[1 * transform.columns() + 3];
+    vertex.data[2] = vertex.data[2] + transform.data[2 * transform.columns() + 3];
+    return vertex;
 }
 
 pickle::math::Vector<6, float> Renderer::projectVertex(pickle::math::Vector<6, float> vertex)

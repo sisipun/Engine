@@ -4,6 +4,7 @@
 #include <vector>
 #include <SDL.h>
 
+#include <rasterization/model_instance.h>
 #include <pickle/math.h>
 
 class Renderer
@@ -15,7 +16,13 @@ public:
 
     void drawLine(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1);
 
+    void drawWireTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2);
+
     void drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2);
+
+    void drawModelInstance(SDL_Renderer *renderer, const ModelInstance &instance);
+
+    pickle::math::Vector<6, float> transformVertex(pickle::math::Vector<6, float> vertex, const pickle::math::Matrix<4, 4, float> &transform);
 
     pickle::math::Vector<6, float> projectVertex(pickle::math::Vector<6, float> vertex);
 

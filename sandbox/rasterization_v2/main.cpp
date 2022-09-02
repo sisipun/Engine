@@ -3,6 +3,8 @@
 #include <pickle/math.h>
 
 #include <rasterization/renderer.h>
+#include <rasterization/model.h>
+#include <rasterization/model_instance.h>
 
 int main(int argc, char *argv[])
 {
@@ -38,30 +40,42 @@ int main(int argc, char *argv[])
     SDL_RenderClear(sdlRenderer);
 
     // Render
-    pickle::math::Vector<6, float> va = pickle::math::Vector({-2.0f, -0.5f, 5.0f, 1.0f, 0.0f, 0.0f});
-    pickle::math::Vector<6, float> vb = pickle::math::Vector({-2.0f, 0.5f, 5.0f, 0.0f, 1.0f, 0.0f});
-    pickle::math::Vector<6, float> vc = pickle::math::Vector({-1.0f, 0.5f, 5.0f, 0.0f, 0.0f, 1.0f});
-    pickle::math::Vector<6, float> vd = pickle::math::Vector({-1.0f, -0.5f, 5.0f, 1.0f, 1.0f, 1.0f});
+    std::vector<pickle::math::Vector<6, float>> vertices;
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, -1.0f, 0.5f, 0.5f, 0.5f}));
 
-    pickle::math::Vector<6, float> vab = pickle::math::Vector({-2.0f, -0.5f, 6.0f, 0.0f, 1.0f, 1.0f});
-    pickle::math::Vector<6, float> vbb = pickle::math::Vector({-2.0f, 0.5f, 6.0f, 1.0f, 0.0f, 1.0f});
-    pickle::math::Vector<6, float> vcb = pickle::math::Vector({-1.0f, 0.5f, 6.0f, 1.0f, 1.0f, 0.0f});
-    pickle::math::Vector<6, float> vdb = pickle::math::Vector({-1.0f, -0.5f, 6.0f, 0.5f, 0.5f, 0.5f});
+    std::vector<pickle::math::Vector<3, int>> triangles;
+    triangles.push_back(pickle::math::Vector<3, int>({0, 1, 2}));
+    triangles.push_back(pickle::math::Vector<3, int>({0, 2, 3}));
+    triangles.push_back(pickle::math::Vector<3, int>({4, 0, 3}));
+    triangles.push_back(pickle::math::Vector<3, int>({4, 3, 7}));
+    triangles.push_back(pickle::math::Vector<3, int>({5, 4, 7}));
+    triangles.push_back(pickle::math::Vector<3, int>({5, 7, 6}));
+    triangles.push_back(pickle::math::Vector<3, int>({1, 5, 6}));
+    triangles.push_back(pickle::math::Vector<3, int>({1, 6, 2}));
+    triangles.push_back(pickle::math::Vector<3, int>({4, 5, 1}));
+    triangles.push_back(pickle::math::Vector<3, int>({4, 1, 0}));
+    triangles.push_back(pickle::math::Vector<3, int>({2, 6, 7}));
+    triangles.push_back(pickle::math::Vector<3, int>({2, 7, 3}));
 
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(va), renderer.projectVertex(vb));
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vb), renderer.projectVertex(vc));
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vc), renderer.projectVertex(vd));
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vd), renderer.projectVertex(va));
+    Model box{vertices, triangles};
 
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vab), renderer.projectVertex(vbb));
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vbb), renderer.projectVertex(vcb));
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vcb), renderer.projectVertex(vdb));
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vdb), renderer.projectVertex(vab));
-
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(va), renderer.projectVertex(vab));
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vb), renderer.projectVertex(vbb));
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vc), renderer.projectVertex(vcb));
-    renderer.drawLine(sdlRenderer, renderer.projectVertex(vd), renderer.projectVertex(vdb));
+    ModelInstance box1{box, pickle::math::Matrix<4, 4, float>({1.0f, 0.0f, 0.0f, -1.5f,
+                                                               0.0f, 1.0f, 0.0f, 0.0f,
+                                                               0.0f, 0.0f, 1.0f, 7.0f,
+                                                               0.0f, 0.0f, 0.0f, 1.0f})};
+    ModelInstance box2{box, pickle::math::Matrix<4, 4, float>({1.0f, 0.0f, 0.0f, 1.5f,
+                                                               0.0f, 1.0f, 0.0f, 2.0f,
+                                                               0.0f, 0.0f, 1.0f, 7.6f,
+                                                               0.0f, 0.0f, 0.0f, 1.0f})};
+    renderer.drawModelInstance(sdlRenderer, box1);
+    renderer.drawModelInstance(sdlRenderer, box2);
 
     SDL_RenderPresent(sdlRenderer);
 
