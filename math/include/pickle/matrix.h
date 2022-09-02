@@ -4,7 +4,7 @@
 namespace pickle
 {
     namespace math
-    {        
+    {
         template <size_t R, size_t C, typename T>
         class Matrix
         {
@@ -137,6 +137,16 @@ namespace pickle
                     }
                 }
                 return div;
+            }
+
+            size_t rows() const
+            {
+                return R;
+            }
+
+            size_t columns() const
+            {
+                return C;
             }
 
         public:
