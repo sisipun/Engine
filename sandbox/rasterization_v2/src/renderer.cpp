@@ -95,24 +95,33 @@ void Renderer::drawModelInstance(SDL_Renderer *renderer, const ModelInstance &in
 
 pickle::math::Vector<6, float> Renderer::transformVertex(pickle::math::Vector<6, float> vertex, const pickle::math::Matrix<4, 4, float> &transform)
 {
-    vertex.data[0] = vertex.data[0] + transform.data[0 * transform.columns() + 3];
-    vertex.data[1] = vertex.data[1] + transform.data[1 * transform.columns() + 3];
-    vertex.data[2] = vertex.data[2] + transform.data[2 * transform.columns() + 3];
-    return vertex;
+    pickle::math::Vector<6, float> transformedVertex(vertex.data);
+    pickle::math::Vector<4, float> positionVertexPart({transformedVertex.data[0],
+                                                       transformedVertex.data[1],
+                                                       transformedVertex.data[2],
+                                                       1.0});
+    pickle::math::Vector<4, float> transformedPositionVertexPart = transform * positionVertexPart;
+
+    transformedVertex.data[0] = transformedPositionVertexPart.data[0];
+    transformedVertex.data[1] = transformedPositionVertexPart.data[1];
+    transformedVertex.data[2] = transformedPositionVertexPart.data[2];
+    return transformedVertex;
 }
 
 pickle::math::Vector<6, float> Renderer::projectVertex(pickle::math::Vector<6, float> vertex)
 {
-    vertex.data[0] = (vertex.data[0] * distanceToViewport) / vertex.data[2];
-    vertex.data[1] = (vertex.data[1] * distanceToViewport) / vertex.data[2];
-    return viewportToScreen(vertex);
+    pickle::math::Vector<6, float> projectedVertex(vertex.data);
+    projectedVertex.data[0] = (projectedVertex.data[0] * distanceToViewport) / projectedVertex.data[2];
+    projectedVertex.data[1] = (projectedVertex.data[1] * distanceToViewport) / projectedVertex.data[2];
+    return viewportToScreen(projectedVertex);
 }
 
 pickle::math::Vector<6, float> Renderer::viewportToScreen(pickle::math::Vector<6, float> vertex)
 {
-    vertex.data[0] = (vertex.data[0] * screenWidth) / viewportWidth;
-    vertex.data[1] = (vertex.data[1] * screenHeight) / viewportHeight;
-    return vertex;
+    pickle::math::Vector<6, float> screenVertex(vertex.data);
+    screenVertex.data[0] = (screenVertex.data[0] * screenWidth) / viewportWidth;
+    screenVertex.data[1] = (screenVertex.data[1] * screenHeight) / viewportHeight;
+    return screenVertex;
 }
 
 std::vector<pickle::math::Vector<6, float>> Renderer::interpolate(float a0, pickle::math::Vector<6, float> p0, float a1, pickle::math::Vector<6, float> p1)
