@@ -37,6 +37,7 @@ private:
     float viewportWidth;
     float viewportHeight;
     float distanceToViewport;
+    pickle::math::Matrix<4, 4, float> projection;
 };
 
 #endif

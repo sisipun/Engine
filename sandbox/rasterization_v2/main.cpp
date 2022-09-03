@@ -66,14 +66,19 @@ int main(int argc, char *argv[])
 
     Model box{vertices, triangles};
 
-    ModelInstance box1{box, pickle::math::Matrix<4, 4, float>({1.0f, 0.0f, 0.0f, -1.5f,
-                                                               0.0f, 1.0f, 0.0f, 0.0f,
-                                                               0.0f, 0.0f, 1.0f, 7.0f,
-                                                               0.0f, 0.0f, 0.0f, 1.0f})};
-    ModelInstance box2{box, pickle::math::Matrix<4, 4, float>({1.0f, 0.0f, 0.0f, 1.5f,
-                                                               0.0f, 1.0f, 0.0f, 2.0f,
-                                                               0.0f, 0.0f, 1.0f, 7.6f,
-                                                               0.0f, 0.0f, 0.0f, 1.0f})};
+    pickle::math::Matrix<4, 4, float> transformBox1 = pickle::math::translate(
+        pickle::math::identity<4, float>(),
+        pickle::math::Vector<3, float>({-1.5f, 0.0f, 7.0f}));
+
+    pickle::math::Matrix<4, 4, float> transformBox2 = pickle::math::rotate(
+        pickle::math::translate(
+            pickle::math::identity<4, float>(),
+            pickle::math::Vector<3, float>({1.25f, 2.0f, 7.5f})),
+        pickle::math::radians(195.0f),
+        pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
+
+    ModelInstance box1{box, transformBox1};
+    ModelInstance box2{box, transformBox2};
     renderer.drawModelInstance(sdlRenderer, box1);
     renderer.drawModelInstance(sdlRenderer, box2);
 

@@ -2,7 +2,21 @@
 
 #include <iostream>
 
-Renderer::Renderer(float screenWidth, float screenHeight, float viewportWidth, float viewportHeight, float distanceToViewport) : screenWidth(screenWidth), screenHeight(screenHeight), viewportWidth(viewportWidth), viewportHeight(viewportHeight), distanceToViewport(distanceToViewport)
+Renderer::Renderer(
+    float screenWidth,
+    float screenHeight,
+    float viewportWidth,
+    float viewportHeight,
+    float distanceToViewport)
+    : screenWidth(screenWidth),
+      screenHeight(screenHeight),
+      viewportWidth(viewportWidth),
+      viewportHeight(viewportHeight),
+      distanceToViewport(distanceToViewport),
+      projection({distanceToViewport * screenWidth / viewportWidth, 0.0f, 0.0f, 0.0f,
+                  0.0f, distanceToViewport * screenHeight / viewportHeight, 0.0f, 0.0f,
+                  0.0f, 0.0f, distanceToViewport, 0.0f,
+                  0.0f, 0.0f, 1.0f, 0.0f})
 {
 }
 
@@ -84,7 +98,7 @@ void Renderer::drawModelInstance(SDL_Renderer *renderer, const ModelInstance &in
     std::vector<pickle::math::Vector<6, float>> projectedVertices;
     for (const pickle::math::Vector<6, float> &vertex : instance.model.vertices)
     {
-        projectedVertices.push_back(projectVertex(transformVertex(vertex, instance.transform)));
+        projectedVertices.push_back(transformVertex(vertex, instance.transform));
     }
 
     for (const pickle::math::Vector<3, int> &triangle : instance.model.triangles)
@@ -100,11 +114,11 @@ pickle::math::Vector<6, float> Renderer::transformVertex(pickle::math::Vector<6,
                                                        transformedVertex.data[1],
                                                        transformedVertex.data[2],
                                                        1.0});
-    pickle::math::Vector<4, float> transformedPositionVertexPart = transform * positionVertexPart;
+    pickle::math::Vector<4, float> transformedPositionVertexPart = projection * transform * positionVertexPart;
 
-    transformedVertex.data[0] = transformedPositionVertexPart.data[0];
-    transformedVertex.data[1] = transformedPositionVertexPart.data[1];
-    transformedVertex.data[2] = transformedPositionVertexPart.data[2];
+    transformedVertex.data[0] = transformedPositionVertexPart.data[0] / transformedPositionVertexPart.data[3];
+    transformedVertex.data[1] = transformedPositionVertexPart.data[1] / transformedPositionVertexPart.data[3];
+    transformedVertex.data[2] = transformedPositionVertexPart.data[2] / transformedPositionVertexPart.data[3];
     return transformedVertex;
 }
 
