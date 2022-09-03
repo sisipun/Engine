@@ -3,6 +3,7 @@
 #include <pickle/math.h>
 
 #include <rasterization/renderer.h>
+#include <rasterization/camera.h>
 #include <rasterization/model.h>
 #include <rasterization/model_instance.h>
 
@@ -34,7 +35,8 @@ int main(int argc, char *argv[])
 
     bool quit = false;
 
-    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f);
+    Camera camera(pickle::math::Vector<3, float>({-1.0f, 0.0f, -3.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}));
+    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f, camera);
 
     SDL_SetRenderDrawColor(sdlRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sdlRenderer);

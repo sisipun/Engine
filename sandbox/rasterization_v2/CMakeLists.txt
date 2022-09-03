@@ -9,6 +9,7 @@ add_subdirectory(../../math ./build)
 add_library(Rasterization STATIC
     include/rasterization/model.h
     include/rasterization/model_instance.h
+    include/rasterization/camera.h src/camera.cpp
     include/rasterization/renderer.h src/renderer.cpp
 )
 add_executable(RasterizationTest main.cpp)

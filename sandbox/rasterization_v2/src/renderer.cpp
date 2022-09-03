@@ -7,12 +7,14 @@ Renderer::Renderer(
     float screenHeight,
     float viewportWidth,
     float viewportHeight,
-    float distanceToViewport)
+    float distanceToViewport,
+    Camera camera)
     : screenWidth(screenWidth),
       screenHeight(screenHeight),
       viewportWidth(viewportWidth),
       viewportHeight(viewportHeight),
       distanceToViewport(distanceToViewport),
+      camera(camera),
       projection({distanceToViewport / viewportWidth, 0.0f, 0.0f, 0.0f,
                   0.0f, distanceToViewport / viewportHeight, 0.0f, 0.0f,
                   0.0f, 0.0f, distanceToViewport, 0.0f,
@@ -114,7 +116,9 @@ pickle::math::Vector<6, float> Renderer::transformVertex(pickle::math::Vector<6,
                                                        transformedVertex.data[1],
                                                        transformedVertex.data[2],
                                                        1.0});
-    pickle::math::Vector<4, float> transformedPositionVertexPart = projection * transform * positionVertexPart;
+
+    pickle::math::Matrix<4, 4, float> view = camera.getViewMatrix();
+    pickle::math::Vector<4, float> transformedPositionVertexPart = projection * view * transform * positionVertexPart;
 
     transformedVertex.data[0] = transformedPositionVertexPart.data[0] / transformedPositionVertexPart.data[3];
     transformedVertex.data[1] = transformedPositionVertexPart.data[1] / transformedPositionVertexPart.data[3];

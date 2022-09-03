@@ -5,12 +5,13 @@
 #include <SDL.h>
 
 #include <rasterization/model_instance.h>
+#include <rasterization/camera.h>
 #include <pickle/math.h>
 
 class Renderer
 {
 public:
-    Renderer(float screenWidth, float screenHeight, float viewportWidth, float viewportHeight, float distanceToViewport);
+    Renderer(float screenWidth, float screenHeight, float viewportWidth, float viewportHeight, float distanceToViewport, Camera camera);
 
     void drawPoint(SDL_Renderer *renderer, pickle::math::Vector<6, float> point);
 
@@ -35,6 +36,7 @@ private:
     float viewportWidth;
     float viewportHeight;
     float distanceToViewport;
+    Camera camera;
     pickle::math::Matrix<4, 4, float> projection;
 };
 
