@@ -13,8 +13,8 @@ Renderer::Renderer(
       viewportWidth(viewportWidth),
       viewportHeight(viewportHeight),
       distanceToViewport(distanceToViewport),
-      projection({distanceToViewport * screenWidth / viewportWidth, 0.0f, 0.0f, 0.0f,
-                  0.0f, distanceToViewport * screenHeight / viewportHeight, 0.0f, 0.0f,
+      projection({distanceToViewport / viewportWidth, 0.0f, 0.0f, 0.0f,
+                  0.0f, distanceToViewport / viewportHeight, 0.0f, 0.0f,
                   0.0f, 0.0f, distanceToViewport, 0.0f,
                   0.0f, 0.0f, 1.0f, 0.0f})
 {
@@ -119,15 +119,7 @@ pickle::math::Vector<6, float> Renderer::transformVertex(pickle::math::Vector<6,
     transformedVertex.data[0] = transformedPositionVertexPart.data[0] / transformedPositionVertexPart.data[3];
     transformedVertex.data[1] = transformedPositionVertexPart.data[1] / transformedPositionVertexPart.data[3];
     transformedVertex.data[2] = transformedPositionVertexPart.data[2] / transformedPositionVertexPart.data[3];
-    return transformedVertex;
-}
-
-pickle::math::Vector<6, float> Renderer::projectVertex(pickle::math::Vector<6, float> vertex)
-{
-    pickle::math::Vector<6, float> projectedVertex(vertex.data);
-    projectedVertex.data[0] = (projectedVertex.data[0] * distanceToViewport) / projectedVertex.data[2];
-    projectedVertex.data[1] = (projectedVertex.data[1] * distanceToViewport) / projectedVertex.data[2];
-    return viewportToScreen(projectedVertex);
+    return viewportToScreen(transformedVertex);
 }
 
 pickle::math::Vector<6, float> Renderer::viewportToScreen(pickle::math::Vector<6, float> vertex)

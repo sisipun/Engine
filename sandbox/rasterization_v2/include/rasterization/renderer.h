@@ -24,8 +24,6 @@ public:
 
     pickle::math::Vector<6, float> transformVertex(pickle::math::Vector<6, float> vertex, const pickle::math::Matrix<4, 4, float> &transform);
 
-    pickle::math::Vector<6, float> projectVertex(pickle::math::Vector<6, float> vertex);
-
     pickle::math::Vector<6, float> viewportToScreen(pickle::math::Vector<6, float> vertex);
 
 private:
