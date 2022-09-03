@@ -67,6 +67,19 @@ namespace pickle
                                     0.0f, 0.0f, -(far + near) / (far - near), -2.0f * far * near / (far - near),
                                     0.0f, 0.0f, -1.0f, 0.0f});
         }
+
+        template <typename T>
+        Matrix<4, 4, T> lookAt(const Vector<3, T> &position, const Vector<3, T> &target, const Vector<3, T> &up)
+        {
+            Vector<3, T> cameraDirection = normalize(position - target);
+            Vector<3, T> cameraRight = normalize(cross(up, cameraDirection));
+            Vector<3, T> cameraUp = cross(cameraDirection, cameraRight);
+
+            return Matrix<4, 4, T>({cameraRight.data[0], cameraRight.data[1], cameraRight.data[2], -dot(cameraRight, position),
+                                    cameraUp.data[0], cameraUp.data[1], cameraUp.data[2], -dot(cameraUp, position),
+                                    cameraDirection.data[0], cameraDirection.data[1], cameraDirection.data[2], -dot(cameraDirection, position),
+                                    0.0f, 0.0f, 0.0f, 1.0f});
+        }
     }
 }
 #endif

@@ -411,3 +411,24 @@ TEST_CASE("Convert To Radians", "[angle][transformation]")
     REQUIRE(roundTwoDigets(radians(-30.0f)) == -0.52f);
     REQUIRE(roundTwoDigets(radians(-180.0)) == -3.14);
 }
+
+TEST_CASE("Look at", "[camera][matrix][vector][transformation]")
+{
+    Matrix<4, 4, float> lookAtMatrix = lookAt(Vector<3, float>({0.0f, 0.0f, -3.0f}), Vector<3, float>({0.0f, 0.0f, 0.0f}), Vector<3, float>({0.0f, 1.0f, 0.0f}));
+    REQUIRE(lookAtMatrix.data[0] == -1.0f);
+    REQUIRE(lookAtMatrix.data[1] == 0.0f);
+    REQUIRE(lookAtMatrix.data[2] == 0.0f);
+    REQUIRE(lookAtMatrix.data[3] == 0.0f);
+    REQUIRE(lookAtMatrix.data[4] == 0.0f);
+    REQUIRE(lookAtMatrix.data[5] == 1.0f);
+    REQUIRE(lookAtMatrix.data[6] == 0.0f);
+    REQUIRE(lookAtMatrix.data[7] == 0.0f);
+    REQUIRE(lookAtMatrix.data[8] == 0.0f);
+    REQUIRE(lookAtMatrix.data[9] == 0.0f);
+    REQUIRE(lookAtMatrix.data[10] == -1.0f);
+    REQUIRE(lookAtMatrix.data[11] == -3.0f);
+    REQUIRE(lookAtMatrix.data[12] == 0.0f);
+    REQUIRE(lookAtMatrix.data[13] == 0.0f);
+    REQUIRE(lookAtMatrix.data[14] == 0.0f);
+    REQUIRE(lookAtMatrix.data[15] == 1.0f);
+}
