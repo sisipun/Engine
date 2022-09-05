@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
 
     bool quit = false;
 
-    Camera camera(pickle::math::Vector<3, float>({-1.0f, 0.0f, -3.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}));
-    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f, camera);
+    Camera camera(pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}));
+    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f, 1000.0f, camera);
 
     SDL_SetRenderDrawColor(sdlRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sdlRenderer);
@@ -70,12 +70,12 @@ int main(int argc, char *argv[])
 
     pickle::math::Matrix<4, 4, float> transformBox1 = pickle::math::translate(
         pickle::math::identity<4, float>(),
-        pickle::math::Vector<3, float>({-1.5f, 0.0f, 7.0f}));
+        pickle::math::Vector<3, float>({-1.5f, 0.0f, 4.0f}));
 
     pickle::math::Matrix<4, 4, float> transformBox2 = pickle::math::rotate(
         pickle::math::translate(
             pickle::math::identity<4, float>(),
-            pickle::math::Vector<3, float>({1.25f, 2.0f, 7.5f})),
+            pickle::math::Vector<3, float>({1.25f, 2.0f, 4.5f})),
         pickle::math::radians(195.0f),
         pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
 

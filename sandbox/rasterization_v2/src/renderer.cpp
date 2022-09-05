@@ -8,29 +8,26 @@ Renderer::Renderer(
     float viewportWidth,
     float viewportHeight,
     float distanceToViewport,
+    float maxDistance,
     Camera camera)
     : screenWidth(screenWidth),
       screenHeight(screenHeight),
       viewportWidth(viewportWidth),
       viewportHeight(viewportHeight),
       distanceToViewport(distanceToViewport),
+      maxDistance(maxDistance),
       camera(camera),
       projection({distanceToViewport / viewportWidth, 0.0f, 0.0f, 0.0f,
                   0.0f, distanceToViewport / viewportHeight, 0.0f, 0.0f,
-                  0.0f, 0.0f, distanceToViewport, 0.0f,
+                  0.0f, 0.0f, 1 / (maxDistance - distanceToViewport), -distanceToViewport / (maxDistance - distanceToViewport),
                   0.0f, 0.0f, 1.0f, 0.0f})
 {
 }
 
 void Renderer::drawPoint(SDL_Renderer *renderer, pickle::math::Vector<6, float> point)
 {
-    float x = (screenWidth / 2.0f) + point.data[0];
-    float y = (screenHeight / 2.0f) - point.data[1];
-
-    if (x < 0 || x > screenWidth || y < 0 || y > screenHeight)
-    {
-        return;
-    }
+    float x = point.data[0];
+    float y = point.data[1];
 
     SDL_SetRenderDrawColor(renderer, point.data[3] * 0xFF, point.data[4] * 0xFF, point.data[5] * 0xFF, 0xFF);
     SDL_Rect rect = {static_cast<int>(x), static_cast<int>(y), 1, 1};
@@ -105,7 +102,16 @@ void Renderer::drawModelInstance(SDL_Renderer *renderer, const ModelInstance &in
 
     for (const pickle::math::Vector<3, int> &triangle : instance.model.triangles)
     {
-        drawWireTriangle(renderer, projectedVertices[triangle.data[0]], projectedVertices[triangle.data[1]], projectedVertices[triangle.data[2]]);
+        pickle::math::Vector<6, float> v1 = projectedVertices[triangle.data[0]];
+        pickle::math::Vector<6, float> v2 = projectedVertices[triangle.data[1]];
+        pickle::math::Vector<6, float> v3 = projectedVertices[triangle.data[2]];
+        std::cout << "TRY" << std::endl;
+
+        if (!isClipped(v1) || !isClipped(v2) || !isClipped(v3))
+        {
+            std::cout << "DRAW" << std::endl;
+            drawWireTriangle(renderer, viewportToScreen(v1), viewportToScreen(v2), viewportToScreen(v3));
+        }
     }
 }
 
@@ -122,16 +128,26 @@ pickle::math::Vector<6, float> Renderer::transformVertex(pickle::math::Vector<6,
 
     transformedVertex.data[0] = transformedPositionVertexPart.data[0] / transformedPositionVertexPart.data[3];
     transformedVertex.data[1] = transformedPositionVertexPart.data[1] / transformedPositionVertexPart.data[3];
-    transformedVertex.data[2] = transformedPositionVertexPart.data[2] / transformedPositionVertexPart.data[3];
-    return viewportToScreen(transformedVertex);
+    transformedVertex.data[2] = transformedPositionVertexPart.data[2];
+
+    std::cout << transformedVertex.data[0] << " " << transformedVertex.data[1] << std::endl;
+
+    return transformedVertex;
 }
 
 pickle::math::Vector<6, float> Renderer::viewportToScreen(pickle::math::Vector<6, float> vertex)
 {
     pickle::math::Vector<6, float> screenVertex(vertex.data);
-    screenVertex.data[0] = (screenVertex.data[0] * screenWidth) / viewportWidth;
-    screenVertex.data[1] = (screenVertex.data[1] * screenHeight) / viewportHeight;
+    float halfScreenWidth = screenWidth / 2.0f;
+    float halfScreenHeight = screenHeight / 2.0f;
+    screenVertex.data[0] = (screenVertex.data[0] / viewportWidth) * halfScreenWidth + halfScreenWidth;
+    screenVertex.data[1] = (-(screenVertex.data[1] / viewportHeight)) * halfScreenHeight + halfScreenHeight;
     return screenVertex;
+}
+
+bool Renderer::isClipped(pickle::math::Vector<6, float> vertex) const
+{
+    return vertex.data[0] < -viewportWidth || vertex.data[0] > viewportWidth || vertex.data[1] < -viewportHeight || vertex.data[1] > viewportHeight || vertex.data[2] < 0.0f || vertex.data[2] > 1.0f;
 }
 
 std::vector<pickle::math::Vector<6, float>> Renderer::interpolate(float a0, pickle::math::Vector<6, float> p0, float a1, pickle::math::Vector<6, float> p1)

@@ -11,7 +11,7 @@
 class Renderer
 {
 public:
-    Renderer(float screenWidth, float screenHeight, float viewportWidth, float viewportHeight, float distanceToViewport, Camera camera);
+    Renderer(float screenWidth, float screenHeight, float viewportWidth, float viewportHeight, float distanceToViewport, float maxDistance, Camera camera);
 
     void drawPoint(SDL_Renderer *renderer, pickle::math::Vector<6, float> point);
 
@@ -27,6 +27,8 @@ public:
 
     pickle::math::Vector<6, float> viewportToScreen(pickle::math::Vector<6, float> vertex);
 
+    bool isClipped(pickle::math::Vector<6, float> vertex) const;
+
 private:
     std::vector<pickle::math::Vector<6, float>> interpolate(float a0, pickle::math::Vector<6, float> p0, float a1, pickle::math::Vector<6, float> p1);
 
@@ -36,6 +38,7 @@ private:
     float viewportWidth;
     float viewportHeight;
     float distanceToViewport;
+    float maxDistance;
     Camera camera;
     pickle::math::Matrix<4, 4, float> projection;
 };
