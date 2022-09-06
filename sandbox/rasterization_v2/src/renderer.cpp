@@ -22,19 +22,26 @@ Renderer::Renderer(
                   0.0f, 0.0f, 1 / (maxDistance - distanceToViewport), -distanceToViewport / (maxDistance - distanceToViewport),
                   0.0f, 0.0f, 1.0f, 0.0f})
 {
+    for (int x = 0; x < screenWidth; x++)
+    {
+        for (int y = 0; y < screenHeight; y++)
+        {
+            buffer.push_back(pickle::math::Vector<6, float>());
+        }
+    }
 }
 
-void Renderer::drawPoint(SDL_Renderer *renderer, pickle::math::Vector<6, float> point)
+void Renderer::drawPoint(pickle::math::Vector<6, float> point)
 {
-    float x = point.data[0];
-    float y = point.data[1];
-
-    SDL_SetRenderDrawColor(renderer, point.data[3] * 0xFF, point.data[4] * 0xFF, point.data[5] * 0xFF, 0xFF);
-    SDL_Rect rect = {static_cast<int>(x), static_cast<int>(y), 1, 1};
-    SDL_RenderFillRect(renderer, &rect);
+    int x = point.data[0];
+    int y = point.data[1];
+    if (buffer[x * screenHeight + y].data[2] < point.data[2])
+    {
+        buffer[x * screenHeight + y] = point;
+    }
 }
 
-void Renderer::drawLine(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1)
+void Renderer::drawLine(pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1)
 {
     int aIndex = std::abs(p1.data[0] - p0.data[0]) < std::abs(p1.data[1] - p0.data[1]) ? 1 : 0;
     float a0 = p0.data[aIndex];
@@ -49,18 +56,18 @@ void Renderer::drawLine(SDL_Renderer *renderer, pickle::math::Vector<6, float> p
     std::vector<pickle::math::Vector<6, float>> line = interpolate(a0, p0, a1, p1);
     for (const pickle::math::Vector<6, float> &point : line)
     {
-        drawPoint(renderer, point);
+        drawPoint(point);
     }
 }
 
-void Renderer::drawWireTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2)
+void Renderer::drawWireTriangle(pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2)
 {
-    drawLine(renderer, p0, p1);
-    drawLine(renderer, p1, p2);
-    drawLine(renderer, p2, p0);
+    drawLine(p0, p1);
+    drawLine(p1, p2);
+    drawLine(p2, p0);
 }
 
-void Renderer::drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2)
+void Renderer::drawTriangle(pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2)
 {
     if (p1.data[1] > p2.data[1])
     {
@@ -88,11 +95,11 @@ void Renderer::drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, floa
     for (float y = p0.data[1]; y < p2.data[1]; y++)
     {
         int index = y - p0.data[1];
-        drawLine(renderer, shortSide[index], longSide[index]);
+        drawLine(shortSide[index], longSide[index]);
     }
 }
 
-void Renderer::drawModelInstance(SDL_Renderer *renderer, const ModelInstance &instance)
+void Renderer::drawModelInstance(const ModelInstance &instance)
 {
     std::vector<pickle::math::Vector<6, float>> projectedVertices;
     for (const pickle::math::Vector<6, float> &vertex : instance.model.vertices)
@@ -105,13 +112,26 @@ void Renderer::drawModelInstance(SDL_Renderer *renderer, const ModelInstance &in
         pickle::math::Vector<6, float> v1 = projectedVertices[triangle.data[0]];
         pickle::math::Vector<6, float> v2 = projectedVertices[triangle.data[1]];
         pickle::math::Vector<6, float> v3 = projectedVertices[triangle.data[2]];
-        std::cout << "TRY" << std::endl;
 
         if (!isClipped(v1) || !isClipped(v2) || !isClipped(v3))
         {
-            std::cout << "DRAW" << std::endl;
-            drawWireTriangle(renderer, viewportToScreen(v1), viewportToScreen(v2), viewportToScreen(v3));
+            drawTriangle(viewportToScreen(v1), viewportToScreen(v2), viewportToScreen(v3));
         }
+    }
+}
+
+void Renderer::present(SDL_Renderer *renderer)
+{
+    for (const pickle::math::Vector<6, float> &point : buffer)
+    {
+        SDL_SetRenderDrawColor(
+            renderer,
+            std::clamp(point.data[3], 0.0f, 1.0f) * 0xFF,
+            std::clamp(point.data[4], 0.0f, 1.0f) * 0xFF,
+            std::clamp(point.data[5], 0.0f, 1.0f) * 0xFF,
+            0xFF);
+        SDL_Rect rect = {static_cast<int>(point.data[0]), static_cast<int>(point.data[1]), 1, 1};
+        SDL_RenderFillRect(renderer, &rect);
     }
 }
 
@@ -130,8 +150,6 @@ pickle::math::Vector<6, float> Renderer::transformVertex(pickle::math::Vector<6,
     transformedVertex.data[1] = transformedPositionVertexPart.data[1] / transformedPositionVertexPart.data[3];
     transformedVertex.data[2] = transformedPositionVertexPart.data[2];
 
-    std::cout << transformedVertex.data[0] << " " << transformedVertex.data[1] << std::endl;
-
     return transformedVertex;
 }
 
@@ -140,8 +158,10 @@ pickle::math::Vector<6, float> Renderer::viewportToScreen(pickle::math::Vector<6
     pickle::math::Vector<6, float> screenVertex(vertex.data);
     float halfScreenWidth = screenWidth / 2.0f;
     float halfScreenHeight = screenHeight / 2.0f;
-    screenVertex.data[0] = (screenVertex.data[0] / viewportWidth) * halfScreenWidth + halfScreenWidth;
-    screenVertex.data[1] = (-(screenVertex.data[1] / viewportHeight)) * halfScreenHeight + halfScreenHeight;
+
+    screenVertex.data[0] = screenVertex.data[0] * halfScreenWidth / viewportWidth + halfScreenWidth;
+    screenVertex.data[1] = -screenVertex.data[1] * halfScreenHeight / viewportHeight + halfScreenHeight;
+    screenVertex.data[2] = 1.0f / screenVertex.data[2];
     return screenVertex;
 }
 
@@ -160,7 +180,7 @@ std::vector<pickle::math::Vector<6, float>> Renderer::interpolate(float a0, pick
     }
 
     pickle::math::Vector<6, float> p = p0;
-    for (float a = a0; a < a1; a++)
+    for (int a = a0; a < a1; a++)
     {
         for (int i = 0; i < p.size(); i++)
         {

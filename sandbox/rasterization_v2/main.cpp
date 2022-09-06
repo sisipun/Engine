@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     bool quit = false;
 
     Camera camera(pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}));
-    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f, 1000.0f, camera);
+    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f, 10.0f, camera);
 
     SDL_SetRenderDrawColor(sdlRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sdlRenderer);
@@ -81,8 +81,10 @@ int main(int argc, char *argv[])
 
     ModelInstance box1{box, transformBox1};
     ModelInstance box2{box, transformBox2};
-    renderer.drawModelInstance(sdlRenderer, box1);
-    renderer.drawModelInstance(sdlRenderer, box2);
+    renderer.drawModelInstance(box1);
+    renderer.drawModelInstance(box2);
+
+    renderer.present(sdlRenderer);
 
     SDL_RenderPresent(sdlRenderer);
 

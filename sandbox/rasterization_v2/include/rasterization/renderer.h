@@ -13,15 +13,17 @@ class Renderer
 public:
     Renderer(float screenWidth, float screenHeight, float viewportWidth, float viewportHeight, float distanceToViewport, float maxDistance, Camera camera);
 
-    void drawPoint(SDL_Renderer *renderer, pickle::math::Vector<6, float> point);
+    void drawPoint(pickle::math::Vector<6, float> point);
 
-    void drawLine(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1);
+    void drawLine(pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1);
 
-    void drawWireTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2);
+    void drawWireTriangle(pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2);
 
-    void drawTriangle(SDL_Renderer *renderer, pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2);
+    void drawTriangle(pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2);
 
-    void drawModelInstance(SDL_Renderer *renderer, const ModelInstance &instance);
+    void drawModelInstance(const ModelInstance &instance);
+
+    void present(SDL_Renderer *renderer);
 
     pickle::math::Vector<6, float> transformVertex(pickle::math::Vector<6, float> vertex, const pickle::math::Matrix<4, 4, float> &transform);
 
@@ -30,7 +32,8 @@ public:
     bool isClipped(pickle::math::Vector<6, float> vertex) const;
 
 private:
-    std::vector<pickle::math::Vector<6, float>> interpolate(float a0, pickle::math::Vector<6, float> p0, float a1, pickle::math::Vector<6, float> p1);
+    std::vector<pickle::math::Vector<6, float>>
+    interpolate(float a0, pickle::math::Vector<6, float> p0, float a1, pickle::math::Vector<6, float> p1);
 
 private:
     float screenWidth;
@@ -41,6 +44,7 @@ private:
     float maxDistance;
     Camera camera;
     pickle::math::Matrix<4, 4, float> projection;
+    std::vector<pickle::math::Vector<6, float>> buffer;
 };
 
 #endif
