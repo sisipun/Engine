@@ -10,6 +10,8 @@ public:
 
     pickle::math::Matrix<4, 4, float> getViewMatrix() const;
 
+    pickle::math::Vector<3, float> getViewDirection() const;
+
 private:
     pickle::math::Vector<3, float> position;
     pickle::math::Vector<3, float> target;

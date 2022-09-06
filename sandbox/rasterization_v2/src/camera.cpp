@@ -1,7 +1,5 @@
 #include <rasterization/camera.h>
 
-#include <iostream>
-
 Camera::Camera(pickle::math::Vector<3, float> position, pickle::math::Vector<3, float> target) : position(position), target(target)
 {
 }
@@ -17,4 +15,9 @@ pickle::math::Matrix<4, 4, float> Camera::getViewMatrix() const
                                               cameraUp.data[0], cameraUp.data[1], cameraUp.data[2], -dot(cameraUp, position),
                                               cameraDirection.data[0], cameraDirection.data[1], cameraDirection.data[2], -dot(cameraDirection, position),
                                               0.0f, 0.0f, 0.0f, 1.0f});
+}
+
+pickle::math::Vector<3, float> Camera::getViewDirection() const
+{
+    return normalize(target - position);
 }

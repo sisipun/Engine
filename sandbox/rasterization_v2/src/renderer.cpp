@@ -1,7 +1,5 @@
 #include <rasterization/renderer.h>
 
-#include <iostream>
-
 Renderer::Renderer(
     float screenWidth,
     float screenHeight,
@@ -109,14 +107,27 @@ void Renderer::drawModelInstance(const ModelInstance &instance)
 
     for (const pickle::math::Vector<3, int> &triangle : instance.model.triangles)
     {
-        pickle::math::Vector<6, float> v1 = projectedVertices[triangle.data[0]];
-        pickle::math::Vector<6, float> v2 = projectedVertices[triangle.data[1]];
-        pickle::math::Vector<6, float> v3 = projectedVertices[triangle.data[2]];
+        pickle::math::Vector<6, float> v0 = projectedVertices[triangle.data[0]];
+        pickle::math::Vector<6, float> v1 = projectedVertices[triangle.data[1]];
+        pickle::math::Vector<6, float> v2 = projectedVertices[triangle.data[2]];
 
-        if (!isClipped(v1) || !isClipped(v2) || !isClipped(v3))
+        if (isClipped(v0) && isClipped(v1) && isClipped(v2))
         {
-            drawTriangle(viewportToScreen(v1), viewportToScreen(v2), viewportToScreen(v3));
+            continue;
         }
+
+        pickle::math::Vector<3, float> v0Pos = extractPosition(v0);
+        pickle::math::Vector<3, float> v1Pos = extractPosition(v1);
+        pickle::math::Vector<3, float> v2Pos = extractPosition(v2);
+        pickle::math::Vector<3, float> norm = normalize(cross(v1Pos - v0Pos, v2Pos - v0Pos));
+        pickle::math::Vector<3, float> view = -camera.getViewDirection();
+
+        if (dot(norm, view) <= 0)
+        {
+            continue;
+        }
+
+        drawTriangle(viewportToScreen(v0), viewportToScreen(v1), viewportToScreen(v2));
     }
 }
 
@@ -135,13 +146,17 @@ void Renderer::present(SDL_Renderer *renderer)
     }
 }
 
-pickle::math::Vector<6, float> Renderer::transformVertex(pickle::math::Vector<6, float> vertex, const pickle::math::Matrix<4, 4, float> &transform)
+pickle::math::Vector<3, float> Renderer::extractPosition(const pickle::math::Vector<6, float> &vertex)
+{
+    return pickle::math::Vector<3, float>({vertex.data[0],
+                                           vertex.data[1],
+                                           vertex.data[2]});
+}
+
+pickle::math::Vector<6, float> Renderer::transformVertex(const pickle::math::Vector<6, float> &vertex, const pickle::math::Matrix<4, 4, float> &transform)
 {
     pickle::math::Vector<6, float> transformedVertex(vertex.data);
-    pickle::math::Vector<4, float> positionVertexPart({transformedVertex.data[0],
-                                                       transformedVertex.data[1],
-                                                       transformedVertex.data[2],
-                                                       1.0});
+    pickle::math::Vector<4, float> positionVertexPart = extractPosition(transformedVertex).addDimension(1.0f);
 
     pickle::math::Matrix<4, 4, float> view = camera.getViewMatrix();
     pickle::math::Vector<4, float> transformedPositionVertexPart = projection * view * transform * positionVertexPart;
@@ -153,7 +168,7 @@ pickle::math::Vector<6, float> Renderer::transformVertex(pickle::math::Vector<6,
     return transformedVertex;
 }
 
-pickle::math::Vector<6, float> Renderer::viewportToScreen(pickle::math::Vector<6, float> vertex)
+pickle::math::Vector<6, float> Renderer::viewportToScreen(const pickle::math::Vector<6, float> &vertex)
 {
     pickle::math::Vector<6, float> screenVertex(vertex.data);
     float halfScreenWidth = screenWidth / 2.0f;
@@ -165,7 +180,7 @@ pickle::math::Vector<6, float> Renderer::viewportToScreen(pickle::math::Vector<6
     return screenVertex;
 }
 
-bool Renderer::isClipped(pickle::math::Vector<6, float> vertex) const
+bool Renderer::isClipped(const pickle::math::Vector<6, float> &vertex) const
 {
     return vertex.data[0] < -viewportWidth || vertex.data[0] > viewportWidth || vertex.data[1] < -viewportHeight || vertex.data[1] > viewportHeight || vertex.data[2] < 0.0f || vertex.data[2] > 1.0f;
 }

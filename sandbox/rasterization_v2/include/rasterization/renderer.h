@@ -25,11 +25,13 @@ public:
 
     void present(SDL_Renderer *renderer);
 
-    pickle::math::Vector<6, float> transformVertex(pickle::math::Vector<6, float> vertex, const pickle::math::Matrix<4, 4, float> &transform);
+    pickle::math::Vector<3, float> extractPosition(const pickle::math::Vector<6, float> &vertex);
 
-    pickle::math::Vector<6, float> viewportToScreen(pickle::math::Vector<6, float> vertex);
+    pickle::math::Vector<6, float> transformVertex(const pickle::math::Vector<6, float> &vertex, const pickle::math::Matrix<4, 4, float> &transform);
 
-    bool isClipped(pickle::math::Vector<6, float> vertex) const;
+    pickle::math::Vector<6, float> viewportToScreen(const pickle::math::Vector<6, float> &vertex);
+
+    bool isClipped(const pickle::math::Vector<6, float> &vertex) const;
 
 private:
     std::vector<pickle::math::Vector<6, float>>
