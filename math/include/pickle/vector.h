@@ -125,6 +125,17 @@ namespace pickle
                 return cutted;
             }
 
+            Vector<D + 1, T> addDimension(T value)
+            {
+                Vector<D + 1, T> added;
+                for (size_t i = 0; i < D; i++)
+                {
+                    added.data[i] = data[i];
+                }
+                added.data[D] = value;
+                return added;
+            }
+
             size_t size() const
             {
                 return D;

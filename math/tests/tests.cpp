@@ -50,6 +50,22 @@ TEST_CASE("Vector Scalar Div", "[vector]")
     REQUIRE(div.data[2] == 1.0f);
 }
 
+TEST_CASE("Vector Cut Dimention", "[vector]")
+{
+    Vector<2, float> cutted = Vector<3, float>({5, -3, 2}).cutDimension();
+    REQUIRE(cutted.data[0] == 5.0f);
+    REQUIRE(cutted.data[1] == -3.0f);
+}
+
+TEST_CASE("Vector Add", "[vector]")
+{
+    Vector<4, float> added = Vector<3, float>({5, -3, 2}).addDimension(4);
+    REQUIRE(added.data[0] == 5.0f);
+    REQUIRE(added.data[1] == -3.0f);
+    REQUIRE(added.data[2] == 2.0f);
+    REQUIRE(added.data[3] == 4.0f);
+}
+
 TEST_CASE("Vector Length", "[vector]")
 {
     float len = length(Vector<3, float>({3, 4, 0}));
