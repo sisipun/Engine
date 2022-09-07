@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     bool quit = false;
 
     Camera camera(pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}));
-    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f, 10.0f, camera);
+    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f, 10.0f, camera, pickle::math::Vector<3, float>({0.0f, -1.0f, 1.0f}));
 
     SDL_SetRenderDrawColor(sdlRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sdlRenderer);
@@ -44,27 +44,53 @@ int main(int argc, char *argv[])
     // Render
     std::vector<pickle::math::Vector<6, float>> vertices;
     vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f}));
-    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f}));
-    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f}));
-    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f}));
-    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f}));
-    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 0.0f}));
     vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f}));
-    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, -1.0f, 0.5f, 0.5f, 0.5f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 0.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f}));
 
     std::vector<pickle::math::Vector<3, int>> triangles;
     triangles.push_back(pickle::math::Vector<3, int>({0, 1, 2}));
     triangles.push_back(pickle::math::Vector<3, int>({0, 2, 3}));
-    triangles.push_back(pickle::math::Vector<3, int>({4, 0, 3}));
-    triangles.push_back(pickle::math::Vector<3, int>({4, 3, 7}));
+
     triangles.push_back(pickle::math::Vector<3, int>({5, 4, 7}));
     triangles.push_back(pickle::math::Vector<3, int>({5, 7, 6}));
-    triangles.push_back(pickle::math::Vector<3, int>({1, 5, 6}));
-    triangles.push_back(pickle::math::Vector<3, int>({1, 6, 2}));
-    triangles.push_back(pickle::math::Vector<3, int>({4, 5, 1}));
-    triangles.push_back(pickle::math::Vector<3, int>({4, 1, 0}));
-    triangles.push_back(pickle::math::Vector<3, int>({2, 6, 7}));
-    triangles.push_back(pickle::math::Vector<3, int>({2, 7, 3}));
+
+    triangles.push_back(pickle::math::Vector<3, int>({8, 9, 10}));
+    triangles.push_back(pickle::math::Vector<3, int>({8, 10, 11}));
+
+    triangles.push_back(pickle::math::Vector<3, int>({12, 13, 14}));
+    triangles.push_back(pickle::math::Vector<3, int>({12, 14, 15}));
+
+    triangles.push_back(pickle::math::Vector<3, int>({16, 17, 18}));
+    triangles.push_back(pickle::math::Vector<3, int>({16, 18, 19}));
+
+    triangles.push_back(pickle::math::Vector<3, int>({20, 21, 22}));
+    triangles.push_back(pickle::math::Vector<3, int>({20, 22, 23}));
 
     Model box{vertices, triangles};
 

@@ -7,7 +7,8 @@ Renderer::Renderer(
     float viewportHeight,
     float distanceToViewport,
     float maxDistance,
-    Camera camera)
+    Camera camera,
+    pickle::math::Vector<3, float> lightDirection)
     : screenWidth(screenWidth),
       screenHeight(screenHeight),
       viewportWidth(viewportWidth),
@@ -15,6 +16,7 @@ Renderer::Renderer(
       distanceToViewport(distanceToViewport),
       maxDistance(maxDistance),
       camera(camera),
+      lightDirection(normalize(lightDirection)),
       projection({distanceToViewport / viewportWidth, 0.0f, 0.0f, 0.0f,
                   0.0f, distanceToViewport / viewportHeight, 0.0f, 0.0f,
                   0.0f, 0.0f, 1 / (maxDistance - distanceToViewport), -distanceToViewport / (maxDistance - distanceToViewport),
@@ -126,6 +128,22 @@ void Renderer::drawModelInstance(const ModelInstance &instance)
         {
             continue;
         }
+
+        float ambientLightPower = 0.2f;
+        float diffuseLightPower = std::max(dot(norm, -lightDirection), 0.0f);
+        float lightPower = ambientLightPower + diffuseLightPower;
+
+        v0.data[3] *= v0.data[3] * lightPower;
+        v0.data[4] *= v0.data[4] * lightPower;
+        v0.data[5] *= v0.data[5] * lightPower;
+
+        v1.data[3] *= v1.data[3] * lightPower;
+        v1.data[4] *= v1.data[4] * lightPower;
+        v1.data[5] *= v1.data[5] * lightPower;
+
+        v2.data[3] *= v2.data[3] * lightPower;
+        v2.data[4] *= v2.data[4] * lightPower;
+        v2.data[5] *= v2.data[5] * lightPower;
 
         drawTriangle(viewportToScreen(v0), viewportToScreen(v1), viewportToScreen(v2));
     }

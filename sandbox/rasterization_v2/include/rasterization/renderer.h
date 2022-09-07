@@ -11,7 +11,14 @@
 class Renderer
 {
 public:
-    Renderer(float screenWidth, float screenHeight, float viewportWidth, float viewportHeight, float distanceToViewport, float maxDistance, Camera camera);
+    Renderer(float screenWidth,
+             float screenHeight,
+             float viewportWidth,
+             float viewportHeight,
+             float distanceToViewport,
+             float maxDistance,
+             Camera camera,
+             pickle::math::Vector<3, float> lightDirection);
 
     void drawPoint(pickle::math::Vector<6, float> point);
 
@@ -45,6 +52,7 @@ private:
     float distanceToViewport;
     float maxDistance;
     Camera camera;
+    pickle::math::Vector<3, float> lightDirection;
     pickle::math::Matrix<4, 4, float> projection;
     std::vector<pickle::math::Vector<6, float>> buffer;
 };
