@@ -3,6 +3,9 @@
 #include <pickle/math.h>
 
 #include <rasterization/renderer.h>
+#include <rasterization/camera.h>
+#include <rasterization/model.h>
+#include <rasterization/model_instance.h>
 
 int main(int argc, char *argv[])
 {
@@ -32,17 +35,82 @@ int main(int argc, char *argv[])
 
     bool quit = false;
 
-    Renderer renderer(width, height);
+    Camera camera(pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}));
+    Renderer renderer(width, height, 1.0f, 1.0f, 1.0f, 10.0f, camera, pickle::math::Vector<3, float>({0.0f, -1.0f, 1.0f}));
 
     SDL_SetRenderDrawColor(sdlRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(sdlRenderer);
 
     // Render
-    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, float>({-0.65f, -0.65f}), pickle::math::Vector<2, float>({0.65, 0.65}), {0xFF, 0xFF, 0xFF, 0xFF});
-    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, float>({0.35f, 0.0f}), pickle::math::Vector<2, float>({-0.35, -0.35}), {0xFF, 0xFF, 0xFF, 0xFF});
-    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, float>({-0.65, 0.65}), pickle::math::Vector<2, float>({0.65, 0.65}), {0xFF, 0xFF, 0xFF, 0xFF});
-    renderer.drawLine(sdlRenderer, pickle::math::Vector<2, float>({-0.65, -0.65}), pickle::math::Vector<2, float>({-0.65, 0.65}), {0xFF, 0x00, 0x00, 0xFF});
-    renderer.drawTriangle(sdlRenderer, pickle::math::Vector<2, float>({-0.35, 0.35}), 1.0f, pickle::math::Vector<2, float>({0.0, -0.35}), 0.0f, pickle::math::Vector<2, float>({0.35, 0.35}), 0.2f, {0x00, 0x00, 0xFF, 0xFF});
+    std::vector<pickle::math::Vector<6, float>> vertices;
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 0.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f}));
+
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({-1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 1.0f}));
+    vertices.push_back(pickle::math::Vector<6, float>({1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f}));
+
+    std::vector<pickle::math::Vector<3, int>> triangles;
+    triangles.push_back(pickle::math::Vector<3, int>({0, 1, 2}));
+    triangles.push_back(pickle::math::Vector<3, int>({0, 2, 3}));
+
+    triangles.push_back(pickle::math::Vector<3, int>({5, 4, 7}));
+    triangles.push_back(pickle::math::Vector<3, int>({5, 7, 6}));
+
+    triangles.push_back(pickle::math::Vector<3, int>({8, 9, 10}));
+    triangles.push_back(pickle::math::Vector<3, int>({8, 10, 11}));
+
+    triangles.push_back(pickle::math::Vector<3, int>({12, 13, 14}));
+    triangles.push_back(pickle::math::Vector<3, int>({12, 14, 15}));
+
+    triangles.push_back(pickle::math::Vector<3, int>({16, 17, 18}));
+    triangles.push_back(pickle::math::Vector<3, int>({16, 18, 19}));
+
+    triangles.push_back(pickle::math::Vector<3, int>({20, 21, 22}));
+    triangles.push_back(pickle::math::Vector<3, int>({20, 22, 23}));
+
+    Model box{vertices, triangles};
+
+    pickle::math::Matrix<4, 4, float> transformBox1 = pickle::math::translate(
+        pickle::math::identity<4, float>(),
+        pickle::math::Vector<3, float>({-1.5f, 0.0f, 4.0f}));
+
+    pickle::math::Matrix<4, 4, float> transformBox2 = pickle::math::rotate(
+        pickle::math::translate(
+            pickle::math::identity<4, float>(),
+            pickle::math::Vector<3, float>({1.25f, 2.0f, 4.5f})),
+        pickle::math::radians(195.0f),
+        pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
+
+    ModelInstance box1{box, transformBox1};
+    ModelInstance box2{box, transformBox2};
+    renderer.drawModelInstance(box1);
+    renderer.drawModelInstance(box2);
+
+    renderer.present(sdlRenderer);
 
     SDL_RenderPresent(sdlRenderer);
 

@@ -1,129 +1,225 @@
 #include <rasterization/renderer.h>
 
-Renderer::Renderer(float width, float height) : width(width), height(height), widthStep(2.0f/width), heightStep(2.0f/height)
+Renderer::Renderer(
+    float screenWidth,
+    float screenHeight,
+    float viewportWidth,
+    float viewportHeight,
+    float distanceToViewport,
+    float maxDistance,
+    Camera camera,
+    pickle::math::Vector<3, float> lightDirection)
+    : screenWidth(screenWidth),
+      screenHeight(screenHeight),
+      viewportWidth(viewportWidth),
+      viewportHeight(viewportHeight),
+      distanceToViewport(distanceToViewport),
+      maxDistance(maxDistance),
+      camera(camera),
+      lightDirection(normalize(lightDirection)),
+      projection({distanceToViewport / viewportWidth, 0.0f, 0.0f, 0.0f,
+                  0.0f, distanceToViewport / viewportHeight, 0.0f, 0.0f,
+                  0.0f, 0.0f, 1 / (maxDistance - distanceToViewport), -distanceToViewport / (maxDistance - distanceToViewport),
+                  0.0f, 0.0f, 1.0f, 0.0f})
 {
-}
-
-void Renderer::drawPoint(SDL_Renderer *renderer, pickle::math::Vector<3, float> p, Color color)
-{
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_Rect rect = {
-        static_cast<int>(((x + 1.0f) / 2.0f) * width), 
-        static_cast<int>(((-y + 1.0f) / 2.0f) * height), 
-        1, 
-        1};
-    SDL_RenderFillRect(renderer, &rect);
-}
-
-void Renderer::drawLine(SDL_Renderer *renderer, pickle::math::Vector<2, float> start, pickle::math::Vector<2, float> end, Color color)
-{
-    bool swapped = false;
-    if (std::abs(end.data[1] - start.data[1]) > std::abs(end.data[0] - start.data[0]))
+    for (int x = 0; x < screenWidth; x++)
     {
-        std::swap(start.data[0], start.data[1]);
-        std::swap(end.data[0], end.data[1]);
-        swapped = true;
-    }
-    if (start.data[0] > end.data[0])
-    {
-        std::swap(start, end);
-    }
-
-    std::unordered_map<float, float> sequence = interpolate(start.data[0], start.data[1], end.data[0], end.data[1]);
-    for (float x = start.data[0]; x < end.data[0]; x+=widthStep)
-    {
-        float y = sequence[x];
-        if (swapped)
+        for (int y = 0; y < screenHeight; y++)
         {
-            drawPoint(renderer, y, x, color);
-        }
-        else
-        {
-            drawPoint(renderer, x, y, color);
+            buffer.push_back(pickle::math::Vector<6, float>());
         }
     }
 }
 
-void Renderer::drawTriangle(
-    SDL_Renderer *renderer, 
-    pickle::math::Vector<2, float> p1, 
-    float h1,
-    pickle::math::Vector<2, float> p2, 
-    float h2,
-    pickle::math::Vector<2, float> p3, 
-    float h3,
-    Color color
-)
+void Renderer::drawPoint(pickle::math::Vector<6, float> point)
 {
-    if (p1.data[1] < p2.data[1])
+    int x = point.data[0];
+    int y = point.data[1];
+    if (buffer[x * screenHeight + y].data[2] < point.data[2])
+    {
+        buffer[x * screenHeight + y] = point;
+    }
+}
+
+void Renderer::drawLine(pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1)
+{
+    int aIndex = std::abs(p1.data[0] - p0.data[0]) < std::abs(p1.data[1] - p0.data[1]) ? 1 : 0;
+    float a0 = p0.data[aIndex];
+    float a1 = p1.data[aIndex];
+
+    if (a0 > a1)
+    {
+        std::swap(a0, a1);
+        std::swap(p0, p1);
+    }
+
+    std::vector<pickle::math::Vector<6, float>> line = interpolate(a0, p0, a1, p1);
+    for (const pickle::math::Vector<6, float> &point : line)
+    {
+        drawPoint(point);
+    }
+}
+
+void Renderer::drawWireTriangle(pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2)
+{
+    drawLine(p0, p1);
+    drawLine(p1, p2);
+    drawLine(p2, p0);
+}
+
+void Renderer::drawTriangle(pickle::math::Vector<6, float> p0, pickle::math::Vector<6, float> p1, pickle::math::Vector<6, float> p2)
+{
+    if (p1.data[1] > p2.data[1])
     {
         std::swap(p1, p2);
     }
-    if (p1.data[1] < p3.data[1])
+    if (p0.data[1] > p2.data[1])
     {
-        std::swap(p1, p3);
+        std::swap(p0, p2);
     }
-    if (p2.data[1] < p3.data[1])
+    if (p0.data[1] > p1.data[1])
     {
-        std::swap(p2, p3);
+        std::swap(p0, p1);
     }
 
-    std::unordered_map<float, float> longSide = interpolate(p3.data[1], p3.data[0], p1.data[1], p1.data[0]);
-    std::unordered_map<float, float> topSide = interpolate(p2.data[1], p2.data[0], p1.data[1], p1.data[0]);
-    std::unordered_map<float, float> bottomSide = interpolate(p3.data[1], p3.data[0], p2.data[1], p2.data[0]);
+    std::vector<pickle::math::Vector<6, float>> longSide = interpolate(p0.data[1], p0, p2.data[1], p2);
+    std::vector<pickle::math::Vector<6, float>> shortSide;
 
-    std::unordered_map<float, float> longSideH = interpolate(p3.data[1], h3, p1.data[1], h1);
-    std::unordered_map<float, float> topSideH = interpolate(p2.data[1], h2, p1.data[1], h1);
-    std::unordered_map<float, float> bottomSideH = interpolate(p3.data[1], h3, p2.data[1], h2);
+    std::vector<pickle::math::Vector<6, float>> shortSideFirtsPart = interpolate(p0.data[1], p0, p1.data[1], p1);
+    std::vector<pickle::math::Vector<6, float>> shortSideSecondPart = interpolate(p1.data[1], p1, p2.data[1], p2);
 
-    for (float y = p3.data[1]; y < p1.data[1]; y+=heightStep)
+    shortSide.insert(shortSide.end(), shortSideFirtsPart.begin(), shortSideFirtsPart.end());
+    shortSide.pop_back();
+    shortSide.insert(shortSide.end(), shortSideSecondPart.begin(), shortSideSecondPart.end());
+
+    for (float y = p0.data[1]; y < p2.data[1]; y++)
     {
-        float leftX = longSide[y];
-        float rightX = y > p2.data[1] 
-            ? topSide[y]
-            : bottomSide[y];
-        
-        float leftH = longSideH[y];
-        float rightH = y > p2.data[1] 
-            ? topSideH[y]
-            : bottomSideH[y];
-        
-        if (leftX > rightX)
-        {
-            std::swap(leftX, rightX);
-            std::swap(leftH, rightH);
-        }
-
-        std::unordered_map<float, float> hValues = interpolate(leftX, leftH, rightX, rightH);
-        for (float x = leftX; x < rightX; x+=widthStep) 
-        {
-            drawPoint(renderer, x, y, color * hValues[x]);
-        }
+        int index = y - p0.data[1];
+        drawLine(shortSide[index], longSide[index]);
     }
 }
 
-std::unordered_map<float, float> Renderer::interpolate(float x1, float y1, float x2, float y2)
+void Renderer::drawModelInstance(const ModelInstance &instance)
 {
-    std::unordered_map<float, float> values;
-    if (x1 == x2)
+    std::vector<pickle::math::Vector<6, float>> projectedVertices;
+    for (const pickle::math::Vector<6, float> &vertex : instance.model.vertices)
     {
-        values.insert(std::pair<float, float>(x1, y1));
+        projectedVertices.push_back(transformVertex(vertex, instance.transform));
+    }
+
+    for (const pickle::math::Vector<3, int> &triangle : instance.model.triangles)
+    {
+        pickle::math::Vector<6, float> v0 = projectedVertices[triangle.data[0]];
+        pickle::math::Vector<6, float> v1 = projectedVertices[triangle.data[1]];
+        pickle::math::Vector<6, float> v2 = projectedVertices[triangle.data[2]];
+
+        if (isClipped(v0) && isClipped(v1) && isClipped(v2))
+        {
+            continue;
+        }
+
+        pickle::math::Vector<3, float> v0Pos = extractPosition(v0);
+        pickle::math::Vector<3, float> v1Pos = extractPosition(v1);
+        pickle::math::Vector<3, float> v2Pos = extractPosition(v2);
+        pickle::math::Vector<3, float> norm = normalize(cross(v1Pos - v0Pos, v2Pos - v0Pos));
+        pickle::math::Vector<3, float> view = -camera.getViewDirection();
+
+        if (dot(norm, view) <= 0)
+        {
+            continue;
+        }
+
+        float ambientLightPower = 0.2f;
+        float diffuseLightPower = std::max(dot(norm, -lightDirection), 0.0f);
+        float lightPower = ambientLightPower + diffuseLightPower;
+
+        v0.data[3] *= v0.data[3] * lightPower;
+        v0.data[4] *= v0.data[4] * lightPower;
+        v0.data[5] *= v0.data[5] * lightPower;
+
+        v1.data[3] *= v1.data[3] * lightPower;
+        v1.data[4] *= v1.data[4] * lightPower;
+        v1.data[5] *= v1.data[5] * lightPower;
+
+        v2.data[3] *= v2.data[3] * lightPower;
+        v2.data[4] *= v2.data[4] * lightPower;
+        v2.data[5] *= v2.data[5] * lightPower;
+
+        drawTriangle(viewportToScreen(v0), viewportToScreen(v1), viewportToScreen(v2));
+    }
+}
+
+void Renderer::present(SDL_Renderer *renderer)
+{
+    for (const pickle::math::Vector<6, float> &point : buffer)
+    {
+        SDL_SetRenderDrawColor(
+            renderer,
+            std::clamp(point.data[3], 0.0f, 1.0f) * 0xFF,
+            std::clamp(point.data[4], 0.0f, 1.0f) * 0xFF,
+            std::clamp(point.data[5], 0.0f, 1.0f) * 0xFF,
+            0xFF);
+        SDL_Rect rect = {static_cast<int>(point.data[0]), static_cast<int>(point.data[1]), 1, 1};
+        SDL_RenderFillRect(renderer, &rect);
+    }
+}
+
+pickle::math::Vector<3, float> Renderer::extractPosition(const pickle::math::Vector<6, float> &vertex)
+{
+    return pickle::math::Vector<3, float>({vertex.data[0],
+                                           vertex.data[1],
+                                           vertex.data[2]});
+}
+
+pickle::math::Vector<6, float> Renderer::transformVertex(const pickle::math::Vector<6, float> &vertex, const pickle::math::Matrix<4, 4, float> &transform)
+{
+    pickle::math::Vector<6, float> transformedVertex(vertex.data);
+    pickle::math::Vector<4, float> positionVertexPart = extractPosition(transformedVertex).addDimension(1.0f);
+
+    pickle::math::Matrix<4, 4, float> view = camera.getViewMatrix();
+    pickle::math::Vector<4, float> transformedPositionVertexPart = projection * view * transform * positionVertexPart;
+
+    transformedVertex.data[0] = transformedPositionVertexPart.data[0] / transformedPositionVertexPart.data[3];
+    transformedVertex.data[1] = transformedPositionVertexPart.data[1] / transformedPositionVertexPart.data[3];
+    transformedVertex.data[2] = transformedPositionVertexPart.data[2];
+
+    return transformedVertex;
+}
+
+pickle::math::Vector<6, float> Renderer::viewportToScreen(const pickle::math::Vector<6, float> &vertex)
+{
+    pickle::math::Vector<6, float> screenVertex(vertex.data);
+    float halfScreenWidth = screenWidth / 2.0f;
+    float halfScreenHeight = screenHeight / 2.0f;
+
+    screenVertex.data[0] = screenVertex.data[0] * halfScreenWidth / viewportWidth + halfScreenWidth;
+    screenVertex.data[1] = -screenVertex.data[1] * halfScreenHeight / viewportHeight + halfScreenHeight;
+    screenVertex.data[2] = 1.0f / screenVertex.data[2];
+    return screenVertex;
+}
+
+bool Renderer::isClipped(const pickle::math::Vector<6, float> &vertex) const
+{
+    return vertex.data[0] < -viewportWidth || vertex.data[0] > viewportWidth || vertex.data[1] < -viewportHeight || vertex.data[1] > viewportHeight || vertex.data[2] < 0.0f || vertex.data[2] > 1.0f;
+}
+
+std::vector<pickle::math::Vector<6, float>> Renderer::interpolate(float a0, pickle::math::Vector<6, float> p0, float a1, pickle::math::Vector<6, float> p1)
+{
+    std::vector<pickle::math::Vector<6, float>> values;
+    values.push_back(p0);
+    if (a0 == a1)
+    {
         return values;
     }
-    if (x1 > x2)
-    {
-        std::swap(x1, x2);
-        std::swap(y1, y2);
-    }
 
-    float a = (y2 - y1) * heightStep / (x2 - x1);
-    float b = y1 - a * x1;
-    float y = y1;
-
-    for (float x = x1; x < x2; x+=widthStep)
+    pickle::math::Vector<6, float> p = p0;
+    for (int a = a0; a < a1; a++)
     {
-        y += a;
-        values.insert(std::pair<float, float>(x, y));
+        for (int i = 0; i < p.size(); i++)
+        {
+            p.data[i] += (p1.data[i] - p0.data[i]) / (a1 - a0);
+        }
+        values.push_back(p);
     }
 
     return values;
