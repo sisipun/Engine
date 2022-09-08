@@ -59,7 +59,7 @@ TEST_CASE("Vector Cut Dimention Simple", "[vector]")
 
 TEST_CASE("Vector Cut Dimention", "[vector]")
 {
-    Vector<3, float> cutted = Vector<5, float>({5, -3, 2, 5, 1}).cutDimension<2, 3>();
+    Vector<3, float> cutted = Vector<5, float>({5, -3, 2, 5, 1}).cutDimension<2, 2>();
     REQUIRE(cutted.data[0] == 5.0f);
     REQUIRE(cutted.data[1] == -3.0f);
     REQUIRE(cutted.data[2] == 1.0f);
@@ -109,6 +109,13 @@ TEST_CASE("Vector Replace", "[vector]")
     REQUIRE(replaced.data[1] == 1.0f);
     REQUIRE(replaced.data[2] == 4.0f);
     REQUIRE(replaced.data[3] == -7.0f);
+}
+
+TEST_CASE("Vector SubVector", "[vector]")
+{
+    Vector<2, float> subVector = Vector<4, float>({5, -3, 2, -7}).subVector<1, 2>();
+    REQUIRE(subVector.data[0] == -3.0f);
+    REQUIRE(subVector.data[1] == 2.0f);
 }
 
 TEST_CASE("Vector Replace To Start", "[vector]")

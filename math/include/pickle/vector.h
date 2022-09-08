@@ -116,25 +116,23 @@ namespace pickle
             }
 
             template <int P>
-            typename std::enable_if<P >= 0 && P <= D - 1, Vector<D - 1, T>>::type cutDimension()
+            typename std::enable_if<P >= 0 && P + 1 <= D, Vector<D - 1, T>>::type cutDimension()
             {
-                return cutDimension<P, P>();
+                return cutDimension<P, 1>();
             }
 
-            template <int L, int R>
-            typename std::enable_if<L <= R && L >= 0 && R <= D - 1, Vector<D - (R - L + 1), T>>::type cutDimension()
+            template <int P, int S>
+            typename std::enable_if<P >= 0 && P + S <= D, Vector<D - S, T>>::type cutDimension()
             {
-                Vector<D - (R - L + 1), T> cutted;
+                Vector<D - S, T> cutted;
                 size_t cuttedIndex = 0;
                 for (size_t i = 0; i < D; i++)
                 {
-                    if (i >= L && i <= R)
+                    if (i < P || i >= P + S)
                     {
-                        continue;
+                        cutted.data[cuttedIndex] = data[i];
+                        cuttedIndex++;
                     }
-
-                    cutted.data[cuttedIndex] = data[i];
-                    cuttedIndex++;
                 }
                 return cutted;
             }
@@ -195,6 +193,22 @@ namespace pickle
                 }
 
                 return replaced;
+            }
+
+            template <int P, int S>
+            typename std::enable_if<P >= 0 && P + S <= D, Vector<D - S, T>>::type subVector()
+            {
+                Vector<D - S, T> sub;
+                size_t subIndex = 0;
+                for (size_t i = 0; i < D; i++)
+                {
+                    if (i >= P && i < P + S)
+                    {
+                        sub.data[subIndex] = data[i];
+                        subIndex++;
+                    }
+                }
+                return sub;
             }
 
             size_t size() const
