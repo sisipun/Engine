@@ -115,24 +115,56 @@ namespace pickle
                 return !(*this == vector);
             }
 
-            Vector<D - 1, T> cutDimension()
+            template <int P>
+            typename std::enable_if<P >= 0 && P <= D - 1, Vector<D - 1, T>>::type cutDimension()
             {
-                Vector<D - 1, T> cutted;
-                for (size_t i = 0; i < D - 1; i++)
+                return cutDimension<P, P>();
+            }
+
+            template <int L, int R>
+            typename std::enable_if<L <= R && L >= 0 && R <= D - 1, Vector<D - (R - L + 1), T>>::type cutDimension()
+            {
+                Vector<D - (R - L + 1), T> cutted;
+                size_t cuttedIndex = 0;
+                for (size_t i = 0; i < D; i++)
                 {
-                    cutted.data[i] = data[i];
+                    if (i >= L && i <= R)
+                    {
+                        continue;
+                    }
+
+                    cutted.data[cuttedIndex] = data[i];
+                    cuttedIndex++;
                 }
                 return cutted;
             }
 
-            Vector<D + 1, T> addDimension(T value)
+            template <int P>
+            typename std::enable_if<P >= 0 && P <= D, Vector<D + 1, T>>::type addDimension(T value)
             {
-                Vector<D + 1, T> added;
-                for (size_t i = 0; i < D; i++)
+                return addDimension<P, 1>(Vector<1, T>({value}));
+            }
+
+            template <int P, int S>
+            typename std::enable_if<P >= 0 && P <= D, Vector<D + S, T>>::type addDimension(Vector<S, T> value)
+            {
+                Vector<D + S, T> added;
+                size_t addedIndex = 0;
+                for (size_t i = 0; i < P; i++, addedIndex++)
                 {
-                    added.data[i] = data[i];
+                    added.data[addedIndex] = data[i];
                 }
-                added.data[D] = value;
+
+                for (size_t i = 0; i < S; i++, addedIndex++)
+                {
+                    added.data[addedIndex] = value.data[i];
+                }
+
+                for (size_t i = P; i < D; i++, addedIndex++)
+                {
+                    added.data[addedIndex] = data[i];
+                }
+
                 return added;
             }
 

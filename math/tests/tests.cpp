@@ -50,16 +50,44 @@ TEST_CASE("Vector Scalar Div", "[vector]")
     REQUIRE(div.data[2] == 1.0f);
 }
 
-TEST_CASE("Vector Cut Dimention", "[vector]")
+TEST_CASE("Vector Cut Dimention Simple", "[vector]")
 {
-    Vector<2, float> cutted = Vector<3, float>({5, -3, 2}).cutDimension();
+    Vector<2, float> cutted = Vector<3, float>({5, -3, 2}).cutDimension<1>();
     REQUIRE(cutted.data[0] == 5.0f);
-    REQUIRE(cutted.data[1] == -3.0f);
+    REQUIRE(cutted.data[1] == 2.0f);
 }
 
-TEST_CASE("Vector Add", "[vector]")
+TEST_CASE("Vector Cut Dimention", "[vector]")
 {
-    Vector<4, float> added = Vector<3, float>({5, -3, 2}).addDimension(4);
+    Vector<3, float> cutted = Vector<5, float>({5, -3, 2, 5, 1}).cutDimension<2, 3>();
+    REQUIRE(cutted.data[0] == 5.0f);
+    REQUIRE(cutted.data[1] == -3.0f);
+    REQUIRE(cutted.data[2] == 1.0f);
+}
+
+TEST_CASE("Vector Add Dimension Simple", "[vector]")
+{
+    Vector<4, float> added = Vector<3, float>({5, -3, 2}).addDimension<1>(4);
+    REQUIRE(added.data[0] == 5.0f);
+    REQUIRE(added.data[1] == 4.0f);
+    REQUIRE(added.data[2] == -3.0f);
+    REQUIRE(added.data[3] == 2.0f);
+}
+
+TEST_CASE("Vector Add Dimension", "[vector]")
+{
+    Vector<6, float> added = Vector<3, float>({5, -3, 2}).addDimension<2, 3>(Vector<3, float>({1, 4, -8}));
+    REQUIRE(added.data[0] == 5.0f);
+    REQUIRE(added.data[1] == -3.0f);
+    REQUIRE(added.data[2] == 1.0f);
+    REQUIRE(added.data[3] == 4.0f);
+    REQUIRE(added.data[4] == -8.0f);
+    REQUIRE(added.data[5] == 2.0f);
+}
+
+TEST_CASE("Vector Add Dimension To End", "[vector]")
+{
+    Vector<4, float> added = Vector<3, float>({5, -3, 2}).addDimension<3>(4);
     REQUIRE(added.data[0] == 5.0f);
     REQUIRE(added.data[1] == -3.0f);
     REQUIRE(added.data[2] == 2.0f);
