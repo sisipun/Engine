@@ -168,6 +168,35 @@ namespace pickle
                 return added;
             }
 
+            template <int P>
+            typename std::enable_if<P >= 0 && P + 1 <= D, Vector<D, T>>::type replace(T value)
+            {
+                return replace<P, 1>(Vector<1, T>({value}));
+            }
+
+            template <int P, int S>
+            typename std::enable_if<P >= 0 && P + S <= D, Vector<D, T>>::type replace(Vector<S, T> value)
+            {
+                Vector<D, T> replaced;
+                size_t replacedIndex = 0;
+                for (size_t i = 0; i < P; i++, replacedIndex++)
+                {
+                    replaced.data[replacedIndex] = data[i];
+                }
+
+                for (size_t i = 0; i < S; i++, replacedIndex++)
+                {
+                    replaced.data[replacedIndex] = value.data[i];
+                }
+
+                for (size_t i = P + S; i < D; i++, replacedIndex++)
+                {
+                    replaced.data[replacedIndex] = data[i];
+                }
+
+                return replaced;
+            }
+
             size_t size() const
             {
                 return D;

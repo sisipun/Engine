@@ -94,6 +94,31 @@ TEST_CASE("Vector Add Dimension To End", "[vector]")
     REQUIRE(added.data[3] == 4.0f);
 }
 
+TEST_CASE("Vector Replace Simple", "[vector]")
+{
+    Vector<3, float> replaced = Vector<3, float>({5, -3, 2}).replace<1>(4);
+    REQUIRE(replaced.data[0] == 5.0f);
+    REQUIRE(replaced.data[1] == 4.0f);
+    REQUIRE(replaced.data[2] == 2.0f);
+}
+
+TEST_CASE("Vector Replace", "[vector]")
+{
+    Vector<4, float> replaced = Vector<4, float>({5, -3, 2, -7}).replace<1, 2>(Vector<2, float>({1, 4}));
+    REQUIRE(replaced.data[0] == 5.0f);
+    REQUIRE(replaced.data[1] == 1.0f);
+    REQUIRE(replaced.data[2] == 4.0f);
+    REQUIRE(replaced.data[3] == -7.0f);
+}
+
+TEST_CASE("Vector Replace To Start", "[vector]")
+{
+    Vector<3, float> added = Vector<3, float>({5, -3, 2}).replace<0>(4);
+    REQUIRE(added.data[0] == 4.0f);
+    REQUIRE(added.data[1] == -3.0f);
+    REQUIRE(added.data[2] == 2.0f);
+}
+
 TEST_CASE("Vector Length", "[vector]")
 {
     float len = length(Vector<3, float>({3, 4, 0}));
