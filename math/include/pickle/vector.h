@@ -121,14 +121,14 @@ namespace pickle
                 return cutDimension<P, 1>();
             }
 
-            template <int P, int S>
-            typename std::enable_if<P >= 0 && P + S <= D, Vector<D - S, T>>::type cutDimension()
+            template <int P, int C>
+            typename std::enable_if<P >= 0 && C >= 0 && P + C <= D, Vector<D - C, T>>::type cutDimension()
             {
-                Vector<D - S, T> cutted;
+                Vector<D - C, T> cutted;
                 size_t cuttedIndex = 0;
                 for (size_t i = 0; i < D; i++)
                 {
-                    if (i < P || i >= P + S)
+                    if (i < P || i >= P + C)
                     {
                         cutted.data[cuttedIndex] = data[i];
                         cuttedIndex++;
@@ -143,17 +143,17 @@ namespace pickle
                 return addDimension<P, 1>(Vector<1, T>({value}));
             }
 
-            template <int P, int S>
-            typename std::enable_if<P >= 0 && P <= D, Vector<D + S, T>>::type addDimension(Vector<S, T> value)
+            template <int P, int C>
+            typename std::enable_if<P >= 0 && C >= 0 && P <= D, Vector<D + C, T>>::type addDimension(Vector<C, T> value)
             {
-                Vector<D + S, T> added;
+                Vector<D + C, T> added;
                 size_t addedIndex = 0;
                 for (size_t i = 0; i < P; i++, addedIndex++)
                 {
                     added.data[addedIndex] = data[i];
                 }
 
-                for (size_t i = 0; i < S; i++, addedIndex++)
+                for (size_t i = 0; i < C; i++, addedIndex++)
                 {
                     added.data[addedIndex] = value.data[i];
                 }
@@ -172,8 +172,8 @@ namespace pickle
                 return replace<P, 1>(Vector<1, T>({value}));
             }
 
-            template <int P, int S>
-            typename std::enable_if<P >= 0 && P + S <= D, Vector<D, T>>::type replace(Vector<S, T> value)
+            template <int P, int C>
+            typename std::enable_if<P >= 0 && C >= 0 && P + C <= D, Vector<D, T>>::type replace(Vector<C, T> value)
             {
                 Vector<D, T> replaced;
                 size_t replacedIndex = 0;
@@ -182,12 +182,12 @@ namespace pickle
                     replaced.data[replacedIndex] = data[i];
                 }
 
-                for (size_t i = 0; i < S; i++, replacedIndex++)
+                for (size_t i = 0; i < C; i++, replacedIndex++)
                 {
                     replaced.data[replacedIndex] = value.data[i];
                 }
 
-                for (size_t i = P + S; i < D; i++, replacedIndex++)
+                for (size_t i = P + C; i < D; i++, replacedIndex++)
                 {
                     replaced.data[replacedIndex] = data[i];
                 }
@@ -195,14 +195,14 @@ namespace pickle
                 return replaced;
             }
 
-            template <int P, int S>
-            typename std::enable_if<P >= 0 && P + S <= D, Vector<D - S, T>>::type subVector()
+            template <int P, int C>
+            typename std::enable_if<P >= 0 && C >= 1 && P + C <= D, Vector<D - C, T>>::type subVector()
             {
-                Vector<D - S, T> sub;
+                Vector<D - C, T> sub;
                 size_t subIndex = 0;
                 for (size_t i = 0; i < D; i++)
                 {
-                    if (i >= P && i < P + S)
+                    if (i >= P && i < P + C)
                     {
                         sub.data[subIndex] = data[i];
                         subIndex++;

@@ -233,6 +233,67 @@ TEST_CASE("Matrix Mul", "[matrix]")
     REQUIRE(mul.data[8] == 22.0f);
 }
 
+TEST_CASE("Matrix Cut Dimention Simple", "[matrix]")
+{
+    Matrix<2, 2, float> cutted = Matrix<3, 3, float>({2, 3, 2,
+                                                      1, 5, 3,
+                                                      -2, 1, 4})
+                                     .cutDimension<1, 1>();
+    REQUIRE(cutted.data[0] == 2.0f);
+    REQUIRE(cutted.data[1] == 2.0f);
+    REQUIRE(cutted.data[2] == -2.0f);
+    REQUIRE(cutted.data[3] == 4.0f);
+}
+
+TEST_CASE("Matrix Cut Dimention Zero", "[matrix]")
+{
+    Matrix<2, 3, float> cutted = Matrix<3, 3, float>({2, 3, 2,
+                                                      1, 5, 3,
+                                                      -2, 1, 4})
+                                     .cutDimension<1, 1, 1, 0>();
+    REQUIRE(cutted.data[0] == 2.0f);
+    REQUIRE(cutted.data[1] == 3.0f);
+    REQUIRE(cutted.data[2] == 2.0f);
+    REQUIRE(cutted.data[3] == -2.0f);
+    REQUIRE(cutted.data[4] == 1.0f);
+    REQUIRE(cutted.data[5] == 4.0f);
+}
+
+TEST_CASE("Matrix Cut Dimention", "[matrix]")
+{
+    Matrix<3, 2, float> cutted = Matrix<4, 4, float>({2, 3, 2, 1,
+                                                      5, 3, -2, 1,
+                                                      4, 8, 2, -3,
+                                                      6, 9, -5, 1})
+                                     .cutDimension<1, 1, 2, 2>();
+    REQUIRE(cutted.data[0] == 2.0f);
+    REQUIRE(cutted.data[1] == 3.0f);
+    REQUIRE(cutted.data[2] == 4.0f);
+    REQUIRE(cutted.data[3] == 8.0f);
+    REQUIRE(cutted.data[4] == 6.0f);
+    REQUIRE(cutted.data[5] == 9.0f);
+}
+
+TEST_CASE("Matrix SubMatrix Simple", "[matrix]")
+{
+    Matrix<1, 1, float> subMatrix = Matrix<3, 3, float>({2, 3, 2,
+                                                         1, 5, 3,
+                                                         -2, 1, 4})
+                                        .subMatrix<1, 1, 1, 1>();
+    REQUIRE(subMatrix.data[0] == 5.0f);
+}
+
+TEST_CASE("Matrix SubMatrix", "[matrix]")
+{
+    Matrix<1, 2, float> subMatrix = Matrix<4, 4, float>({2, 3, 2, 1,
+                                                         5, 3, -2, 1,
+                                                         4, 8, 2, -3,
+                                                         6, 9, -5, 1})
+                                        .subMatrix<1, 1, 2, 2>();
+    REQUIRE(subMatrix.data[0] == -2.0f);
+    REQUIRE(subMatrix.data[1] == 1.0f);
+}
+
 TEST_CASE("Matrix Identity", "[matrix]")
 {
     Matrix<3, 3, float> idn = identity<3, float>();

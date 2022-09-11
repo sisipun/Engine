@@ -139,6 +139,62 @@ namespace pickle
                 return div;
             }
 
+            template <int RP, int CP>
+            typename std::enable_if<RP >= 0 && RP + 1 <= R && CP >= 0 && CP + 1 <= C, Matrix<R - 1, C - 1, T>>::type cutDimension()
+            {
+                return cutDimension<RP, 1, CP, 1>();
+            }
+
+            template <int RP, int RC, int CP, int CC>
+            typename std::enable_if<RP >= 0 && RC >= 0 && RP + RC <= R && CP >= 0 && CC >= 0 && CP + CC <= C, Matrix<R - RC, C - CC, T>>::type cutDimension()
+            {
+                Matrix<R - RC, C - CC, T> cutted;
+                size_t cuttedRowIndex = 0;
+                size_t cuttedColumnIndex = 0;
+                for (size_t i = 0; i < R; i++)
+                {
+                    if (i < RP || i >= RP + RC)
+                    {
+                        for (size_t j = 0; j < C; j++)
+                        {
+                            if (j < CP || j >= CP + CC)
+                            {
+                                cutted.data[cuttedRowIndex * (C - CC) + cuttedColumnIndex] = data[i * C + j];
+                                cuttedColumnIndex++;
+                            }
+                        }
+                        cuttedRowIndex++;
+                        cuttedColumnIndex = 0;
+                    }
+                }
+                return cutted;
+            }
+
+            template <int RP, int RC, int CP, int CC>
+            typename std::enable_if<RP >= 0 && RC >= 1 && RP + RC <= R && CP >= 0 && CC >= 1 && CP + CC <= C, Matrix<RC, CC, T>>::type subMatrix()
+            {
+                Matrix<RC, CC, T> subMatrix;
+                size_t subMatrixRowIndex = 0;
+                size_t subMatrixColumnIndex = 0;
+                for (size_t i = 0; i < R; i++)
+                {
+                    if (i >= RP && i < RP + RC)
+                    {
+                        for (size_t j = 0; j < C; j++)
+                        {
+                            if (j >= CP && j < CP + CC)
+                            {
+                                subMatrix.data[subMatrixRowIndex * (CC) + subMatrixColumnIndex] = data[i * C + j];
+                                subMatrixColumnIndex++;
+                            }
+                        }
+                        subMatrixRowIndex++;
+                        subMatrixColumnIndex = 0;
+                    }
+                }
+                return subMatrix;
+            }
+
             size_t rows() const
             {
                 return R;
