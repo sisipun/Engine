@@ -18,12 +18,12 @@ namespace pickle
         template <size_t D, typename T>
         float dot(const Vector<D, T> &first, const Vector<D, T> &second)
         {
-            float dotValue = 0;
+            float result = 0;
             for (size_t i = 0; i < D; i++)
             {
-                dotValue += first.data[i] * second.data[i];
+                result += first.data[i] * second.data[i];
             }
-            return dotValue;
+            return result;
         }
 
         template <size_t D, typename T>
@@ -47,13 +47,13 @@ namespace pickle
         template <size_t D, typename T>
         Vector<D, T> normalize(const Vector<D, T> &vector)
         {
-            Vector<D, T> norm;
+            Vector<D, T> result;
             float len = length(vector);
             for (size_t i = 0; i < D; i++)
             {
-                norm.data[i] = vector.data[i] / len;
+                result.data[i] = vector.data[i] / len;
             }
-            return norm;
+            return result;
         }
     }
 }

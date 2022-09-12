@@ -49,52 +49,52 @@ namespace pickle
 
             Vector<D, T> operator+(const Vector<D, T> &vector) const
             {
-                Vector<D, T> sum;
+                Vector<D, T> result;
                 for (size_t i = 0; i < D; i++)
                 {
-                    sum.data[i] = data[i] + vector.data[i];
+                    result.data[i] = data[i] + vector.data[i];
                 }
-                return sum;
+                return result;
             }
 
             Vector<D, T> operator-(const Vector<D, T> &vector) const
             {
-                Vector<D, T> sub;
+                Vector<D, T> result;
                 for (size_t i = 0; i < D; i++)
                 {
-                    sub.data[i] = this->data[i] - vector.data[i];
+                    result.data[i] = this->data[i] - vector.data[i];
                 }
-                return sub;
+                return result;
             }
 
             Vector<D, T> operator-() const
             {
-                Vector<D, T> opposite;
+                Vector<D, T> result;
                 for (size_t i = 0; i < D; i++)
                 {
-                    opposite.data[i] = -this->data[i];
+                    result.data[i] = -this->data[i];
                 }
-                return opposite;
+                return result;
             }
 
             Vector<D, T> operator*(float scalar) const
             {
-                Vector<D, T> mul;
+                Vector<D, T> result;
                 for (size_t i = 0; i < D; i++)
                 {
-                    mul.data[i] = data[i] * scalar;
+                    result.data[i] = data[i] * scalar;
                 }
-                return mul;
+                return result;
             }
 
             Vector<D, T> operator/(float divider) const
             {
-                Vector<D, T> div;
+                Vector<D, T> result;
                 for (size_t i = 0; i < D; i++)
                 {
-                    div.data[i] = data[i] / divider;
+                    result.data[i] = data[i] / divider;
                 }
-                return div;
+                return result;
             }
 
             bool operator==(Vector<D, T> vector)
@@ -115,100 +115,86 @@ namespace pickle
                 return !(*this == vector);
             }
 
-            template <int P>
-            typename std::enable_if<P >= 0 && P + 1 <= D, Vector<D - 1, T>>::type cutDimension()
+            template <size_t P>
+            typename std::enable_if<(P < D), Vector<D - 1, T>>::type cutDimension()
             {
                 return cutDimension<P, 1>();
             }
 
-            template <int P, int C>
-            typename std::enable_if<P >= 0 && C >= 0 && P + C <= D, Vector<D - C, T>>::type cutDimension()
+            template <size_t P, size_t C>
+            typename std::enable_if<P + C <= D, Vector<D - C, T>>::type cutDimension()
             {
-                Vector<D - C, T> cutted;
-                size_t cuttedIndex = 0;
-                for (size_t i = 0; i < D; i++)
+                Vector<D - C, T> result;
+                for (size_t i = 0, ci = 0; i < D; i++)
                 {
                     if (i < P || i >= P + C)
                     {
-                        cutted.data[cuttedIndex] = data[i];
-                        cuttedIndex++;
+                        result.data[ci] = data[i];
+                        ci++;
                     }
                 }
-                return cutted;
+                return result;
             }
 
-            template <int P>
-            typename std::enable_if<P >= 0 && P <= D, Vector<D + 1, T>>::type addDimension(T value)
+            template <size_t P, size_t C>
+            typename std::enable_if<(C > 1) && P + C <= D, Vector<D - C, T>>::type extract()
+            {
+                Vector<D - C, T> result;
+                for (size_t i = 0, ri = 0; i < D; i++)
+                {
+                    if (i >= P && i < P + C)
+                    {
+                        result.data[ri] = data[i];
+                        ri++;
+                    }
+                }
+                return result;
+            }
+
+            template <size_t P>
+            typename std::enable_if<P <= D, Vector<D + 1, T>>::type addDimension(T value)
             {
                 return addDimension<P, 1>(Vector<1, T>({value}));
             }
 
-            template <int P, int C>
-            typename std::enable_if<P >= 0 && C >= 0 && P <= D, Vector<D + C, T>>::type addDimension(Vector<C, T> value)
+            template <size_t P, size_t C>
+            typename std::enable_if<P <= D, Vector<D + C, T>>::type addDimension(Vector<C, T> value)
             {
-                Vector<D + C, T> added;
-                size_t addedIndex = 0;
-                for (size_t i = 0; i < P; i++, addedIndex++)
+                Vector<D + C, T> result;
+                size_t ri = 0;
+                for (size_t i = 0; i < P; i++, ri++)
                 {
-                    added.data[addedIndex] = data[i];
+                    result.data[ri] = data[i];
                 }
 
-                for (size_t i = 0; i < C; i++, addedIndex++)
+                for (size_t i = 0; i < C; i++, ri++)
                 {
-                    added.data[addedIndex] = value.data[i];
+                    result.data[ri] = value.data[i];
                 }
 
-                for (size_t i = P; i < D; i++, addedIndex++)
+                for (size_t i = P; i < D; i++, ri++)
                 {
-                    added.data[addedIndex] = data[i];
+                    result.data[ri] = data[i];
                 }
 
-                return added;
+                return result;
             }
 
-            template <int P>
-            typename std::enable_if<P >= 0 && P + 1 <= D, Vector<D, T>>::type replace(T value)
+            template <size_t P>
+            typename std::enable_if<(P < D), Vector<D, T>>::type replace(T value)
             {
                 return replace<P, 1>(Vector<1, T>({value}));
             }
 
-            template <int P, int C>
-            typename std::enable_if<P >= 0 && C >= 0 && P + C <= D, Vector<D, T>>::type replace(Vector<C, T> value)
+            template <size_t P, size_t C>
+            typename std::enable_if<P + C <= D, Vector<D, T>>::type replace(Vector<C, T> value)
             {
-                Vector<D, T> replaced;
-                size_t replacedIndex = 0;
-                for (size_t i = 0; i < P; i++, replacedIndex++)
+                Vector<D, T> result(data);
+                for (size_t i = 0; i < C; i++)
                 {
-                    replaced.data[replacedIndex] = data[i];
+                    result.data[i + P] = value.data[i];
                 }
-
-                for (size_t i = 0; i < C; i++, replacedIndex++)
-                {
-                    replaced.data[replacedIndex] = value.data[i];
-                }
-
-                for (size_t i = P + C; i < D; i++, replacedIndex++)
-                {
-                    replaced.data[replacedIndex] = data[i];
-                }
-
-                return replaced;
-            }
-
-            template <int P, int C>
-            typename std::enable_if<P >= 0 && C >= 1 && P + C <= D, Vector<D - C, T>>::type subVector()
-            {
-                Vector<D - C, T> sub;
-                size_t subIndex = 0;
-                for (size_t i = 0; i < D; i++)
-                {
-                    if (i >= P && i < P + C)
-                    {
-                        sub.data[subIndex] = data[i];
-                        subIndex++;
-                    }
-                }
-                return sub;
+                return result;
             }
 
             size_t size() const
