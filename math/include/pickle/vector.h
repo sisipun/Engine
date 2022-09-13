@@ -97,7 +97,7 @@ namespace pickle
                 return result;
             }
 
-            bool operator==(Vector<D, T> vector)
+            bool operator==(Vector<D, T> vector) const
             {
                 for (size_t i = 0; i < D; i++)
                 {
@@ -110,19 +110,19 @@ namespace pickle
                 return true;
             }
 
-            bool operator!=(Vector<D, T> vector)
+            bool operator!=(Vector<D, T> vector) const
             {
                 return !(*this == vector);
             }
 
             template <size_t P>
-            typename std::enable_if<(P < D), Vector<D - 1, T>>::type cutDimension()
+            typename std::enable_if<(P < D), Vector<D - 1, T>>::type cutDimension() const
             {
                 return cutDimension<P, 1>();
             }
 
             template <size_t P, size_t C>
-            typename std::enable_if<P + C <= D, Vector<D - C, T>>::type cutDimension()
+            typename std::enable_if<P + C <= D, Vector<D - C, T>>::type cutDimension() const
             {
                 Vector<D - C, T> result;
                 for (size_t i = 0, ci = 0; i < D; i++)
@@ -137,7 +137,7 @@ namespace pickle
             }
 
             template <size_t P, size_t C>
-            typename std::enable_if<(C > 1) && P + C <= D, Vector<D - C, T>>::type extract()
+            typename std::enable_if<(C > 1) && P + C <= D, Vector<D - C, T>>::type extract() const
             {
                 Vector<D - C, T> result;
                 for (size_t i = 0, ri = 0; i < D; i++)
@@ -152,13 +152,13 @@ namespace pickle
             }
 
             template <size_t P>
-            typename std::enable_if<P <= D, Vector<D + 1, T>>::type addDimension(T value)
+            typename std::enable_if<P <= D, Vector<D + 1, T>>::type addDimension(T value) const
             {
                 return addDimension<P, 1>(Vector<1, T>({value}));
             }
 
             template <size_t P, size_t C>
-            typename std::enable_if<P <= D, Vector<D + C, T>>::type addDimension(Vector<C, T> value)
+            typename std::enable_if<P <= D, Vector<D + C, T>>::type addDimension(Vector<C, T> value) const
             {
                 Vector<D + C, T> result;
                 size_t ri = 0;
@@ -181,13 +181,13 @@ namespace pickle
             }
 
             template <size_t P>
-            typename std::enable_if<(P < D), Vector<D, T>>::type replace(T value)
+            typename std::enable_if<(P < D), Vector<D, T>>::type replace(T value) const
             {
                 return replace<P, 1>(Vector<1, T>({value}));
             }
 
             template <size_t P, size_t C>
-            typename std::enable_if<P + C <= D, Vector<D, T>>::type replace(Vector<C, T> value)
+            typename std::enable_if<P + C <= D, Vector<D, T>>::type replace(Vector<C, T> value) const
             {
                 Vector<D, T> result(data);
                 for (size_t i = 0; i < C; i++)

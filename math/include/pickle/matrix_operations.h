@@ -34,6 +34,21 @@ namespace pickle
             return result * (1 / determinant(matrix));
         }
 
+        template <size_t R, size_t C, typename T>
+        Matrix<C, R, T> transpose(const Matrix<R, C, T> &matrix)
+        {
+            Matrix<C, R, T> result;
+            for (size_t i = 0; i < R; i++)
+            {
+                for (size_t j = 0; j < C; j++)
+                {
+                    size_t index = i * C + j;
+                    result.data[j * R + i] = matrix.data[i * C + j];
+                }
+            }
+            return result;
+        }
+
         template <size_t D, typename T>
         typename std::enable_if<(D > 1), T>::type determinant(const Matrix<D, D, T> &matrix)
         {

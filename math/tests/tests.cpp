@@ -408,7 +408,7 @@ TEST_CASE("Matrix Identity Mul", "[matrix]")
 
 TEST_CASE("Matrix Transpose", "[matrix]")
 {
-    Matrix<2, 3, float> result = Matrix<3, 2, float>({2, 3, 2, 1, 5, 3}).transpose();
+    Matrix<2, 3, float> result = transpose(Matrix<3, 2, float>({2, 3, 2, 1, 5, 3}));
     REQUIRE(result.data[0] == 2.0f);
     REQUIRE(result.data[1] == 2.0f);
     REQUIRE(result.data[2] == 5.0f);

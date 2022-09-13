@@ -139,52 +139,38 @@ namespace pickle
                 return result;
             }
 
-            Matrix<C, R, T> transpose()
-            {
-                Matrix<C, R, T> result;
-                for (size_t i = 0; i < R; i++)
-                {
-                    for (size_t j = 0; j < C; j++)
-                    {
-                        size_t index = i * C + j;
-                        result.data[j * R + i] = data[i * C + j];
-                    }
-                }
-                return result;
-            }
-
             template <size_t RP>
-            typename std::enable_if<(RP < R), Matrix<R - 1, C, T>>::type cutRowDimension()
+            typename std::enable_if<(RP < R), Matrix<R - 1, C, T>>::type cutRowDimension() const
             {
                 return cutRowDimension<RP, 1>();
             }
 
             template <size_t CP>
-            typename std::enable_if<(CP <= C), Matrix<R, C - 1, T>>::type cutColumnDimension()
+            typename std::enable_if<(CP <= C), Matrix<R, C - 1, T>>::type cutColumnDimension() const
             {
                 return cutColumnDimension<CP, 1>();
             }
 
             template <size_t RP, size_t RC>
-            typename std::enable_if<RP + RC <= R, Matrix<R - RC, C, T>>::type cutRowDimension()
+            typename std::enable_if<RP + RC <= R, Matrix<R - RC, C, T>>::type cutRowDimension() const
             {
                 return cutDimension<RP, RC, 0, 0>();
             }
 
             template <size_t CP, size_t CC>
-            typename std::enable_if<CP + CC <= C, Matrix<R, C - CC, T>>::type cutColumnDimension()
+            typename std::enable_if<CP + CC <= C, Matrix<R, C - CC, T>>::type cutColumnDimension() const
             {
                 return cutDimension<0, 0, CP, CC>();
             }
 
             template <size_t RP, size_t CP>
-            typename std::enable_if<(RP < R) && (CP < C), Matrix<R - 1, C - 1, T>>::type cutDimension()
+            typename std::enable_if<(RP < R) && (CP < C), Matrix<R - 1, C - 1, T>>::type cutDimension() const
             {
                 return cutDimension<RP, 1, CP, 1>();
             }
 
             template <size_t RP, size_t RC, size_t CP, size_t CC>
-            typename std::enable_if<RP + RC <= R && CP + CC <= C, Matrix<R - RC, C - CC, T>>::type cutDimension()
+            typename std::enable_if<RP + RC <= R && CP + CC <= C, Matrix<R - RC, C - CC, T>>::type cutDimension() const
             {
                 Matrix<R - RC, C - CC, T> result;
                 for (size_t i = 0, ri = 0; i < R; i++)
@@ -206,7 +192,7 @@ namespace pickle
             }
 
             template <size_t RP, size_t RC, size_t CP, size_t CC>
-            typename std::enable_if<(RC > 0) && RP + RC <= R && (CC > 0) && CP + CC <= C, Matrix<RC, CC, T>>::type extract()
+            typename std::enable_if<(RC > 0) && RP + RC <= R && (CC > 0) && CP + CC <= C, Matrix<RC, CC, T>>::type extract() const
             {
                 Matrix<RC, CC, T> result;
                 for (size_t i = 0, ri = 0; i < R; i++)
@@ -228,13 +214,13 @@ namespace pickle
             }
 
             template <size_t RP, size_t CC>
-            typename std::enable_if<(RP < R) && (CC < C), Matrix<R, C, T>>::type replace(T value)
+            typename std::enable_if<(RP < R) && (CC < C), Matrix<R, C, T>>::type replace(T value) const
             {
                 return replace<RP, 1, CC, 1>(Matrix<1, 1, T>({value}));
             }
 
             template <size_t RP, size_t RC, size_t CP, size_t CC>
-            typename std::enable_if<(RC > 0) && RP + RC <= R && (CC > 0) && CP + CC <= C, Matrix<R, C, T>>::type replace(Matrix<RC, CC, T> value)
+            typename std::enable_if<(RC > 0) && RP + RC <= R && (CC > 0) && CP + CC <= C, Matrix<R, C, T>>::type replace(Matrix<RC, CC, T> value) const
             {
                 Matrix<R, C, T> result(data);
                 for (size_t i = 0; i < RC; i++)
