@@ -378,6 +378,52 @@ TEST_CASE("Matrix Replace", "[matrix]")
     REQUIRE(result.data[8] == 4.0f);
 }
 
+TEST_CASE("Matrix Add Row Dimension", "[matrix]")
+{
+    Matrix<5, 3, float> result = Matrix<3, 3, float>({2, 3, 2,
+                                                      1, 5, 3,
+                                                      -2, 1, 4})
+                                     .addRowDimension<1, 2>(Matrix<2, 3, float>({7, 8, 9, 10, 11, 12}));
+    REQUIRE(result.data[0] == 2.0f);
+    REQUIRE(result.data[1] == 3.0f);
+    REQUIRE(result.data[2] == 2.0f);
+    REQUIRE(result.data[3] == 7.0f);
+    REQUIRE(result.data[4] == 8.0f);
+    REQUIRE(result.data[5] == 9.0f);
+    REQUIRE(result.data[6] == 10.0f);
+    REQUIRE(result.data[7] == 11.0f);
+    REQUIRE(result.data[8] == 12.0f);
+    REQUIRE(result.data[9] == 1.0f);
+    REQUIRE(result.data[10] == 5.0f);
+    REQUIRE(result.data[11] == 3.0f);
+    REQUIRE(result.data[12] == -2.0f);
+    REQUIRE(result.data[13] == 1.0f);
+    REQUIRE(result.data[14] == 4.0f);
+}
+
+TEST_CASE("Matrix Add Column Dimension", "[matrix]")
+{
+    Matrix<3, 5, float> result = Matrix<3, 3, float>({2, 3, 2,
+                                                      1, 5, 3,
+                                                      -2, 1, 4})
+                                     .addColumnDimension<1, 2>(Matrix<3, 2, float>({7, 8, 9, 10, 11, 12}));
+    REQUIRE(result.data[0] == 2.0f);
+    REQUIRE(result.data[1] == 7.0f);
+    REQUIRE(result.data[2] == 8.0f);
+    REQUIRE(result.data[3] == 3.0f);
+    REQUIRE(result.data[4] == 2.0f);
+    REQUIRE(result.data[5] == 1.0f);
+    REQUIRE(result.data[6] == 9.0f);
+    REQUIRE(result.data[7] == 10.0f);
+    REQUIRE(result.data[8] == 5.0f);
+    REQUIRE(result.data[9] == 3.0f);
+    REQUIRE(result.data[10] == -2.0f);
+    REQUIRE(result.data[11] == 11.0f);
+    REQUIRE(result.data[12] == 12.0f);
+    REQUIRE(result.data[13] == 1.0f);
+    REQUIRE(result.data[14] == 4.0f);
+}
+
 TEST_CASE("Matrix Identity", "[matrix]")
 {
     Matrix<3, 3, float> result = identity<3, float>();

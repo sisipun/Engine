@@ -213,6 +213,62 @@ namespace pickle
                 return result;
             }
 
+            template <size_t RP, size_t RC>
+            typename std::enable_if<(RP < R), Matrix<R + RC, C, T>>::type addRowDimension(Matrix<RC, C, T> value) const
+            {
+                Matrix<R + RC, C, T> result;
+                size_t ri = 0;
+                for (size_t i = 0; i < RP; i++, ri++)
+                {
+                    for (size_t j = 0; j < C; j++)
+                    {
+                        result.data[ri * C + j] = data[i * C + j];
+                    }
+                }
+
+                for (size_t i = 0; i < RC; i++, ri++)
+                {
+                    for (size_t j = 0; j < C; j++)
+                    {
+                        result.data[ri * C + j] = value.data[i * C + j];
+                    }
+                }
+
+                for (size_t i = RP; i < R; i++, ri++)
+                {
+                    for (size_t j = 0; j < C; j++)
+                    {
+                        result.data[ri * C + j] = data[i * C + j];
+                    }
+                }
+                return result;
+            }
+
+            template <size_t CP, size_t CC>
+            typename std::enable_if<(CP < C), Matrix<R, C + CC, T>>::type addColumnDimension(Matrix<R, CC, T> value) const
+            {
+                Matrix<R, C + CC, T> result;
+                for (size_t i = 0; i < R; i++)
+                {
+                    size_t rj = 0;
+                    for (size_t j = 0; j < CP; j++, rj++)
+                    {
+                        result.data[i * (C + CC) + rj] = data[i * C + j];
+                    }
+
+                    for (size_t j = 0; j < CC; j++, rj++)
+                    {
+                        result.data[i * (C + CC) + rj] = value.data[i * CC + j];
+                    }
+
+                    for (size_t j = CP; j < C; j++, rj++)
+                    {
+                        result.data[i * (C + CC) + rj] = data[i * C + j];
+                    }
+                }
+                return result;
+            }
+
             template <size_t RP, size_t CC>
             typename std::enable_if<(RP < R) && (CC < C), Matrix<R, C, T>>::type replace(T value) const
             {
