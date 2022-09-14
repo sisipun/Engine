@@ -378,6 +378,26 @@ TEST_CASE("Matrix Replace", "[matrix]")
     REQUIRE(result.data[8] == 4.0f);
 }
 
+TEST_CASE("Matrix Add Row Dimension Simple", "[matrix]")
+{
+    Matrix<4, 3, float> result = Matrix<3, 3, float>({2, 3, 2,
+                                                      1, 5, 3,
+                                                      -2, 1, 4})
+                                     .addRowDimension<2>(Matrix<1, 3, float>({7, 8, 9}));
+    REQUIRE(result.data[0] == 2.0f);
+    REQUIRE(result.data[1] == 3.0f);
+    REQUIRE(result.data[2] == 2.0f);
+    REQUIRE(result.data[3] == 1.0f);
+    REQUIRE(result.data[4] == 5.0f);
+    REQUIRE(result.data[5] == 3.0f);
+    REQUIRE(result.data[6] == 7.0f);
+    REQUIRE(result.data[7] == 8.0f);
+    REQUIRE(result.data[8] == 9.0f);
+    REQUIRE(result.data[9] == -2.0f);
+    REQUIRE(result.data[10] == 1.0f);
+    REQUIRE(result.data[11] == 4.0f);
+}
+
 TEST_CASE("Matrix Add Row Dimension", "[matrix]")
 {
     Matrix<5, 3, float> result = Matrix<3, 3, float>({2, 3, 2,
@@ -399,6 +419,26 @@ TEST_CASE("Matrix Add Row Dimension", "[matrix]")
     REQUIRE(result.data[12] == -2.0f);
     REQUIRE(result.data[13] == 1.0f);
     REQUIRE(result.data[14] == 4.0f);
+}
+
+TEST_CASE("Matrix Add Column Dimension Simple", "[matrix]")
+{
+    Matrix<3, 4, float> result = Matrix<3, 3, float>({2, 3, 2,
+                                                      1, 5, 3,
+                                                      -2, 1, 4})
+                                     .addColumnDimension<2>(Matrix<3, 1, float>({7, 8, 9}));
+    REQUIRE(result.data[0] == 2.0f);
+    REQUIRE(result.data[1] == 3.0f);
+    REQUIRE(result.data[2] == 7.0f);
+    REQUIRE(result.data[3] == 2.0f);
+    REQUIRE(result.data[4] == 1.0f);
+    REQUIRE(result.data[5] == 5.0f);
+    REQUIRE(result.data[6] == 8.0f);
+    REQUIRE(result.data[7] == 3.0f);
+    REQUIRE(result.data[8] == -2.0f);
+    REQUIRE(result.data[9] == 1.0f);
+    REQUIRE(result.data[10] == 9.0f);
+    REQUIRE(result.data[11] == 4.0f);
 }
 
 TEST_CASE("Matrix Add Column Dimension", "[matrix]")

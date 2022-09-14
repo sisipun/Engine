@@ -213,6 +213,12 @@ namespace pickle
                 return result;
             }
 
+            template <size_t RP>
+            typename std::enable_if<(RP < R), Matrix<R + 1, C, T>>::type addRowDimension(Matrix<1, C, T> value) const
+            {
+                return addRowDimension<RP, 1>(value);
+            }
+
             template <size_t RP, size_t RC>
             typename std::enable_if<(RP < R), Matrix<R + RC, C, T>>::type addRowDimension(Matrix<RC, C, T> value) const
             {
@@ -242,6 +248,12 @@ namespace pickle
                     }
                 }
                 return result;
+            }
+
+            template <size_t CP>
+            typename std::enable_if<(CP < C), Matrix<R, C + 1, T>>::type addColumnDimension(Matrix<R, 1, T> value) const
+            {
+                return addColumnDimension<CP, 1>(value);
             }
 
             template <size_t CP, size_t CC>
