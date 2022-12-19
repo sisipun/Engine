@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #define PI 3.14159265f
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include <pickle/math.h>
 
 using namespace pickle::math;
