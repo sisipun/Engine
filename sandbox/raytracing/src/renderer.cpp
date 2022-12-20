@@ -15,7 +15,7 @@ void Renderer::render(SDL_Renderer *renderer, const std::vector<std::unique_ptr<
         for (float y = -screenHeight / 2; y < screenHeight / 2; y++)
         {
             pickle::math::Vector<3, float> ray = screenToViewport(x, y);
-            pickle::math::Vector<3, float> rotatedRay = (camera.getRotation() * pickle::math::Vector<4, float>({ray.data[0], ray.data[1], ray.data[2], 0.0f})).cutDimension();
+            pickle::math::Vector<3, float> rotatedRay = (camera.getRotation() * pickle::math::Vector<4, float>({ray.data[0], ray.data[1], ray.data[2], 0.0f})).cutDimension<3>();
             Color color = traceRay(camera.getPosition(), rotatedRay, 1.0f, std::numeric_limits<float>::max(), maxDepth, shapes, lights);
             drawPoint(renderer, x, y, color);
         }

@@ -118,9 +118,9 @@ void Renderer::drawModelInstance(const ModelInstance &instance)
             continue;
         }
 
-        pickle::math::Vector<3, float> v0Pos = v0.subVector<0, 3>();
-        pickle::math::Vector<3, float> v1Pos = v1.subVector<0, 3>();
-        pickle::math::Vector<3, float> v2Pos = v2.subVector<0, 3>();
+        pickle::math::Vector<3, float> v0Pos = v0.cutDimension<3, 3>();
+        pickle::math::Vector<3, float> v1Pos = v1.cutDimension<3, 3>();
+        pickle::math::Vector<3, float> v2Pos = v2.cutDimension<3, 3>();
         pickle::math::Vector<3, float> norm = normalize(cross(v1Pos - v0Pos, v2Pos - v0Pos));
         pickle::math::Vector<3, float> view = -camera.getViewDirection();
 
@@ -133,9 +133,9 @@ void Renderer::drawModelInstance(const ModelInstance &instance)
         float diffuseLightPower = std::max(dot(norm, -lightDirection), 0.0f);
         float lightPower = ambientLightPower + diffuseLightPower;
 
-        v0 = v0.replace<3, 3>(v0.subVector<3, 3>() * lightPower);
-        v1 = v1.replace<3, 3>(v1.subVector<3, 3>() * lightPower);
-        v2 = v2.replace<3, 3>(v2.subVector<3, 3>() * lightPower);
+        v0 = v0.replace<3, 3>(v0.cutDimension<0, 3>() * lightPower);
+        v1 = v1.replace<3, 3>(v1.cutDimension<0, 3>() * lightPower);
+        v2 = v2.replace<3, 3>(v2.cutDimension<0, 3>() * lightPower);
 
         drawTriangle(viewportToScreen(v0), viewportToScreen(v1), viewportToScreen(v2));
     }
@@ -159,7 +159,7 @@ void Renderer::present(SDL_Renderer *renderer)
 pickle::math::Vector<6, float> Renderer::transformVertex(const pickle::math::Vector<6, float> &vertex, const pickle::math::Matrix<4, 4, float> &transform)
 {
     pickle::math::Vector<6, float> transformedVertex(vertex.data);
-    pickle::math::Vector<4, float> positionVertexPart = transformedVertex.subVector<0, 3>().addDimension<3>(1.0f);
+    pickle::math::Vector<4, float> positionVertexPart = transformedVertex.cutDimension<3, 3>().addDimension<3>(1.0f);
 
     pickle::math::Matrix<4, 4, float> view = camera.getViewMatrix();
     pickle::math::Vector<4, float> transformedPositionVertexPart = projection * view * transform * positionVertexPart;
