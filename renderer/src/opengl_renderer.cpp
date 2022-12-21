@@ -20,8 +20,5 @@ pickle::renderer::OpenGLRenderer::~OpenGLRenderer()
 
 void pickle::renderer::OpenGLRenderer::render() const
 {
-    LOG_DEBUG("OpenGL");
     LOG_INFO("OpenGL");
-    LOG_WARNING("OpenGL");
-    LOG_ERROR("OpenGL");
 }
