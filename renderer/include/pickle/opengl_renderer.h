@@ -19,7 +19,11 @@ namespace pickle
             void render() const override;
 
         private:
+            SDL_Window *window;
             SDL_GLContext context;
+            
+            unsigned int VAO;
+            unsigned int program;
         };
     }
 }
