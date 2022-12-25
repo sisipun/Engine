@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(SDL2 REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS})
-add_subdirectory(../math ./mathBuild)
 add_subdirectory(../renderer ./rendererBuild)
 
 add_library(PickleCore STATIC 
@@ -15,5 +14,5 @@ add_library(PickleCore STATIC
 add_executable(PickleCoreTest main.cpp)
 
 target_include_directories(PickleCore PUBLIC include)
-target_link_libraries(PickleCore PickleMath PickleRenderer ${SDL2_LIBRARIES})
+target_link_libraries(PickleCore PickleRenderer ${SDL2_LIBRARIES})
 target_link_libraries(PickleCoreTest PickleCore)

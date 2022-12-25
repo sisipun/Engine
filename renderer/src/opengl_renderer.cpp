@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 
 #include <pickle/logger.h>
+#include <pickle/math.h>
 
 void checkShaderCompilation(unsigned int shader)
 {
@@ -31,9 +32,8 @@ void checkProgramLinking(unsigned int program)
     }
 }
 
-pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window)
+pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window) : window(window)
 {
-    this->window = window;
     context = SDL_GL_CreateContext(window);
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {
@@ -72,7 +72,7 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window)
 
     glShaderSource(vertexShader, 1, &vertexShaderContent, NULL);
     glShaderSource(fragmentShader, 1, &fragmentShaderContent, NULL);
-    
+
     glCompileShader(vertexShader);
     glCompileShader(fragmentShader);
 
@@ -85,16 +85,51 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window)
     glLinkProgram(program);
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
-    
+
     checkProgramLinking(program);
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        -0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        -0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.5f, 0.5f, 0.0f};
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, 0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        -0.5f, 0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, 0.5f, -0.5f,
+
+        -0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f,
+        0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f,
+        0.5f, -0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f,
+
+        -0.5f, 0.5f, -0.5f,
+        -0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, -0.5f,
+        -0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, -0.5f,
+        0.5f, 0.5f, 0.5f,
+
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, 0.5f,
+        0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, 0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, 0.5f,
+
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, -0.5f,
+        -0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, -0.5f,
+        -0.5f, 0.5f, 0.5f,
+
+        0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, 0.5f,
+        0.5f, 0.5f, -0.5f,
+        0.5f, -0.5f, 0.5f,
+        0.5f, 0.5f, -0.5f,
+        0.5f, 0.5f, 0.5f};
 
     glGenVertexArrays(1, &VAO);
 
@@ -123,8 +158,31 @@ void pickle::renderer::OpenGLRenderer::render() const
 
     glUseProgram(program);
 
+    int modelUniform = glGetUniformLocation(program, "model");
+    pickle::math::Matrix<4, 4, float> modelMatrix = pickle::math::Matrix<4, 4, float>({
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    });
+    int viewUniform = glGetUniformLocation(program, "view");
+    pickle::math::Matrix<4, 4, float> viewMatix = pickle::math::lookAt(
+        pickle::math::Vector<3, float>({1.0f, 1.0f, -1.0f}),
+        pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}),
+        pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
+    int projectionUniform = glGetUniformLocation(program, "projection");
+    pickle::math::Matrix<4, 4, float> projectionMatrix = pickle::math::perspective(
+        pickle::math::radians(90.0f), 
+        800.0f / 600.0f,
+        0.01f, 
+        100.0f);
+    
+    glUniformMatrix4fv(modelUniform, 1, GL_FALSE, transpose(modelMatrix).data);
+    glUniformMatrix4fv(viewUniform, 1, GL_FALSE, transpose(viewMatix).data);
+    glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, transpose(projectionMatrix).data);
+
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 
     SDL_GL_SwapWindow(window);

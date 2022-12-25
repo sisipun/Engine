@@ -7,6 +7,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 add_subdirectory(lib/glad/)
 add_subdirectory(../logger ./loggerBuild)
+add_subdirectory(../math ./mathBuild)
 
 add_library(PickleRenderer STATIC 
     include/pickle/renderer.h
@@ -15,4 +16,4 @@ add_library(PickleRenderer STATIC
 )
 
 target_include_directories(PickleRenderer PUBLIC include)
-target_link_libraries(PickleRenderer PickleLogger GLAD ${SDL2_LIBRARIES})
+target_link_libraries(PickleRenderer PickleLogger PickleMath GLAD ${SDL2_LIBRARIES})
