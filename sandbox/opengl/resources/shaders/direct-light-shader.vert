@@ -6,7 +6,7 @@ layout(location = 2) in vec2 aTextureCoord;
 
 out VS_OUT {
    vec3 FragPos;
-   vec3 Normal;   
+   vec3 Normal;
    vec2 TextureCoord;
 } vs_out;
 
