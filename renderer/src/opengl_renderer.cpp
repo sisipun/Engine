@@ -168,9 +168,9 @@ void pickle::renderer::OpenGLRenderer::render() const
     glUseProgram(program);
 
     int lightDirectionUniform = glGetUniformLocation(program, "lightDirection");
-    pickle::math::Vector<3, float> lightDirection = pickle::math::Vector<3, float>({1.0f, -1.0f, 1.0f});
+    pickle::math::Vector<3, float> lightDirection = pickle::math::Vector<3, float>({1.0f, -1.0f, -1.0f});
     int cameraPositionUniform = glGetUniformLocation(program, "cameraPosition");
-    pickle::math::Vector<3, float> cameraPosition = pickle::math::Vector<3, float>({1.0f, 1.0f, 1.0f});
+    pickle::math::Vector<3, float> cameraPosition = pickle::math::Vector<3, float>({-1.0f, 1.0f, -1.0f});
     int modelUniform = glGetUniformLocation(program, "model");
     pickle::math::Matrix<4, 4, float> modelMatrix = pickle::math::Matrix<4, 4, float>({
         1.0f, 0.0f, 0.0f, 0.0f,
