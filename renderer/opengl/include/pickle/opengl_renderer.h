@@ -1,7 +1,7 @@
 #ifndef PICKLE_RENDERER_OPENGL
 #define PICKLE_RENDERER_OPENGL
 
-#include "renderer.h"
+#include <pickle/renderer.h>
 
 #include <SDL.h>
 

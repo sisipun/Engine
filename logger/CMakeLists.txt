@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
+if(TARGET PickleLogger)
+    return()
+endif()
+
 project(PickleLogger)
 set(CMAKE_CXX_STANDARD 20)
 

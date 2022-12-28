@@ -1,7 +1,7 @@
 #ifndef PICKLE_RENDERER_DIRECTX
 #define PICKLE_RENDERER_DIRECTX
 
-#include "renderer.h"
+#include <pickle/renderer.h>
 
 namespace pickle
 {

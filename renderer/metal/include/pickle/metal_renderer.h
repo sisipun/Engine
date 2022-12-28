@@ -1,7 +1,7 @@
 #ifndef PICKLE_RENDERER_METAL
 #define PICKLE_RENDERER_METAL
 
-#include "renderer.h"
+#include <pickle/renderer.h>
 
 namespace pickle
 {
