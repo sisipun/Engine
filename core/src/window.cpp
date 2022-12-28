@@ -3,6 +3,7 @@
 #include <SDL.h>
 
 #include <pickle/opengl_renderer.h>
+#include <pickle/metal_renderer.h>
 #include <pickle/logger.h>
 
 pickle::Window::Window(int width, int height)
@@ -22,7 +23,7 @@ pickle::Window::Window(int width, int height)
         LOG_ERROR("Can't create window");
     }
 
-    renderer = std::make_unique<pickle::renderer::OpenGLRenderer>(window);
+    renderer = std::make_unique<pickle::renderer::MetalRenderer>();
 }
 
 pickle::Window::~Window()

@@ -1,4 +1,4 @@
-#include <pickle/directx_renderer.h>
+#include <pickle/metal_renderer.h>
 
 #include <pickle/logger.h>
 

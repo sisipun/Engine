@@ -13,6 +13,7 @@ add_library(PickleRenderer STATIC
     include/pickle/renderer.h
     include/pickle/directx_renderer.h src/directx_renderer.cpp
     include/pickle/opengl_renderer.h src/opengl_renderer.cpp
+    include/pickle/metal_renderer.h src/metal_renderer.cpp
 )
 
 target_include_directories(PickleRenderer PUBLIC include)
