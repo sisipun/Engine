@@ -16,8 +16,8 @@ TEST_CASE("Vector Copy", "[vector]")
 {
     Vector<2, float> vector({1, 1});
     Vector<2, float> result = vector;
-    REQUIRE(result.data[0] == 1);
-    REQUIRE(result.data[1] == 1);
+    REQUIRE(result.data[0] == 1.0f);
+    REQUIRE(result.data[1] == 1.0f);
 }
 
 TEST_CASE("Vector Sum", "[vector]")
