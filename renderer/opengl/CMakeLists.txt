@@ -6,9 +6,9 @@ endif()
 project(PickleRendererOpenGL)
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(SDL2 REQUIRED)
+find_package(SDL3 REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIRS})
+include_directories(${SDL3_INCLUDE_DIRS})
 add_subdirectory(lib/glad/)
 add_subdirectory(../api ./apiBuild)
 add_subdirectory(../../logger ./loggerBuild)
@@ -19,4 +19,4 @@ add_library(PickleRendererOpenGL STATIC
 )
 
 target_include_directories(PickleRendererOpenGL PUBLIC include)
-target_link_libraries(PickleRendererOpenGL PickleRendererApi PickleLogger PickleMath GLAD ${SDL2_LIBRARIES})
+target_link_libraries(PickleRendererOpenGL PickleRendererApi PickleLogger PickleMath GLAD ${SDL3_LIBRARIES})
