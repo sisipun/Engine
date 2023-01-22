@@ -13,8 +13,10 @@ namespace pickle
         {
         public:
             OpenGLRenderer(SDL_Window *window);
-
             ~OpenGLRenderer() override;
+            
+            OpenGLRenderer(const OpenGLRenderer &renderer) = delete;
+            OpenGLRenderer &operator=(const OpenGLRenderer &renderer) = delete;
 
             void render() const override;
 

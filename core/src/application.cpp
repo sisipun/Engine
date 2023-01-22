@@ -1,20 +1,28 @@
 #include <pickle/application.h>
 
+#include <pickle/sdl_window.h>
+
 namespace pickle
 {
-    Application::Application() : window(800, 600)
+    Application::Application()
     {
+        window = std::make_unique<pickle::SdlWindow>(800, 600);
     }
 
     Application::~Application()
     {
     }
 
+    Window &Application::getWindow() const
+    {
+        return *window;
+    }
+
     void Application::start()
     {
-        while (!window.isClosed())
+        while (!getWindow().isClosed())
         {
-            window.getRenderer().render();
+            getWindow().getRenderer().render();
         }
     }
 }

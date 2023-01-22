@@ -11,8 +11,10 @@ namespace pickle
         {
         public:
             MetalRenderer();
-
             ~MetalRenderer() override;
+
+            MetalRenderer(const MetalRenderer &renderer) = delete;
+            MetalRenderer &operator=(const MetalRenderer &renderer) = delete;
 
             void render() const override;
         };

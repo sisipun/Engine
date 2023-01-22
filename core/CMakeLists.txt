@@ -11,6 +11,7 @@ add_subdirectory(../renderer ./rendererBuild)
 
 add_library(PickleCore STATIC 
     include/pickle/window.h src/window.cpp
+    include/pickle/sdl_window.h src/sdl_window.cpp
     include/pickle/application.h src/application.cpp
 )
 add_executable(PickleCoreTest main.cpp)

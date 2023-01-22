@@ -11,8 +11,10 @@ namespace pickle
         {
         public:
             DirectXRenderer();
-
             ~DirectXRenderer() override;
+
+            DirectXRenderer(const DirectXRenderer &renderer) = delete;
+            DirectXRenderer &operator=(const DirectXRenderer &renderer) = delete;
 
             void render() const override;
         };

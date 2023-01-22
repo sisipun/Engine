@@ -10,15 +10,17 @@ namespace pickle
     {
     public:
         Window(int width, int height);
-        ~Window();
+        virtual ~Window();
 
         Window(const Window &window) = delete;
         Window &operator=(const Window &window) = delete;
 
         renderer::Renderer &getRenderer() const;
-        bool isClosed() const;
+        virtual bool isClosed() const = 0;
 
-    private:
+    protected:
+        int width;
+        int height;
         std::unique_ptr<renderer::Renderer> renderer;
     };
 }

@@ -14,10 +14,11 @@ namespace pickle
         Application(const Application &application) = delete;
         Application &operator=(const Application &application) = delete;
 
+        Window &getWindow() const;
         void start();
 
     private:
-        Window window;
+        std::unique_ptr<Window> window;
     };
 }
 
