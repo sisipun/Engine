@@ -1,12 +1,12 @@
 #include <pickle/application.h>
 
-#include <pickle/sdl_window.h>
+#include <pickle/win32_window.h>
 
 namespace pickle
 {
     Application::Application()
     {
-        window = std::make_unique<pickle::SdlWindow>(800, 600);
+        window = std::make_unique<pickle::Win32Window>(800, 600);
     }
 
     Application::~Application()
