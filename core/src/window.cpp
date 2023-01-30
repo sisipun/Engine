@@ -12,3 +12,8 @@ pickle::renderer::Renderer &pickle::Window::getRenderer() const
 {
     return *renderer;
 }
+
+bool pickle::Window::isClosed() const
+{
+    return closed;
+}

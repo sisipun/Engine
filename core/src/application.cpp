@@ -22,6 +22,7 @@ namespace pickle
     {
         while (!getWindow().isClosed())
         {
+            getWindow().update();
             getWindow().getRenderer().render();
         }
     }

@@ -31,16 +31,15 @@ pickle::SdlWindow::~SdlWindow()
     SDL_Quit();
 }
 
-bool pickle::SdlWindow::isClosed() const
+void pickle::SdlWindow::update() 
 {
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0)
     {
         if (event.type == SDL_QUIT)
         {
-            return true;
+            closed = true;
+            return;
         }
     }
-
-    return false;
 }

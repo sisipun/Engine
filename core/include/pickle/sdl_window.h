@@ -14,7 +14,7 @@ namespace pickle
         SdlWindow(const SdlWindow &window) = delete;
         SdlWindow &operator=(const SdlWindow &window) = delete;
 
-        bool isClosed() const override;
+        void update() override;
     };
 }
 
