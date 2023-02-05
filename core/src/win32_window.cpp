@@ -9,6 +9,8 @@
 
 LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+const char* pickle::Win32Window::BASE_WINNDOW_CLASS = "BASE_WINDOW";
+
 pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
 {
     HINSTANCE hInstance = GetModuleHandle(0);
@@ -17,17 +19,30 @@ pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
     WNDCLASSEX wc;
     ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
+    RECT wr = {0, 0, 500, 400};
+    AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
+
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.style = CS_HREDRAW | CS_VREDRAW;
     wc.lpfnWndProc = windowProc;
     wc.hInstance = hInstance;
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-    wc.lpszClassName = _T("MainWindow");
+    wc.lpszClassName = _T(BASE_WINNDOW_CLASS);
 
     RegisterClassEx(&wc);
-    hWnd = CreateWindowEx(NULL, _T("MainWindow"), _T("Description"), WS_OVERLAPPEDWINDOW, 300, 300, 500, 400, NULL,
-                          NULL, hInstance, NULL);
+    hWnd = CreateWindowEx(NULL,
+                          _T(BASE_WINNDOW_CLASS),
+                          _T("Description"),
+                          WS_OVERLAPPEDWINDOW,
+                          300,
+                          300,
+                          wr.right - wr.left,
+                          wr.bottom - wr.top,
+                          NULL,
+                          NULL,
+                          hInstance,
+                          NULL);
 
     renderer = std::make_unique<pickle::renderer::DirectXRenderer>();
     ShowWindow(hWnd, 1);

@@ -17,6 +17,9 @@ namespace pickle
         Win32Window &operator=(const Win32Window &window) = delete;
 
         void update() override;
+
+    private:
+        static const char* BASE_WINNDOW_CLASS;
     };
 }
 
