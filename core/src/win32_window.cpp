@@ -55,14 +55,15 @@ pickle::Win32Window::~Win32Window()
 void pickle::Win32Window::update()
 {
     MSG msg;
-    if (GetMessage(&msg, NULL, 0, 0))
+    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
-    }
-    else
-    {
-        closed = true;
+
+        if (msg.message == WM_QUIT)
+        {
+            closed = true;
+        }
     }
 }
 
