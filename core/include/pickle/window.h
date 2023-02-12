@@ -1,8 +1,9 @@
 #ifndef PICKLE_WINDOW
 #define PICKLE_WINDOW
 
-#include <memory>
 #include <pickle/renderer.h>
+
+#include <memory>
 
 namespace pickle
 {

@@ -1,9 +1,9 @@
 #ifndef PICKLE_SDL_WINDOW
 #define PICKLE_SDL_WINDOW
 
-#include <windows.h>
-
 #include <pickle/window.h>
+
+#include <windows.h>
 
 namespace pickle
 {

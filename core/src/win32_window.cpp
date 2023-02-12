@@ -44,7 +44,7 @@ pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
                           hInstance,
                           NULL);
 
-    renderer = std::make_unique<pickle::renderer::DirectXRenderer>();
+    renderer = std::make_unique<pickle::renderer::DirectXRenderer>(hWnd);
     ShowWindow(hWnd, 1);
 }
 
