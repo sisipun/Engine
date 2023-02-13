@@ -6,6 +6,10 @@ endif()
 project(PickleRendererDirectX)
 set(CMAKE_CXX_STANDARD 20)
 
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
+
+find_package(DirectX11 REQUIRED)
+
 add_subdirectory(../api ./apiBuild)
 add_subdirectory(../../logger ./loggerBuild)
 
@@ -13,5 +17,5 @@ add_library(PickleRendererDirectX STATIC
     include/pickle/directx_renderer.h src/directx_renderer.cpp
 )
 
-target_include_directories(PickleRendererDirectX PUBLIC include)
-target_link_libraries(PickleRendererDirectX PickleRendererApi PickleLogger)
+target_include_directories(PickleRendererDirectX PUBLIC include ${DirectX11_INCLUDE_DIRS})
+target_link_libraries(PickleRendererDirectX PickleRendererApi PickleLogger ${DirectX11_LIBRARIES})
