@@ -12,7 +12,7 @@ namespace pickle
         class OpenGLRenderer : public Renderer
         {
         public:
-            OpenGLRenderer(SDL_Window *window);
+            OpenGLRenderer(SDL_Window *window, int width, int height);
             ~OpenGLRenderer() override;
             
             OpenGLRenderer(const OpenGLRenderer &renderer) = delete;

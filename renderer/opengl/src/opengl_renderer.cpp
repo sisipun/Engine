@@ -34,7 +34,7 @@ void checkProgramLinking(unsigned int program)
     }
 }
 
-pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window) : window(window)
+pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, int height) : window(window)
 {
     context = SDL_GL_CreateContext(window);
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))

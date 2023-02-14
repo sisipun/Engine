@@ -23,7 +23,7 @@ pickle::SdlWindow::SdlWindow(int width, int height) : Window(width, height)
         LOG_ERROR("Can't create window");
     }
 
-    renderer = std::make_unique<pickle::renderer::OpenGLRenderer>(window);
+    renderer = std::make_unique<pickle::renderer::OpenGLRenderer>(window, width, height);
 }
 
 pickle::SdlWindow::~SdlWindow()

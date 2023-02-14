@@ -19,7 +19,7 @@ pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
     WNDCLASSEX wc;
     ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
-    RECT wr = {0, 0, 500, 400};
+    RECT wr = {0, 0, width, height};
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
 
     wc.cbSize = sizeof(WNDCLASSEX);
@@ -27,7 +27,6 @@ pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
     wc.lpfnWndProc = windowProc;
     wc.hInstance = hInstance;
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
     wc.lpszClassName = _T(BASE_WINNDOW_CLASS);
 
     RegisterClassEx(&wc);
@@ -44,7 +43,7 @@ pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
                           hInstance,
                           NULL);
 
-    renderer = std::make_unique<pickle::renderer::DirectXRenderer>(hWnd);
+    renderer = std::make_unique<pickle::renderer::DirectXRenderer>(hWnd, width, height);
     ShowWindow(hWnd, 1);
 }
 
