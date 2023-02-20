@@ -20,3 +20,5 @@ add_library(PickleRendererOpenGL STATIC
 
 target_include_directories(PickleRendererOpenGL PUBLIC include)
 target_link_libraries(PickleRendererOpenGL PickleRendererApi PickleLogger PickleMath GLAD ${SDL3_LIBRARIES})
+
+file(COPY "${PROJECT_SOURCE_DIR}/resource" DESTINATION ${CMAKE_BINARY_DIR})

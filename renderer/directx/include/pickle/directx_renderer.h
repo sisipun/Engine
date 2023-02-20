@@ -23,10 +23,12 @@ namespace pickle
             void render() const override;
 
         private:
-            IDXGISwapChain *swapChain;
-            ID3D11RenderTargetView *backBuffer;
             ID3D11Device *device;
             ID3D11DeviceContext *deviceContext;
+            IDXGISwapChain *swapChain;
+            ID3D11RenderTargetView *backBuffer;
+            ID3D11VertexShader *vertexSharer;
+            ID3D11PixelShader *pixelShader;
         };
     }
 }

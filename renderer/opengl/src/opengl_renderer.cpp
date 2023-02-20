@@ -42,13 +42,13 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, 
         LOG_ERROR("Can't load glad module");
     }
 
-    std::ifstream vertexShaderFile("./resource/default.vert");
+    std::ifstream vertexShaderFile("resource/default.vert");
     if (!vertexShaderFile)
     {
         LOG_ERROR("Can't read vertex file");
     }
 
-    std::ifstream fragmentShaderFile("./resource/default.frag");
+    std::ifstream fragmentShaderFile("resource/default.frag");
     if (!fragmentShaderFile)
     {
         LOG_ERROR("Can't read fragment file");

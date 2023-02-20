@@ -19,3 +19,5 @@ add_library(PickleRendererDirectX STATIC
 
 target_include_directories(PickleRendererDirectX PUBLIC include ${DirectX11_INCLUDE_DIRS})
 target_link_libraries(PickleRendererDirectX PickleRendererApi PickleLogger ${DirectX11_LIBRARIES})
+
+file(COPY "${PROJECT_SOURCE_DIR}/resource" DESTINATION ${CMAKE_BINARY_DIR})
