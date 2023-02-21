@@ -6,19 +6,18 @@
 
 pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWnd, int width, int height)
 {
-    DXGI_SWAP_CHAIN_DESC scd;
+    DXGI_SWAP_CHAIN_DESC swapChainDesc;
+    ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-    ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
-
-    scd.BufferCount = 1;
-    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    scd.BufferDesc.Width = width;
-    scd.BufferDesc.Height = height;
-    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    scd.OutputWindow = hWnd;
-    scd.SampleDesc.Count = 4;
-    scd.Windowed = TRUE;
-    scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+    swapChainDesc.BufferCount = 1;
+    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    swapChainDesc.BufferDesc.Width = width;
+    swapChainDesc.BufferDesc.Height = height;
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swapChainDesc.OutputWindow = hWnd;
+    swapChainDesc.SampleDesc.Count = 4;
+    swapChainDesc.Windowed = TRUE;
+    swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
     D3D11CreateDeviceAndSwapChain(
         NULL,
@@ -28,22 +27,11 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWnd, int width, int hei
         NULL,
         NULL,
         D3D11_SDK_VERSION,
-        &scd,
+        &swapChainDesc,
         &swapChain,
         &device,
         NULL,
         &deviceContext);
-
-    ID3D10Blob *vertexBlob;
-    ID3D10Blob *pixelBlob;
-    D3DX11CompileFromFile(_T("resource/default_vertex.shader"), 0, 0, "main", "vs_4_0", 0, 0, 0, &vertexBlob, 0, 0);
-    D3DX11CompileFromFile(_T("resource/default_pixel.shader"), 0, 0, "main", "ps_4_0", 0, 0, 0, &pixelBlob, 0, 0);
-
-    device->CreateVertexShader(vertexBlob->GetBufferPointer(), vertexBlob->GetBufferSize(), NULL, &vertexSharer);
-    device->CreatePixelShader(pixelBlob->GetBufferPointer(), pixelBlob->GetBufferSize(), NULL, &pixelShader);
-
-    deviceContext->VSSetShader(vertexSharer, 0, 0);
-    deviceContext->PSSetShader(pixelShader, 0, 0);
 
     ID3D11Texture2D *backBufferTexture;
     swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&backBufferTexture);
@@ -58,16 +46,57 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWnd, int width, int hei
 
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
-    viewport.Width = width;
-    viewport.Height = height;
+    viewport.Width = height;
+    viewport.Height = width;
 
     deviceContext->RSSetViewports(1, &viewport);
+
+    ID3D10Blob *vertexBlob;
+    ID3D10Blob *pixelBlob;
+    D3DX11CompileFromFile(_T("resource/default_vertex.shader"), 0, 0, "main", "vs_4_0", 0, 0, 0, &vertexBlob, 0, 0);
+    D3DX11CompileFromFile(_T("resource/default_pixel.shader"), 0, 0, "main", "ps_4_0", 0, 0, 0, &pixelBlob, 0, 0);
+
+    device->CreateVertexShader(vertexBlob->GetBufferPointer(), vertexBlob->GetBufferSize(), NULL, &vertexSharer);
+    device->CreatePixelShader(pixelBlob->GetBufferPointer(), pixelBlob->GetBufferSize(), NULL, &pixelShader);
+
+    deviceContext->VSSetShader(vertexSharer, 0, 0);
+    deviceContext->PSSetShader(pixelShader, 0, 0);
+
+    float vertices[] = {
+        0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        0.45f, -0.5, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+        -0.45f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f};
+
+    D3D11_BUFFER_DESC vertexBufferDesc;
+    ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+    vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    vertexBufferDesc.ByteWidth = sizeof(vertices);
+    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+    device->CreateBuffer(&vertexBufferDesc, NULL, &vertexBuffer);
+
+    D3D11_MAPPED_SUBRESOURCE vertexBufferSubresource;
+    deviceContext->Map(vertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &vertexBufferSubresource);
+    memcpy(vertexBufferSubresource.pData, vertices, sizeof(vertices));
+    deviceContext->Unmap(vertexBuffer, NULL);
+
+    D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}};
+
+    device->CreateInputLayout(inputElementDesc, 2, vertexBlob->GetBufferPointer(), vertexBlob->GetBufferSize(), &inputLayout);
+
+    deviceContext->IASetInputLayout(inputLayout);
 }
 
 pickle::renderer::DirectXRenderer::~DirectXRenderer()
 {
     swapChain->SetFullscreenState(FALSE, NULL);
 
+    inputLayout->Release();
+    vertexBuffer->Release();
     vertexSharer->Release();
     pixelShader->Release();
     swapChain->Release();
@@ -80,5 +109,12 @@ void pickle::renderer::DirectXRenderer::render() const
 {
     float color[4] = {0.0f, 0.2f, 0.4f, 1.0f};
     deviceContext->ClearRenderTargetView(backBuffer, color);
+
+    UINT stride = sizeof(float) * 7;
+    UINT offset = 0;
+    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    deviceContext->Draw(3, 0);
+
     swapChain->Present(0, 0);
 }
