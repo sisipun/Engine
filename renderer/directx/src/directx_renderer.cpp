@@ -1,10 +1,11 @@
 #include <pickle/directx_renderer.h>
 
+#include <pickle/math.h>
 #include <tchar.h>
 
 #include <pickle/logger.h>
 
-pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWnd, int width, int height)
+pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int height)
 {
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
@@ -14,8 +15,8 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWnd, int width, int hei
     swapChainDesc.BufferDesc.Width = width;
     swapChainDesc.BufferDesc.Height = height;
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.OutputWindow = hWnd;
-    swapChainDesc.SampleDesc.Count = 4;
+    swapChainDesc.OutputWindow = hWindow;
+    swapChainDesc.SampleDesc.Count = 1;
     swapChainDesc.Windowed = TRUE;
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
@@ -46,8 +47,8 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWnd, int width, int hei
 
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
-    viewport.Width = height;
-    viewport.Height = width;
+    viewport.Width = width;
+    viewport.Height = height;
 
     deviceContext->RSSetViewports(1, &viewport);
 
@@ -62,10 +63,10 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWnd, int width, int hei
     deviceContext->VSSetShader(vertexSharer, 0, 0);
     deviceContext->PSSetShader(pixelShader, 0, 0);
 
-    float vertices[] = {
-        0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-        0.45f, -0.5, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        -0.45f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f};
+    pickle::math::Vector<7, float> vertices[] = {
+        pickle::math::Vector<7, float>({0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<7, float>({0.45f, -0.5, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<7, float>({-0.45f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f})};
 
     D3D11_BUFFER_DESC vertexBufferDesc;
     ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -94,13 +95,14 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWnd, int width, int hei
 pickle::renderer::DirectXRenderer::~DirectXRenderer()
 {
     swapChain->SetFullscreenState(FALSE, NULL);
+    deviceContext->ClearState();
 
     inputLayout->Release();
     vertexBuffer->Release();
     vertexSharer->Release();
     pixelShader->Release();
-    swapChain->Release();
     backBuffer->Release();
+    swapChain->Release();
     device->Release();
     deviceContext->Release();
 }

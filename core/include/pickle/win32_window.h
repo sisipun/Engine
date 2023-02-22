@@ -1,5 +1,5 @@
-#ifndef PICKLE_SDL_WINDOW
-#define PICKLE_SDL_WINDOW
+#ifndef PICKLE_WIN32_WINDOW
+#define PICKLE_WIN32_WINDOW
 
 #include <pickle/window.h>
 

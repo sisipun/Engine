@@ -7,7 +7,7 @@
 #include <pickle/logger.h>
 #include <pickle/metal_renderer.h>
 
-LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK windowProc(HWND hWindow, UINT message, WPARAM wParam, LPARAM lParam);
 
 const char* pickle::Win32Window::BASE_WINNDOW_CLASS = "BASE_WINDOW";
 
@@ -15,22 +15,22 @@ pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
 {
     HINSTANCE hInstance = GetModuleHandle(0);
 
-    HWND hWnd;
-    WNDCLASSEX wc;
-    ZeroMemory(&wc, sizeof(WNDCLASSEX));
+    HWND hWindow;
+    WNDCLASSEX windowClass;
+    ZeroMemory(&windowClass, sizeof(WNDCLASSEX));
 
     RECT wr = {0, 0, width, height};
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
 
-    wc.cbSize = sizeof(WNDCLASSEX);
-    wc.style = CS_HREDRAW | CS_VREDRAW;
-    wc.lpfnWndProc = windowProc;
-    wc.hInstance = hInstance;
-    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc.lpszClassName = _T(BASE_WINNDOW_CLASS);
+    windowClass.cbSize = sizeof(WNDCLASSEX);
+    windowClass.style = CS_HREDRAW | CS_VREDRAW;
+    windowClass.lpfnWndProc = windowProc;
+    windowClass.hInstance = hInstance;
+    windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+    windowClass.lpszClassName = _T(BASE_WINNDOW_CLASS);
 
-    RegisterClassEx(&wc);
-    hWnd = CreateWindowEx(NULL,
+    RegisterClassEx(&windowClass);
+    hWindow = CreateWindowEx(NULL,
                           _T(BASE_WINNDOW_CLASS),
                           _T("Description"),
                           WS_OVERLAPPEDWINDOW,
@@ -43,8 +43,8 @@ pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
                           hInstance,
                           NULL);
 
-    renderer = std::make_unique<pickle::renderer::DirectXRenderer>(hWnd, width, height);
-    ShowWindow(hWnd, 1);
+    renderer = std::make_unique<pickle::renderer::DirectXRenderer>(hWindow, width, height);
+    ShowWindow(hWindow, 1);
 }
 
 pickle::Win32Window::~Win32Window()
@@ -53,20 +53,20 @@ pickle::Win32Window::~Win32Window()
 
 void pickle::Win32Window::update()
 {
-    MSG msg;
-    if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+    MSG message;
+    if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
     {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+        TranslateMessage(&message);
+        DispatchMessage(&message);
 
-        if (msg.message == WM_QUIT)
+        if (message.message == WM_QUIT)
         {
             closed = true;
         }
     }
 }
 
-LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK windowProc(HWND hWindow, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (message == WM_DESTROY)
     {
@@ -74,5 +74,5 @@ LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
         return 0;
     }
 
-    return DefWindowProc(hWnd, message, wParam, lParam);
+    return DefWindowProc(hWindow, message, wParam, lParam);
 }
