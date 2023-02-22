@@ -7,49 +7,49 @@ namespace pickle
 {
     namespace math
     {
-        template <typename T>
-        Vector<3, T> cross(const Vector<3, T> &first, const Vector<3, T> &second)
+        template <typename TYPE>
+        Vector<3, TYPE> cross(const Vector<3, TYPE> &first, const Vector<3, TYPE> &second)
         {
-            return Vector<3, T>({first.data[1] * second.data[2] - first.data[2] * second.data[1],
+            return Vector<3, TYPE>({first.data[1] * second.data[2] - first.data[2] * second.data[1],
                                  -first.data[0] * second.data[2] + first.data[2] * second.data[0],
                                  first.data[0] * second.data[1] - first.data[1] * second.data[0]});
         }
 
-        template <size_t D, typename T>
-        float dot(const Vector<D, T> &first, const Vector<D, T> &second)
+        template <size_t SIZE, typename TYPE>
+        float dot(const Vector<SIZE, TYPE> &first, const Vector<SIZE, TYPE> &second)
         {
             float result = 0;
-            for (size_t i = 0; i < D; i++)
+            for (size_t i = 0; i < SIZE; i++)
             {
                 result += first.data[i] * second.data[i];
             }
             return result;
         }
 
-        template <size_t D, typename T>
-        Vector<D, T> reflect(const Vector<D, T> &vector, const Vector<D, T> &norm)
+        template <size_t SIZE, typename TYPE>
+        Vector<SIZE, TYPE> reflect(const Vector<SIZE, TYPE> &vector, const Vector<SIZE, TYPE> &norm)
         {
             return vector - (norm * 2 * (dot(vector, norm) / dot(norm, norm)));
         }
 
-        template <size_t D, typename T>
-        float length(const Vector<D, T> &vector)
+        template <size_t SIZE, typename TYPE>
+        float length(const Vector<SIZE, TYPE> &vector)
         {
             float lenSq = 0;
-            for (size_t i = 0; i < D; i++)
+            for (size_t i = 0; i < SIZE; i++)
             {
-                T value = vector.data[i];
+                TYPE value = vector.data[i];
                 lenSq += value * value;
             }
             return sqrt(lenSq);
         }
 
-        template <size_t D, typename T>
-        Vector<D, T> normalize(const Vector<D, T> &vector)
+        template <size_t SIZE, typename TYPE>
+        Vector<SIZE, TYPE> normalize(const Vector<SIZE, TYPE> &vector)
         {
-            Vector<D, T> result;
+            Vector<SIZE, TYPE> result;
             float len = length(vector);
-            for (size_t i = 0; i < D; i++)
+            for (size_t i = 0; i < SIZE; i++)
             {
                 result.data[i] = vector.data[i] / len;
             }

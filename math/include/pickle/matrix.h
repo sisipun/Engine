@@ -5,7 +5,7 @@ namespace pickle
 {
     namespace math
     {
-        template <size_t R, size_t C, typename T>
+        template <size_t ROWS, size_t COLUMNS, typename T>
         class Matrix
         {
         public:
@@ -13,175 +13,175 @@ namespace pickle
             {
             }
 
-            Matrix(const T (&data)[R * C])
+            Matrix(const T (&data)[ROWS * COLUMNS])
             {
-                for (size_t i = 0; i < R; i++)
+                for (size_t i = 0; i < ROWS; i++)
                 {
-                    for (size_t j = 0; j < C; j++)
+                    for (size_t j = 0; j < COLUMNS; j++)
                     {
-                        size_t index = i * C + j;
+                        size_t index = i * COLUMNS + j;
                         this->data[index] = data[index];
                     }
                 }
             }
 
-            Matrix(const Matrix<R, C, T> &matrix) : Matrix(matrix.data)
+            Matrix(const Matrix<ROWS, COLUMNS, T> &matrix) : Matrix(matrix.data)
             {
             }
 
             ~Matrix() = default;
 
-            Matrix<R, C, T> &operator=(const Matrix<R, C, T> &matrix)
+            Matrix<ROWS, COLUMNS, T> &operator=(const Matrix<ROWS, COLUMNS, T> &matrix)
             {
                 if (this == &matrix)
                 {
                     return *this;
                 }
 
-                for (size_t i = 0; i < R; i++)
+                for (size_t i = 0; i < ROWS; i++)
                 {
-                    for (size_t j = 0; j < C; j++)
+                    for (size_t j = 0; j < COLUMNS; j++)
                     {
-                        size_t index = i * C + j;
+                        size_t index = i * COLUMNS + j;
                         this->data[index] = matrix.data[index];
                     }
                 }
                 return *this;
             }
 
-            Matrix<R, C, T> operator+(const Matrix<R, C, T> &matrix) const
+            Matrix<ROWS, COLUMNS, T> operator+(const Matrix<ROWS, COLUMNS, T> &matrix) const
             {
-                Matrix<R, C, T> result;
-                for (size_t i = 0; i < R; i++)
+                Matrix<ROWS, COLUMNS, T> result;
+                for (size_t i = 0; i < ROWS; i++)
                 {
-                    for (size_t j = 0; j < C; j++)
+                    for (size_t j = 0; j < COLUMNS; j++)
                     {
-                        size_t index = i * C + j;
+                        size_t index = i * COLUMNS + j;
                         result.data[index] = data[index] + matrix.data[index];
                     }
                 }
                 return result;
             }
 
-            Matrix<R, C, T> operator-(const Matrix<R, C, T> &matrix) const
+            Matrix<ROWS, COLUMNS, T> operator-(const Matrix<ROWS, COLUMNS, T> &matrix) const
             {
-                Matrix<R, C, T> result;
-                for (size_t i = 0; i < R; i++)
+                Matrix<ROWS, COLUMNS, T> result;
+                for (size_t i = 0; i < ROWS; i++)
                 {
-                    for (size_t j = 0; j < C; j++)
+                    for (size_t j = 0; j < COLUMNS; j++)
                     {
-                        size_t index = i * C + j;
+                        size_t index = i * COLUMNS + j;
                         result.data[index] = data[index] - matrix.data[index];
                     }
                 }
                 return result;
             }
 
-            Matrix<R, C, T> operator*(float scalar) const
+            Matrix<ROWS, COLUMNS, T> operator*(float scalar) const
             {
-                Matrix<R, C, T> result;
-                for (size_t i = 0; i < R; i++)
+                Matrix<ROWS, COLUMNS, T> result;
+                for (size_t i = 0; i < ROWS; i++)
                 {
-                    for (size_t j = 0; j < C; j++)
+                    for (size_t j = 0; j < COLUMNS; j++)
                     {
-                        size_t index = i * C + j;
+                        size_t index = i * COLUMNS + j;
                         result.data[index] = data[index] * scalar;
                     }
                 }
                 return result;
             }
 
-            template <size_t NC>
-            Matrix<R, NC, T> operator*(const Matrix<C, NC, T> &matrix) const
+            template <size_t NEW_COLUMNS>
+            Matrix<ROWS, NEW_COLUMNS, T> operator*(const Matrix<COLUMNS, NEW_COLUMNS, T> &matrix) const
             {
-                Matrix<R, NC, T> result;
-                for (size_t i = 0; i < R; i++)
+                Matrix<ROWS, NEW_COLUMNS, T> result;
+                for (size_t i = 0; i < ROWS; i++)
                 {
-                    for (size_t j = 0; j < NC; j++)
+                    for (size_t j = 0; j < NEW_COLUMNS; j++)
                     {
                         T value = 0;
-                        for (size_t k = 0; k < C; k++)
+                        for (size_t k = 0; k < COLUMNS; k++)
                         {
-                            value += data[i * C + k] * matrix.data[k * NC + j];
+                            value += data[i * COLUMNS + k] * matrix.data[k * NEW_COLUMNS + j];
                         }
-                        result.data[i * NC + j] = value;
+                        result.data[i * NEW_COLUMNS + j] = value;
                     }
                 }
                 return result;
             }
 
-            Vector<R, T> operator*(const Vector<C, T> &vector) const
+            Vector<ROWS, T> operator*(const Vector<COLUMNS, T> &vector) const
             {
-                Vector<R, T> result;
-                for (size_t i = 0; i < R; i++)
+                Vector<ROWS, T> result;
+                for (size_t i = 0; i < ROWS; i++)
                 {
                     T value = 0;
-                    for (size_t k = 0; k < C; k++)
+                    for (size_t k = 0; k < COLUMNS; k++)
                     {
-                        value += data[i * C + k] * vector.data[k];
+                        value += data[i * COLUMNS + k] * vector.data[k];
                     }
                     result.data[i] = value;
                 }
                 return result;
             }
 
-            Matrix<R, C, T> operator/(float divider) const
+            Matrix<ROWS, COLUMNS, T> operator/(float divider) const
             {
-                Matrix<R, C, T> result;
-                for (size_t i = 0; i < R; i++)
+                Matrix<ROWS, COLUMNS, T> result;
+                for (size_t i = 0; i < ROWS; i++)
                 {
-                    for (size_t j = 0; j < C; j++)
+                    for (size_t j = 0; j < COLUMNS; j++)
                     {
-                        size_t index = i * C + j;
+                        size_t index = i * COLUMNS + j;
                         result.data[index] = data[index] / divider;
                     }
                 }
                 return result;
             }
 
-            template <size_t RP>
-            typename std::enable_if<(RP < R), Matrix<R - 1, C, T>>::type cutRowDimension() const
+            template <size_t ROW_POSITION>
+            typename std::enable_if<(ROW_POSITION < ROWS), Matrix<ROWS - 1, COLUMNS, T>>::type cutRowDimension() const
             {
-                return cutRowDimension<RP, 1>();
+                return cutRowDimension<ROW_POSITION, 1>();
             }
 
-            template <size_t CP>
-            typename std::enable_if<(CP <= C), Matrix<R, C - 1, T>>::type cutColumnDimension() const
+            template <size_t COLUMN_POSITION>
+            typename std::enable_if<(COLUMN_POSITION <= COLUMNS), Matrix<ROWS, COLUMNS - 1, T>>::type cutColumnDimension() const
             {
-                return cutColumnDimension<CP, 1>();
+                return cutColumnDimension<COLUMN_POSITION, 1>();
             }
 
-            template <size_t RP, size_t RC>
-            typename std::enable_if<RP + RC <= R, Matrix<R - RC, C, T>>::type cutRowDimension() const
+            template <size_t ROW_POSITION, size_t ROWS_COUNT>
+            typename std::enable_if<ROW_POSITION + ROWS_COUNT <= ROWS, Matrix<ROWS - ROWS_COUNT, COLUMNS, T>>::type cutRowDimension() const
             {
-                return cutDimension<RP, RC, 0, 0>();
+                return cutDimension<ROW_POSITION, ROWS_COUNT, 0, 0>();
             }
 
-            template <size_t CP, size_t CC>
-            typename std::enable_if<CP + CC <= C, Matrix<R, C - CC, T>>::type cutColumnDimension() const
+            template <size_t COLUMN_POSITION, size_t COLUMNS_COUNT>
+            typename std::enable_if<COLUMN_POSITION + COLUMNS_COUNT <= COLUMNS, Matrix<ROWS, COLUMNS - COLUMNS_COUNT, T>>::type cutColumnDimension() const
             {
-                return cutDimension<0, 0, CP, CC>();
+                return cutDimension<0, 0, COLUMN_POSITION, COLUMNS_COUNT>();
             }
 
-            template <size_t RP, size_t CP>
-            typename std::enable_if<(RP < R) && (CP < C), Matrix<R - 1, C - 1, T>>::type cutDimension() const
+            template <size_t ROW_POSITION, size_t COLUMN_POSITION>
+            typename std::enable_if<(ROW_POSITION < ROWS) && (COLUMN_POSITION < COLUMNS), Matrix<ROWS - 1, COLUMNS - 1, T>>::type cutDimension() const
             {
-                return cutDimension<RP, 1, CP, 1>();
+                return cutDimension<ROW_POSITION, 1, COLUMN_POSITION, 1>();
             }
 
-            template <size_t RP, size_t RC, size_t CP, size_t CC>
-            typename std::enable_if<RP + RC <= R && CP + CC <= C, Matrix<R - RC, C - CC, T>>::type cutDimension() const
+            template <size_t ROW_POSITION, size_t ROWS_COUNT, size_t COLUMN_POSITION, size_t COLUMNS_COUNT>
+            typename std::enable_if<ROW_POSITION + ROWS_COUNT <= ROWS && COLUMN_POSITION + COLUMNS_COUNT <= COLUMNS, Matrix<ROWS - ROWS_COUNT, COLUMNS - COLUMNS_COUNT, T>>::type cutDimension() const
             {
-                Matrix<R - RC, C - CC, T> result;
-                for (size_t i = 0, ri = 0; i < R; i++)
+                Matrix<ROWS - ROWS_COUNT, COLUMNS - COLUMNS_COUNT, T> result;
+                for (size_t i = 0, ri = 0; i < ROWS; i++)
                 {
-                    if (i < RP || i >= RP + RC)
+                    if (i < ROW_POSITION || i >= ROW_POSITION + ROWS_COUNT)
                     {
-                        for (size_t j = 0, rj = 0; j < C; j++)
+                        for (size_t j = 0, rj = 0; j < COLUMNS; j++)
                         {
-                            if (j < CP || j >= CP + CC)
+                            if (j < COLUMN_POSITION || j >= COLUMN_POSITION + COLUMNS_COUNT)
                             {
-                                result.data[ri * (C - CC) + rj] = data[i * C + j];
+                                result.data[ri * (COLUMNS - COLUMNS_COUNT) + rj] = data[i * COLUMNS + j];
                                 rj++;
                             }
                         }
@@ -191,19 +191,19 @@ namespace pickle
                 return result;
             }
 
-            template <size_t RP, size_t RC, size_t CP, size_t CC>
-            typename std::enable_if<(RC > 0) && RP + RC <= R && (CC > 0) && CP + CC <= C, Matrix<RC, CC, T>>::type extract() const
+            template <size_t ROW_POSITION, size_t ROWS_COUNT, size_t COLUMN_POSITION, size_t COLUMNS_COUNT>
+            typename std::enable_if<(ROWS_COUNT > 0) && ROW_POSITION + ROWS_COUNT <= ROWS && (COLUMNS_COUNT > 0) && COLUMN_POSITION + COLUMNS_COUNT <= COLUMNS, Matrix<ROWS_COUNT, COLUMNS_COUNT, T>>::type extract() const
             {
-                Matrix<RC, CC, T> result;
-                for (size_t i = 0, ri = 0; i < R; i++)
+                Matrix<ROWS_COUNT, COLUMNS_COUNT, T> result;
+                for (size_t i = 0, ri = 0; i < ROWS; i++)
                 {
-                    if (i >= RP && i < RP + RC)
+                    if (i >= ROW_POSITION && i < ROW_POSITION + ROWS_COUNT)
                     {
-                        for (size_t j = 0, rj = 0; j < C; j++)
+                        for (size_t j = 0, rj = 0; j < COLUMNS; j++)
                         {
-                            if (j >= CP && j < CP + CC)
+                            if (j >= COLUMN_POSITION && j < COLUMN_POSITION + COLUMNS_COUNT)
                             {
-                                result.data[ri * (CC) + rj] = data[i * C + j];
+                                result.data[ri * (COLUMNS_COUNT) + rj] = data[i * COLUMNS + j];
                                 rj++;
                             }
                         }
@@ -213,89 +213,89 @@ namespace pickle
                 return result;
             }
 
-            template <size_t RP>
-            typename std::enable_if<(RP < R), Matrix<R + 1, C, T>>::type addRowDimension(Matrix<1, C, T> value) const
+            template <size_t ROW_POSITION>
+            typename std::enable_if<(ROW_POSITION < ROWS), Matrix<ROWS + 1, COLUMNS, T>>::type addRowDimension(Matrix<1, COLUMNS, T> value) const
             {
-                return addRowDimension<RP, 1>(value);
+                return addRowDimension<ROW_POSITION, 1>(value);
             }
 
-            template <size_t RP, size_t RC>
-            typename std::enable_if<(RP < R), Matrix<R + RC, C, T>>::type addRowDimension(Matrix<RC, C, T> value) const
+            template <size_t ROW_POSITION, size_t ROWS_COUNT>
+            typename std::enable_if<(ROW_POSITION < ROWS), Matrix<ROWS + ROWS_COUNT, COLUMNS, T>>::type addRowDimension(Matrix<ROWS_COUNT, COLUMNS, T> value) const
             {
-                Matrix<R + RC, C, T> result;
+                Matrix<ROWS + ROWS_COUNT, COLUMNS, T> result;
                 size_t ri = 0;
-                for (size_t i = 0; i < RP; i++, ri++)
+                for (size_t i = 0; i < ROW_POSITION; i++, ri++)
                 {
-                    for (size_t j = 0; j < C; j++)
+                    for (size_t j = 0; j < COLUMNS; j++)
                     {
-                        result.data[ri * C + j] = data[i * C + j];
+                        result.data[ri * COLUMNS + j] = data[i * COLUMNS + j];
                     }
                 }
 
-                for (size_t i = 0; i < RC; i++, ri++)
+                for (size_t i = 0; i < ROWS_COUNT; i++, ri++)
                 {
-                    for (size_t j = 0; j < C; j++)
+                    for (size_t j = 0; j < COLUMNS; j++)
                     {
-                        result.data[ri * C + j] = value.data[i * C + j];
+                        result.data[ri * COLUMNS + j] = value.data[i * COLUMNS + j];
                     }
                 }
 
-                for (size_t i = RP; i < R; i++, ri++)
+                for (size_t i = ROW_POSITION; i < ROWS; i++, ri++)
                 {
-                    for (size_t j = 0; j < C; j++)
+                    for (size_t j = 0; j < COLUMNS; j++)
                     {
-                        result.data[ri * C + j] = data[i * C + j];
+                        result.data[ri * COLUMNS + j] = data[i * COLUMNS + j];
                     }
                 }
                 return result;
             }
 
-            template <size_t CP>
-            typename std::enable_if<(CP < C), Matrix<R, C + 1, T>>::type addColumnDimension(Matrix<R, 1, T> value) const
+            template <size_t COLUMN_POSITION>
+            typename std::enable_if<(COLUMN_POSITION < COLUMNS), Matrix<ROWS, COLUMNS + 1, T>>::type addColumnDimension(Matrix<ROWS, 1, T> value) const
             {
-                return addColumnDimension<CP, 1>(value);
+                return addColumnDimension<COLUMN_POSITION, 1>(value);
             }
 
-            template <size_t CP, size_t CC>
-            typename std::enable_if<(CP < C), Matrix<R, C + CC, T>>::type addColumnDimension(Matrix<R, CC, T> value) const
+            template <size_t COLUMN_POSITION, size_t COLUMNS_COUNT>
+            typename std::enable_if<(COLUMN_POSITION < COLUMNS), Matrix<ROWS, COLUMNS + COLUMNS_COUNT, T>>::type addColumnDimension(Matrix<ROWS, COLUMNS_COUNT, T> value) const
             {
-                Matrix<R, C + CC, T> result;
-                for (size_t i = 0; i < R; i++)
+                Matrix<ROWS, COLUMNS + COLUMNS_COUNT, T> result;
+                for (size_t i = 0; i < ROWS; i++)
                 {
                     size_t rj = 0;
-                    for (size_t j = 0; j < CP; j++, rj++)
+                    for (size_t j = 0; j < COLUMN_POSITION; j++, rj++)
                     {
-                        result.data[i * (C + CC) + rj] = data[i * C + j];
+                        result.data[i * (COLUMNS + COLUMNS_COUNT) + rj] = data[i * COLUMNS + j];
                     }
 
-                    for (size_t j = 0; j < CC; j++, rj++)
+                    for (size_t j = 0; j < COLUMNS_COUNT; j++, rj++)
                     {
-                        result.data[i * (C + CC) + rj] = value.data[i * CC + j];
+                        result.data[i * (COLUMNS + COLUMNS_COUNT) + rj] = value.data[i * COLUMNS_COUNT + j];
                     }
 
-                    for (size_t j = CP; j < C; j++, rj++)
+                    for (size_t j = COLUMN_POSITION; j < COLUMNS; j++, rj++)
                     {
-                        result.data[i * (C + CC) + rj] = data[i * C + j];
+                        result.data[i * (COLUMNS + COLUMNS_COUNT) + rj] = data[i * COLUMNS + j];
                     }
                 }
                 return result;
             }
 
-            template <size_t RP, size_t CC>
-            typename std::enable_if<(RP < R) && (CC < C), Matrix<R, C, T>>::type replace(T value) const
+            template <size_t ROW_POSITION, size_t COLUMNS_COUNT>
+            typename std::enable_if<(ROW_POSITION < ROWS) && (COLUMNS_COUNT < COLUMNS), Matrix<ROWS, COLUMNS, T>>::type replace(T value) const
             {
-                return replace<RP, 1, CC, 1>(Matrix<1, 1, T>({value}));
+                return replace<ROW_POSITION, 1, COLUMNS_COUNT, 1>(Matrix<1, 1, T>({value}));
             }
 
-            template <size_t RP, size_t RC, size_t CP, size_t CC>
-            typename std::enable_if<(RC > 0) && RP + RC <= R && (CC > 0) && CP + CC <= C, Matrix<R, C, T>>::type replace(Matrix<RC, CC, T> value) const
+            template <size_t ROW_POSITION, size_t ROWS_COUNT, size_t COLUMN_POSITION, size_t COLUMNS_COUNT>
+            typename std::enable_if<(ROWS_COUNT > 0) && ROW_POSITION + ROWS_COUNT <= ROWS && (COLUMNS_COUNT > 0) && COLUMN_POSITION + COLUMNS_COUNT <= COLUMNS, Matrix<ROWS, COLUMNS, T>>::type replace(Matrix<ROWS_COUNT, COLUMNS_COUNT, T> value) const
             {
-                Matrix<R, C, T> result(data);
-                for (size_t i = 0; i < RC; i++)
+                Matrix<ROWS, COLUMNS, T> result(data);
+                for (size_t i = 0; i < ROWS_COUNT; i++)
                 {
-                    for (size_t j = 0; j < CC; j++)
+                    for (size_t j = 0; j < COLUMNS_COUNT; j++)
                     {
-                        result.data[(i + RP) * C + (j + CP)] = value.data[i * CC + j];
+                        result.data[(i + ROW_POSITION) * COLUMNS + (j + COLUMN_POSITION)] = value.data[i * COLUMNS_COUNT + j];
                     }
                 }
                 return result;
@@ -303,16 +303,16 @@ namespace pickle
 
             size_t rows() const
             {
-                return R;
+                return ROWS;
             }
 
             size_t columns() const
             {
-                return C;
+                return COLUMNS;
             }
 
         public:
-            T data[R * C];
+            T data[ROWS * COLUMNS];
         };
     }
 }

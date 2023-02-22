@@ -7,7 +7,7 @@ namespace pickle
 {
     namespace math
     {
-        template <size_t D, typename T>
+        template <size_t SIZE, typename TYPE>
         class Vector
         {
         public:
@@ -15,17 +15,17 @@ namespace pickle
             {
             }
 
-            Vector(const T (&data)[D])
+            Vector(const TYPE (&data)[SIZE])
             {
-                for (size_t i = 0; i < D; i++)
+                for (size_t i = 0; i < SIZE; i++)
                 {
                     this->data[i] = data[i];
                 }
             }
 
-            Vector(const Vector<D, T> &vector)
+            Vector(const Vector<SIZE, TYPE> &vector)
             {
-                for (size_t i = 0; i < D; i++)
+                for (size_t i = 0; i < SIZE; i++)
                 {
                     data[i] = vector.data[i];
                 }
@@ -33,73 +33,73 @@ namespace pickle
 
             ~Vector() = default;
 
-            Vector &operator=(const Vector<D, T> &vector)
+            Vector &operator=(const Vector<SIZE, TYPE> &vector)
             {
                 if (this == &vector)
                 {
                     return *this;
                 }
 
-                for (size_t i = 0; i < D; i++)
+                for (size_t i = 0; i < SIZE; i++)
                 {
                     data[i] = vector.data[i];
                 }
                 return *this;
             }
 
-            Vector<D, T> operator+(const Vector<D, T> &vector) const
+            Vector<SIZE, TYPE> operator+(const Vector<SIZE, TYPE> &vector) const
             {
-                Vector<D, T> result;
-                for (size_t i = 0; i < D; i++)
+                Vector<SIZE, TYPE> result;
+                for (size_t i = 0; i < SIZE; i++)
                 {
                     result.data[i] = data[i] + vector.data[i];
                 }
                 return result;
             }
 
-            Vector<D, T> operator-(const Vector<D, T> &vector) const
+            Vector<SIZE, TYPE> operator-(const Vector<SIZE, TYPE> &vector) const
             {
-                Vector<D, T> result;
-                for (size_t i = 0; i < D; i++)
+                Vector<SIZE, TYPE> result;
+                for (size_t i = 0; i < SIZE; i++)
                 {
                     result.data[i] = this->data[i] - vector.data[i];
                 }
                 return result;
             }
 
-            Vector<D, T> operator-() const
+            Vector<SIZE, TYPE> operator-() const
             {
-                Vector<D, T> result;
-                for (size_t i = 0; i < D; i++)
+                Vector<SIZE, TYPE> result;
+                for (size_t i = 0; i < SIZE; i++)
                 {
                     result.data[i] = -this->data[i];
                 }
                 return result;
             }
 
-            Vector<D, T> operator*(float scalar) const
+            Vector<SIZE, TYPE> operator*(float scalar) const
             {
-                Vector<D, T> result;
-                for (size_t i = 0; i < D; i++)
+                Vector<SIZE, TYPE> result;
+                for (size_t i = 0; i < SIZE; i++)
                 {
                     result.data[i] = data[i] * scalar;
                 }
                 return result;
             }
 
-            Vector<D, T> operator/(float divider) const
+            Vector<SIZE, TYPE> operator/(float divider) const
             {
-                Vector<D, T> result;
-                for (size_t i = 0; i < D; i++)
+                Vector<SIZE, TYPE> result;
+                for (size_t i = 0; i < SIZE; i++)
                 {
                     result.data[i] = data[i] / divider;
                 }
                 return result;
             }
 
-            bool operator==(Vector<D, T> vector) const
+            bool operator==(Vector<SIZE, TYPE> vector) const
             {
-                for (size_t i = 0; i < D; i++)
+                for (size_t i = 0; i < SIZE; i++)
                 {
                     if (data[i] != vector.data[i])
                     {
@@ -110,24 +110,24 @@ namespace pickle
                 return true;
             }
 
-            bool operator!=(Vector<D, T> vector) const
+            bool operator!=(Vector<SIZE, TYPE> vector) const
             {
                 return !(*this == vector);
             }
 
-            template <size_t P>
-            typename std::enable_if<(P < D), Vector<D - 1, T>>::type cutDimension() const
+            template <size_t POSITION>
+            typename std::enable_if<(POSITION < SIZE), Vector<SIZE - 1, TYPE>>::type cutDimension() const
             {
-                return cutDimension<P, 1>();
+                return cutDimension<POSITION, 1>();
             }
 
-            template <size_t P, size_t C>
-            typename std::enable_if<P + C <= D, Vector<D - C, T>>::type cutDimension() const
+            template <size_t POSITION, size_t COUNT>
+            typename std::enable_if<POSITION + COUNT <= SIZE, Vector<SIZE - COUNT, TYPE>>::type cutDimension() const
             {
-                Vector<D - C, T> result;
-                for (size_t i = 0, ci = 0; i < D; i++)
+                Vector<SIZE - COUNT, TYPE> result;
+                for (size_t i = 0, ci = 0; i < SIZE; i++)
                 {
-                    if (i < P || i >= P + C)
+                    if (i < POSITION || i >= POSITION + COUNT)
                     {
                         result.data[ci] = data[i];
                         ci++;
@@ -136,13 +136,13 @@ namespace pickle
                 return result;
             }
 
-            template <size_t P, size_t C>
-            typename std::enable_if<(C > 1) && P + C <= D, Vector<D - C, T>>::type extract() const
+            template <size_t POSITION, size_t COUNT>
+            typename std::enable_if<(COUNT > 1) && POSITION + COUNT <= SIZE, Vector<SIZE - COUNT, TYPE>>::type extract() const
             {
-                Vector<D - C, T> result;
-                for (size_t i = 0, ri = 0; i < D; i++)
+                Vector<SIZE - COUNT, TYPE> result;
+                for (size_t i = 0, ri = 0; i < SIZE; i++)
                 {
-                    if (i >= P && i < P + C)
+                    if (i >= POSITION && i < POSITION + COUNT)
                     {
                         result.data[ri] = data[i];
                         ri++;
@@ -151,28 +151,28 @@ namespace pickle
                 return result;
             }
 
-            template <size_t P>
-            typename std::enable_if<P <= D, Vector<D + 1, T>>::type addDimension(T value) const
+            template <size_t POSITION>
+            typename std::enable_if<POSITION <= SIZE, Vector<SIZE + 1, TYPE>>::type addDimension(TYPE value) const
             {
-                return addDimension<P, 1>(Vector<1, T>({value}));
+                return addDimension<POSITION, 1>(Vector<1, TYPE>({value}));
             }
 
-            template <size_t P, size_t C>
-            typename std::enable_if<P <= D, Vector<D + C, T>>::type addDimension(Vector<C, T> value) const
+            template <size_t POSITION, size_t COUNT>
+            typename std::enable_if<POSITION <= SIZE, Vector<SIZE + COUNT, TYPE>>::type addDimension(Vector<COUNT, TYPE> value) const
             {
-                Vector<D + C, T> result;
+                Vector<SIZE + COUNT, TYPE> result;
                 size_t ri = 0;
-                for (size_t i = 0; i < P; i++, ri++)
+                for (size_t i = 0; i < POSITION; i++, ri++)
                 {
                     result.data[ri] = data[i];
                 }
 
-                for (size_t i = 0; i < C; i++, ri++)
+                for (size_t i = 0; i < COUNT; i++, ri++)
                 {
                     result.data[ri] = value.data[i];
                 }
 
-                for (size_t i = P; i < D; i++, ri++)
+                for (size_t i = POSITION; i < SIZE; i++, ri++)
                 {
                     result.data[ri] = data[i];
                 }
@@ -180,30 +180,30 @@ namespace pickle
                 return result;
             }
 
-            template <size_t P>
-            typename std::enable_if<(P < D), Vector<D, T>>::type replace(T value) const
+            template <size_t POSITION>
+            typename std::enable_if<(POSITION < SIZE), Vector<SIZE, TYPE>>::type replace(TYPE value) const
             {
-                return replace<P, 1>(Vector<1, T>({value}));
+                return replace<POSITION, 1>(Vector<1, TYPE>({value}));
             }
 
-            template <size_t P, size_t C>
-            typename std::enable_if<P + C <= D, Vector<D, T>>::type replace(Vector<C, T> value) const
+            template <size_t POSITION, size_t COUNT>
+            typename std::enable_if<POSITION + COUNT <= SIZE, Vector<SIZE, TYPE>>::type replace(Vector<COUNT, TYPE> value) const
             {
-                Vector<D, T> result(data);
-                for (size_t i = 0; i < C; i++)
+                Vector<SIZE, TYPE> result(data);
+                for (size_t i = 0; i < COUNT; i++)
                 {
-                    result.data[i + P] = value.data[i];
+                    result.data[i + POSITION] = value.data[i];
                 }
                 return result;
             }
 
             size_t size() const
             {
-                return D;
+                return SIZE;
             }
 
         public:
-            T data[D];
+            TYPE data[SIZE];
         };
     }
 }

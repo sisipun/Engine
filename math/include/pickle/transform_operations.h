@@ -12,70 +12,70 @@ namespace pickle
 {
     namespace math
     {
-        template <typename T>
-        T radians(const T degrees)
+        template <typename TYPE>
+        TYPE radians(const TYPE degrees)
         {
-            return static_cast<T>((std::numbers::pi / 180.0) * degrees);
+            return static_cast<TYPE>((std::numbers::pi / 180.0) * degrees);
         }
 
-        template <typename T>
-        Matrix<4, 4, T> translate(const Matrix<4, 4, T> &base, const Vector<3, T> &translation)
+        template <typename TYPE>
+        Matrix<4, 4, TYPE> translate(const Matrix<4, 4, TYPE> &base, const Vector<3, TYPE> &translation)
         {
-            return base * Matrix<4, 4, T>({1, 0, 0, translation.data[0],
+            return base * Matrix<4, 4, TYPE>({1, 0, 0, translation.data[0],
                                            0, 1, 0, translation.data[1],
                                            0, 0, 1, translation.data[2],
                                            0, 0, 0, 1});
         }
 
-        template <typename T>
-        Matrix<4, 4, T> scale(const Matrix<4, 4, T> &base, const Vector<3, T> &scale)
+        template <typename TYPE>
+        Matrix<4, 4, TYPE> scale(const Matrix<4, 4, TYPE> &base, const Vector<3, TYPE> &scale)
         {
-            return base * Matrix<4, 4, T>({scale.data[0], 0, 0, 0,
+            return base * Matrix<4, 4, TYPE>({scale.data[0], 0, 0, 0,
                                            0, scale.data[1], 0, 0,
                                            0, 0, scale.data[2], 0,
                                            0, 0, 0, 1});
         }
 
-        template <typename T>
-        Matrix<4, 4, T> rotate(const Matrix<4, 4, T> &base, const T angle, const Vector<3, T> &axis)
+        template <typename TYPE>
+        Matrix<4, 4, TYPE> rotate(const Matrix<4, 4, TYPE> &base, const TYPE angle, const Vector<3, TYPE> &axis)
         {
-            T x = axis.data[0];
-            T y = axis.data[1];
-            T z = axis.data[2];
-            T cosAngle = cos(angle);
-            T sinAngle = sin(angle);
-            return base * Matrix<4, 4, T>({cosAngle + (1 - cosAngle) * x * x, (1 - cosAngle) * x * y - sinAngle * z, (1 - cosAngle) * x * z + sinAngle * y, 0,
+            TYPE x = axis.data[0];
+            TYPE y = axis.data[1];
+            TYPE z = axis.data[2];
+            TYPE cosAngle = cos(angle);
+            TYPE sinAngle = sin(angle);
+            return base * Matrix<4, 4, TYPE>({cosAngle + (1 - cosAngle) * x * x, (1 - cosAngle) * x * y - sinAngle * z, (1 - cosAngle) * x * z + sinAngle * y, 0,
                                            (1 - cosAngle) * x * y + sinAngle * z, cosAngle + (1 - cosAngle) * y * y, (1 - cosAngle) * y * z - sinAngle * x, 0,
                                            (1 - cosAngle) * x * z - sinAngle * y, (1 - cosAngle) * y * z + sinAngle * x, cosAngle + (1 - cosAngle) * z * z, 0,
                                            0, 0, 0, 1});
         }
 
-        template <typename T>
-        Matrix<4, 4, T> ortho(T xMin, T xMax, T yMin, T yMax, T zMin, T zMax)
+        template <typename TYPE>
+        Matrix<4, 4, TYPE> ortho(TYPE xMin, TYPE xMax, TYPE yMin, TYPE yMax, TYPE zMin, TYPE zMax)
         {
-            return Matrix<4, 4, T>({2.0f / (xMax - xMin), 0.0f, 0.0f, -(xMax + xMin) / (xMax - xMin),
+            return Matrix<4, 4, TYPE>({2.0f / (xMax - xMin), 0.0f, 0.0f, -(xMax + xMin) / (xMax - xMin),
                                     0.0f, 2.0f / (yMax - yMin), 0.0f, -(yMax + yMin) / (yMax - yMin),
                                     0.0f, 0.0f, -2.0f / (zMax - zMin), -(zMax + zMin) / (zMax - zMin),
                                     0.0f, 0.0f, 0.0f, 1.0f});
         }
 
-        template <typename T>
-        Matrix<4, 4, T> perspective(float fov, float aspect, T near, T far)
+        template <typename TYPE>
+        Matrix<4, 4, TYPE> perspective(float fov, float aspect, TYPE nearPlane, TYPE farPlane)
         {
-            return Matrix<4, 4, T>({1.0f / (aspect * tan(fov / 2.0f)), 0.0f, 0.0f, 0.0f,
+            return Matrix<4, 4, TYPE>({1.0f / (aspect * tan(fov / 2.0f)), 0.0f, 0.0f, 0.0f,
                                     0.0f, 1.0f / tan(fov / 2.0f), 0.0f, 0.0f,
-                                    0.0f, 0.0f, -(far + near) / (far - near), -2.0f * far * near / (far - near),
+                                    0.0f, 0.0f, -(farPlane + nearPlane) / (farPlane - nearPlane), -2.0f * farPlane * nearPlane / (farPlane - nearPlane),
                                     0.0f, 0.0f, -1.0f, 0.0f});
         }
 
-        template <typename T>
-        Matrix<4, 4, T> lookAt(const Vector<3, T> &position, const Vector<3, T> &target, const Vector<3, T> &up)
+        template <typename TYPE>
+        Matrix<4, 4, TYPE> lookAt(const Vector<3, TYPE> &position, const Vector<3, TYPE> &target, const Vector<3, TYPE> &up)
         {
-            Vector<3, T> cameraDirection = normalize(position - target);
-            Vector<3, T> cameraRight = normalize(cross(up, cameraDirection));
-            Vector<3, T> cameraUp = cross(cameraDirection, cameraRight);
+            Vector<3, TYPE> cameraDirection = normalize(position - target);
+            Vector<3, TYPE> cameraRight = normalize(cross(up, cameraDirection));
+            Vector<3, TYPE> cameraUp = cross(cameraDirection, cameraRight);
 
-            return Matrix<4, 4, T>({cameraRight.data[0], cameraRight.data[1], cameraRight.data[2], -dot(cameraRight, position),
+            return Matrix<4, 4, TYPE>({cameraRight.data[0], cameraRight.data[1], cameraRight.data[2], -dot(cameraRight, position),
                                     cameraUp.data[0], cameraUp.data[1], cameraUp.data[2], -dot(cameraUp, position),
                                     cameraDirection.data[0], cameraDirection.data[1], cameraDirection.data[2], -dot(cameraDirection, position),
                                     0.0f, 0.0f, 0.0f, 1.0f});
