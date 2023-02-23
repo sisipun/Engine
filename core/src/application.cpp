@@ -1,6 +1,7 @@
 #include <pickle/application.h>
 
 #include <pickle/win32_window.h>
+#include <pickle/sdl_window.h>
 
 namespace pickle
 {

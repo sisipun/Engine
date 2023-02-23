@@ -63,6 +63,17 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int 
     deviceContext->VSSetShader(vertexSharer, 0, 0);
     deviceContext->PSSetShader(pixelShader, 0, 0);
 
+    D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}};
+
+    device->CreateInputLayout(inputElementDesc, 2, vertexBlob->GetBufferPointer(), vertexBlob->GetBufferSize(), &inputLayout);
+
+    deviceContext->IASetInputLayout(inputLayout);
+
+    vertexBlob->Release();
+    pixelBlob->Release();
+
     pickle::math::Vector<7, float> vertices[] = {
         pickle::math::Vector<7, float>({0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f}),
         pickle::math::Vector<7, float>({0.45f, -0.5, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
@@ -71,25 +82,17 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int 
     D3D11_BUFFER_DESC vertexBufferDesc;
     ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
-    vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     vertexBufferDesc.ByteWidth = sizeof(vertices);
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    vertexBufferDesc.CPUAccessFlags = 0;
 
-    device->CreateBuffer(&vertexBufferDesc, NULL, &vertexBuffer);
+    D3D11_SUBRESOURCE_DATA initData;
+    ZeroMemory(&initData, sizeof(D3D11_SUBRESOURCE_DATA));
 
-    D3D11_MAPPED_SUBRESOURCE vertexBufferSubresource;
-    deviceContext->Map(vertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &vertexBufferSubresource);
-    memcpy(vertexBufferSubresource.pData, vertices, sizeof(vertices));
-    deviceContext->Unmap(vertexBuffer, NULL);
+    initData.pSysMem = vertices;
 
-    D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = {
-        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}};
-
-    device->CreateInputLayout(inputElementDesc, 2, vertexBlob->GetBufferPointer(), vertexBlob->GetBufferSize(), &inputLayout);
-
-    deviceContext->IASetInputLayout(inputLayout);
+    device->CreateBuffer(&vertexBufferDesc, &initData, &vertexBuffer);
 }
 
 pickle::renderer::DirectXRenderer::~DirectXRenderer()
@@ -97,8 +100,8 @@ pickle::renderer::DirectXRenderer::~DirectXRenderer()
     swapChain->SetFullscreenState(FALSE, NULL);
     deviceContext->ClearState();
 
-    inputLayout->Release();
     vertexBuffer->Release();
+    inputLayout->Release();
     vertexSharer->Release();
     pixelShader->Release();
     backBuffer->Release();

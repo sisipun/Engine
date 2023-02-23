@@ -29,8 +29,8 @@ namespace pickle
             ID3D11RenderTargetView *backBuffer;
             ID3D11VertexShader *vertexSharer;
             ID3D11PixelShader *pixelShader;
-            ID3D11Buffer *vertexBuffer;
             ID3D11InputLayout *inputLayout;
+            ID3D11Buffer *vertexBuffer;
         };
     }
 }
