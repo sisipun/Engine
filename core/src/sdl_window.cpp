@@ -36,7 +36,7 @@ void pickle::SdlWindow::update()
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0)
     {
-        if (event.type == SDL_EVENT_QUIT)
+        if (event.type == SDL_QUIT)
         {
             closed = true;
             return;
