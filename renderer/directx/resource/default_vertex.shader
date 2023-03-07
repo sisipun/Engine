@@ -1,10 +1,10 @@
 struct VSOut 
 {
     float4 position : SV_POSITION;
-    float4 color : COLOR;
+    float3 color : COLOR;
 };
 
-VSOut main(float4 position : POSITION, float4 color : COLOR) : SV_POSITION
+VSOut main(float4 position : POSITION, float3 normal: NORMAL, float3 color : COLOR)
 {
     VSOut output;
 
