@@ -1,9 +1,17 @@
 #include <pickle/directx_renderer.h>
 
-#include <pickle/math.h>
+#include <xnamath.h>
 #include <tchar.h>
 
+#include <pickle/math.h>
 #include <pickle/logger.h>
+
+struct ConstantBuffer
+{
+    XMMATRIX world;
+    XMMATRIX view;
+    XMMATRIX projection;
+};
 
 pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int height)
 {
@@ -76,47 +84,47 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int 
     pixelBlob->Release();
 
     pickle::math::Vector<9, float> vertices[] = {
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.25f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
+        pickle::math::Vector<9, float>({-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
+        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
+        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
+        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
 
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.75f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.75f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.75f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.75f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.75f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.75f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
 
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.25f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.75f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.25f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.75f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.75f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.25f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
 
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.25f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.25f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.75f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.75f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.25f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.75f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
+        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
 
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.25f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.75f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.25f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.75f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.75f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.25f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
+        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
 
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.25f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.25f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.75f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.75f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.25f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.75f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 1.0f})};
+        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
+        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
+        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
+        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
+        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
+        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f})};
 
     D3D11_BUFFER_DESC vertexBufferDesc;
     ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -126,12 +134,33 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int 
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
 
-    D3D11_SUBRESOURCE_DATA initData;
-    ZeroMemory(&initData, sizeof(D3D11_SUBRESOURCE_DATA));
+    D3D11_SUBRESOURCE_DATA vertexBufferInitData;
+    ZeroMemory(&vertexBufferInitData, sizeof(D3D11_SUBRESOURCE_DATA));
 
-    initData.pSysMem = vertices;
+    vertexBufferInitData.pSysMem = vertices;
 
-    device->CreateBuffer(&vertexBufferDesc, &initData, &vertexBuffer);
+    device->CreateBuffer(&vertexBufferDesc, &vertexBufferInitData, &vertexBuffer);
+
+    ConstantBuffer constantBufferData{
+        XMMatrixTranspose(XMMatrixIdentity()),
+        XMMatrixTranspose(XMMatrixLookAtLH(XMVectorSet( -1.0f, 1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f))),
+        XMMatrixTranspose(XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f))
+    };
+
+    D3D11_BUFFER_DESC constantBufferDesc;
+    ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+    constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    constantBufferDesc.ByteWidth = sizeof(ConstantBuffer);
+    constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDesc.CPUAccessFlags = 0;
+
+    D3D11_SUBRESOURCE_DATA constantBufferInitData;
+    ZeroMemory(&constantBufferInitData, sizeof(D3D11_SUBRESOURCE_DATA));
+
+    constantBufferInitData.pSysMem = &constantBufferData;
+
+    device->CreateBuffer(&constantBufferDesc, &constantBufferInitData, &constantBuffer);
 }
 
 pickle::renderer::DirectXRenderer::~DirectXRenderer()
@@ -139,6 +168,7 @@ pickle::renderer::DirectXRenderer::~DirectXRenderer()
     swapChain->SetFullscreenState(FALSE, NULL);
     deviceContext->ClearState();
 
+    constantBuffer->Release();
     vertexBuffer->Release();
     inputLayout->Release();
     vertexSharer->Release();
@@ -151,12 +181,13 @@ pickle::renderer::DirectXRenderer::~DirectXRenderer()
 
 void pickle::renderer::DirectXRenderer::render() const
 {
-    float color[4] = {0.0f, 0.2f, 0.4f, 1.0f};
+    float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     deviceContext->ClearRenderTargetView(backBuffer, color);
 
     UINT stride = sizeof(float) * 9;
     UINT offset = 0;
     deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+    deviceContext->VSSetConstantBuffers(0, 1, &constantBuffer);
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     deviceContext->Draw(36, 0);
 
