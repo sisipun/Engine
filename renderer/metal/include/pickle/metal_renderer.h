@@ -10,7 +10,7 @@ namespace pickle
         class MetalRenderer : public Renderer
         {
         public:
-            MetalRenderer();
+            MetalRenderer(int width, int height);
             ~MetalRenderer() override;
 
             MetalRenderer(const MetalRenderer &renderer) = delete;

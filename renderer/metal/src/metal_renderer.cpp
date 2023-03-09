@@ -2,7 +2,7 @@
 
 #include <pickle/logger.h>
 
-pickle::renderer::MetalRenderer::MetalRenderer()
+pickle::renderer::MetalRenderer::MetalRenderer(int width, int height) : Renderer(width, height)
 {
     LOG_INFO("Inited Metal");
 }

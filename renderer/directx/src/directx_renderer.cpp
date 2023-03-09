@@ -13,7 +13,7 @@ struct ConstantBuffer
     XMMATRIX projection;
 };
 
-pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int height)
+pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int height) : Renderer(width, height)
 {
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
@@ -48,7 +48,34 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int 
     device->CreateRenderTargetView(backBufferTexture, NULL, &backBuffer);
     backBufferTexture->Release();
 
-    deviceContext->OMSetRenderTargets(1, &backBuffer, NULL);
+    ID3D11Texture2D *depthBufferTexture;
+    D3D11_TEXTURE2D_DESC depthBufferTextureDesc;
+    ZeroMemory(&depthBufferTextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+    depthBufferTextureDesc.Width = width;
+    depthBufferTextureDesc.Height = height;
+    depthBufferTextureDesc.MipLevels = 1;
+    depthBufferTextureDesc.ArraySize = 1;
+    depthBufferTextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthBufferTextureDesc.SampleDesc.Count = 1;
+    depthBufferTextureDesc.SampleDesc.Quality = 0;
+    depthBufferTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthBufferTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthBufferTextureDesc.CPUAccessFlags = 0;
+    depthBufferTextureDesc.MiscFlags = 0;
+    device->CreateTexture2D(&depthBufferTextureDesc, NULL, &depthBufferTexture);
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC backBufferDesc;
+    ZeroMemory(&backBufferDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+
+    backBufferDesc.Format = depthBufferTextureDesc.Format;
+    backBufferDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    backBufferDesc.Texture2D.MipSlice = 0;
+
+    device->CreateDepthStencilView(depthBufferTexture, &backBufferDesc, &depthBuffer);
+    depthBufferTexture->Release();
+
+    deviceContext->OMSetRenderTargets(1, &backBuffer, depthBuffer);
 
     D3D11_VIEWPORT viewport;
     ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
@@ -141,12 +168,6 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int 
 
     device->CreateBuffer(&vertexBufferDesc, &vertexBufferInitData, &vertexBuffer);
 
-    ConstantBuffer constantBufferData{
-        XMMatrixTranspose(XMMatrixIdentity()),
-        XMMatrixTranspose(XMMatrixLookAtLH(XMVectorSet( -1.0f, 1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f))),
-        XMMatrixTranspose(XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f))
-    };
-
     D3D11_BUFFER_DESC constantBufferDesc;
     ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
@@ -155,12 +176,7 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int 
     constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     constantBufferDesc.CPUAccessFlags = 0;
 
-    D3D11_SUBRESOURCE_DATA constantBufferInitData;
-    ZeroMemory(&constantBufferInitData, sizeof(D3D11_SUBRESOURCE_DATA));
-
-    constantBufferInitData.pSysMem = &constantBufferData;
-
-    device->CreateBuffer(&constantBufferDesc, &constantBufferInitData, &constantBuffer);
+    device->CreateBuffer(&constantBufferDesc, NULL, &constantBuffer);
 }
 
 pickle::renderer::DirectXRenderer::~DirectXRenderer()
@@ -173,6 +189,7 @@ pickle::renderer::DirectXRenderer::~DirectXRenderer()
     inputLayout->Release();
     vertexSharer->Release();
     pixelShader->Release();
+    depthBuffer->Release();
     backBuffer->Release();
     swapChain->Release();
     device->Release();
@@ -183,6 +200,15 @@ void pickle::renderer::DirectXRenderer::render() const
 {
     float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     deviceContext->ClearRenderTargetView(backBuffer, color);
+    deviceContext->ClearDepthStencilView(depthBuffer, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+    ConstantBuffer constantBufferData1{
+        XMMatrixTranspose(XMMatrixTranslation(0.0f, 0.0f, 0.0f)),
+        XMMatrixTranspose(XMMatrixLookAtLH(XMVectorSet( -1.0f, 1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f))),
+        XMMatrixTranspose(XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f))
+    };
+
+    deviceContext->UpdateSubresource(constantBuffer, 0, NULL, &constantBufferData1, 0, 0);
 
     UINT stride = sizeof(float) * 9;
     UINT offset = 0;

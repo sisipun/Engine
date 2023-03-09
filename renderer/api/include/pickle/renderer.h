@@ -8,13 +8,17 @@ namespace pickle
         class Renderer
         {
         public:
-            Renderer();
+            Renderer(int width, int height);
             virtual ~Renderer();
 
             Renderer(const Renderer &renderer) = delete;
             Renderer &operator=(const Renderer &renderer) = delete;
 
             virtual void render() const = 0;
+
+        protected:
+            int width;
+            int height;
         };
     }
 }

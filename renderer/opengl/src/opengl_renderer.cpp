@@ -34,7 +34,7 @@ void checkProgramLinking(unsigned int program)
     }
 }
 
-pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, int height) : window(window)
+pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, int height) : Renderer(width, height), window(window)
 {
     context = SDL_GL_CreateContext(window);
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
@@ -131,7 +131,7 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, 
         pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
         pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
         pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 1.0f})};
+        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f})};
 
     glGenVertexArrays(1, &VAO);
 
@@ -144,9 +144,9 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, 
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void *) (3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void *) (6 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void *)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);
@@ -172,12 +172,10 @@ void pickle::renderer::OpenGLRenderer::render() const
     int cameraPositionUniform = glGetUniformLocation(program, "cameraPosition");
     pickle::math::Vector<3, float> cameraPosition = pickle::math::Vector<3, float>({-1.0f, 1.0f, -1.0f});
     int modelUniform = glGetUniformLocation(program, "model");
-    pickle::math::Matrix<4, 4, float> modelMatrix = pickle::math::Matrix<4, 4, float>({
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-    });
+    pickle::math::Matrix<4, 4, float> modelMatrix = pickle::math::Matrix<4, 4, float>({1.0f, 0.0f, 0.0f, 0.0f,
+                                                                                       0.0f, 1.0f, 0.0f, 0.0f,
+                                                                                       0.0f, 0.0f, 1.0f, 0.0f,
+                                                                                       0.0f, 0.0f, 0.0f, 1.0f});
     int viewUniform = glGetUniformLocation(program, "view");
     pickle::math::Matrix<4, 4, float> viewMatix = pickle::math::lookAt(
         cameraPosition,
@@ -185,11 +183,11 @@ void pickle::renderer::OpenGLRenderer::render() const
         pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
     int projectionUniform = glGetUniformLocation(program, "projection");
     pickle::math::Matrix<4, 4, float> projectionMatrix = pickle::math::perspective(
-        pickle::math::radians(90.0f), 
-        800.0f / 600.0f,
-        0.01f, 
+        pickle::math::radians(90.0f),
+        width / (float) height,
+        0.01f,
         100.0f);
-    
+
     glUniform3f(lightDirectionUniform, lightDirection.data[0], lightDirection.data[1], lightDirection.data[2]);
     glUniform3f(cameraPositionUniform, cameraPosition.data[0], cameraPosition.data[1], cameraPosition.data[2]);
     glUniformMatrix4fv(modelUniform, 1, GL_FALSE, transpose(modelMatrix).data);
