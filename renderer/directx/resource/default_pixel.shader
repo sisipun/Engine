@@ -1,6 +1,16 @@
+cbuffer ConstantBuffer : register(b0)
+{
+    matrix world;
+    matrix view;
+    matrix projection;
+    float3 lightDirection;
+    float3 cameraPosition;
+}
+
 struct PSInput
 {
     float4 position : SV_POSITION;
+    float3 normal : NORMAL;
     float3 color : COLOR;
 };
 

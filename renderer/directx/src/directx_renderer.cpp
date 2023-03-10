@@ -11,6 +11,8 @@ struct ConstantBuffer
     XMMATRIX world;
     XMMATRIX view;
     XMMATRIX projection;
+    XMFLOAT3 lightDirection;
+    XMFLOAT3 cameraPosition;
 };
 
 pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int height) : Renderer(width, height)
@@ -202,10 +204,15 @@ void pickle::renderer::DirectXRenderer::render() const
     deviceContext->ClearRenderTargetView(backBuffer, color);
     deviceContext->ClearDepthStencilView(depthBuffer, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
+    XMFLOAT3 cameraPosition{-1.0f, 1.0f, -1.0f};
+    XMFLOAT3 lightDirection{1.0f, -1.0f, -1.0f};
+
     ConstantBuffer constantBufferData1{
         XMMatrixTranspose(XMMatrixTranslation(0.0f, 0.0f, 0.0f)),
-        XMMatrixTranspose(XMMatrixLookAtLH(XMVectorSet( -1.0f, 1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f))),
-        XMMatrixTranspose(XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f))
+        XMMatrixTranspose(XMMatrixLookAtLH(XMVectorSet(cameraPosition.x, cameraPosition.y, cameraPosition.z, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f))),
+        XMMatrixTranspose(XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f)),
+        lightDirection,
+        cameraPosition
     };
 
     deviceContext->UpdateSubresource(constantBuffer, 0, NULL, &constantBufferData1, 0, 0);
