@@ -17,6 +17,7 @@ struct VSInput
 struct VSOutput
 {
     float4 position : SV_POSITION;
+    float3 worldPosition : POSITION;
     float3 normal: NORMAL;
     float3 color : COLOR;
 };
@@ -26,7 +27,8 @@ VSOutput main(VSInput input)
     VSOutput output;
 
     output.position = mul(mul(mul(float4(input.position, 1.0f), world), view), projection);
-    output.normal = input.normal;
+    output.worldPosition = mul(input.position, world);
+    output.normal = mul(input.normal, world);
     output.color = input.color;
 
     return output;

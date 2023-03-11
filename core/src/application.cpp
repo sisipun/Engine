@@ -7,7 +7,7 @@ namespace pickle
 {
     Application::Application()
     {
-        window = std::make_unique<pickle::Win32Window>(2048, 1080);
+        window = std::make_unique<pickle::SdlWindow>(2048, 1080);
     }
 
     Application::~Application()

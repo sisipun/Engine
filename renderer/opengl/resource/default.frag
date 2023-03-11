@@ -15,12 +15,12 @@ void main()
     vec3 ambient = vec3(0.1f, 0.1f, 0.1f);
 
     vec3 normal = normalize(inFs.Normal);
-    vec3 normLightDirection = normalize(-lightDirection);
+    vec3 normLightDirection = normalize(lightDirection);
 
-    vec3 diffuse = vec3(max(dot(normal, normLightDirection), 0.0f));
+    vec3 diffuse = vec3(max(dot(normal, -normLightDirection), 0.0f));
 
-    vec3 normViewDirection = normalize(cameraPosition - inFs.FragPos);
-    vec3 halfway = normalize(normViewDirection + normLightDirection);
+    vec3 normViewDirection = normalize(inFs.FragPos - cameraPosition);
+    vec3 halfway = -normalize(normViewDirection + normLightDirection);
 
     vec3 specular = vec3(pow(max(dot(normal, halfway), 0.0f), 16.0f));
 

@@ -11,8 +11,8 @@ struct ConstantBuffer
     XMMATRIX world;
     XMMATRIX view;
     XMMATRIX projection;
-    XMFLOAT3 lightDirection;
-    XMFLOAT3 cameraPosition;
+    XMFLOAT4 lightDirection;
+    XMFLOAT4 cameraPosition;
 };
 
 pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int height) : Renderer(width, height)
@@ -204,8 +204,8 @@ void pickle::renderer::DirectXRenderer::render() const
     deviceContext->ClearRenderTargetView(backBuffer, color);
     deviceContext->ClearDepthStencilView(depthBuffer, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-    XMFLOAT3 cameraPosition{-1.0f, 1.0f, -1.0f};
-    XMFLOAT3 lightDirection{1.0f, -1.0f, -1.0f};
+    XMFLOAT4 lightDirection{1.0f, -1.0f, -1.0f, 0.0f};
+    XMFLOAT4 cameraPosition{-1.0f, 1.0f, -1.0f, 0.0f};
 
     ConstantBuffer constantBufferData1{
         XMMatrixTranspose(XMMatrixTranslation(0.0f, 0.0f, 0.0f)),
@@ -221,6 +221,7 @@ void pickle::renderer::DirectXRenderer::render() const
     UINT offset = 0;
     deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
     deviceContext->VSSetConstantBuffers(0, 1, &constantBuffer);
+    deviceContext->PSSetConstantBuffers(0, 1, &constantBuffer);
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     deviceContext->Draw(36, 0);
 
