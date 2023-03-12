@@ -16,10 +16,14 @@ namespace pickle
         Win32Window(const Win32Window &window) = delete;
         Win32Window &operator=(const Win32Window &window) = delete;
 
+        HWND getWindow() const;
+        void show() override;
         void update() override;
 
     private:
-        static const char* BASE_WINNDOW_CLASS;
+        static const char *BASE_WINNDOW_CLASS;
+
+        HWND hWindow;
     };
 }
 

@@ -2,8 +2,6 @@
 
 #include <SDL.h>
 
-#include <pickle/metal_renderer.h>
-#include <pickle/opengl_renderer.h>
 #include <pickle/logger.h>
 
 pickle::SdlWindow::SdlWindow(int width, int height) : Window(width, height)
@@ -17,18 +15,21 @@ pickle::SdlWindow::SdlWindow(int width, int height) : Window(width, height)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    SDL_Window *window = SDL_CreateWindow("Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
+    window = SDL_CreateWindow("Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
     if (window == nullptr)
     {
         LOG_ERROR("Can't create window");
     }
-
-    renderer = std::make_unique<pickle::renderer::OpenGLRenderer>(window, width, height);
 }
 
 pickle::SdlWindow::~SdlWindow()
 {
     SDL_Quit();
+}
+
+SDL_Window* pickle::SdlWindow::getWindow() const
+{
+    return window;
 }
 
 void pickle::SdlWindow::update() 

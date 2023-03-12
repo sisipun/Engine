@@ -8,12 +8,21 @@ pickle::Window::~Window()
 {
 }
 
-pickle::renderer::Renderer &pickle::Window::getRenderer() const
+int pickle::Window::getWidth() const
 {
-    return *renderer;
+    return width;
+}
+
+int pickle::Window::getHeight() const
+{
+    return height;
 }
 
 bool pickle::Window::isClosed() const
 {
     return closed;
+}
+
+void pickle::Window::show()
+{
 }

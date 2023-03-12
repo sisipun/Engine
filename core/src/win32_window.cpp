@@ -3,9 +3,7 @@
 #include <tchar.h>
 #include <windows.h>
 
-#include <pickle/directx_renderer.h>
 #include <pickle/logger.h>
-#include <pickle/metal_renderer.h>
 
 LRESULT CALLBACK windowProc(HWND hWindow, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -15,7 +13,6 @@ pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
 {
     HINSTANCE hInstance = GetModuleHandle(0);
 
-    HWND hWindow;
     WNDCLASSEX windowClass;
     ZeroMemory(&windowClass, sizeof(WNDCLASSEX));
 
@@ -42,13 +39,20 @@ pickle::Win32Window::Win32Window(int width, int height) : Window(width, height)
                           NULL,
                           hInstance,
                           NULL);
-
-    renderer = std::make_unique<pickle::renderer::DirectXRenderer>(hWindow, width, height);
-    ShowWindow(hWindow, 1);
 }
 
 pickle::Win32Window::~Win32Window()
 {
+}
+
+HWND pickle::Win32Window::getWindow() const
+{
+    return hWindow;
+}
+
+void pickle::Win32Window::show()
+{
+    ShowWindow(hWindow, 1);
 }
 
 void pickle::Win32Window::update()

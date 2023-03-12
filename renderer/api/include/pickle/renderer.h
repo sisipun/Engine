@@ -5,6 +5,13 @@ namespace pickle
 {
     namespace renderer
     {
+        enum class RendererType
+        {
+            DIRECT_X,
+            OPEN_GL,
+            METAL
+        };
+
         class Renderer
         {
         public:
