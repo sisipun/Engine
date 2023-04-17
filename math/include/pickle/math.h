@@ -6,5 +6,7 @@
 #include "matrix.h"
 #include "matrix_operations.h"
 #include "transform_operations.h"
+#include "quaternion.h"
+#include "quaternion_operations.h"
 
 #endif
