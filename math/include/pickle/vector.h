@@ -77,7 +77,7 @@ namespace pickle
                 return result;
             }
 
-            Vector<SIZE, TYPE> operator*(float scalar) const
+            Vector<SIZE, TYPE> operator*(TYPE scalar) const
             {
                 Vector<SIZE, TYPE> result;
                 for (size_t i = 0; i < SIZE; i++)
@@ -87,7 +87,7 @@ namespace pickle
                 return result;
             }
 
-            Vector<SIZE, TYPE> operator/(float divider) const
+            Vector<SIZE, TYPE> operator/(TYPE divider) const
             {
                 Vector<SIZE, TYPE> result;
                 for (size_t i = 0; i < SIZE; i++)

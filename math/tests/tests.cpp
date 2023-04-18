@@ -207,7 +207,7 @@ TEST_CASE("Matrix Scalar Mul", "[matrix]")
 
 TEST_CASE("Matrix Scalar Div", "[matrix]")
 {
-    Matrix<3, 3, float> result = Matrix<3, 3, float>({1, -1.2, 2, -1, 4, 2, 1, -5.2, 2.2}) / 2;
+    Matrix<3, 3, float> result = Matrix<3, 3, float>({1, -1.2f, 2, -1, 4, 2, 1, -5.2f, 2.2f}) / 2;
     REQUIRE(result.data[0] == 0.5f);
     REQUIRE(result.data[1] == -0.6f);
     REQUIRE(result.data[2] == 1.0f);
@@ -480,7 +480,7 @@ TEST_CASE("Matrix Identity", "[matrix]")
 
 TEST_CASE("Matrix Identity Mul", "[matrix]")
 {
-    Matrix<3, 3, float> result = Matrix<3, 3, float>({2, 3, -2, 1, 5.3, -3, 4, 5, 8.1}) * identity<3, float>();
+    Matrix<3, 3, float> result = Matrix<3, 3, float>({2, 3, -2, 1, 5.3f, -3, 4, 5, 8.1f}) * identity<3, float>();
     REQUIRE(result.data[0] == 2.0f);
     REQUIRE(result.data[1] == 3.0f);
     REQUIRE(result.data[2] == -2.0f);

@@ -28,7 +28,7 @@ namespace pickle
             {
                 for (size_t j = 0; j < SIZE; j++)
                 {
-                    result.data[j * SIZE + i] = pow(-1, i + j) * determinant(excludeRowAndColumn(matrix, i, j));
+                    result.data[j * SIZE + i] = TYPE(pow(-1, i + j)) * determinant(excludeRowAndColumn(matrix, i, j));
                 }
             }
             return result * (1 / determinant(matrix));
@@ -55,7 +55,7 @@ namespace pickle
             TYPE result = 0;
             for (size_t i = 0; i < SIZE; i++)
             {
-                result += pow(-1, i) * matrix.data[i] * determinant(excludeRowAndColumn(matrix, 0, i));
+                result += TYPE(pow(-1, i)) * matrix.data[i] * determinant(excludeRowAndColumn(matrix, 0, i));
             }
             return result;
         }

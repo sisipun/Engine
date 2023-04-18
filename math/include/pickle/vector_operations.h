@@ -16,9 +16,9 @@ namespace pickle
         }
 
         template <size_t SIZE, typename TYPE>
-        float dot(const Vector<SIZE, TYPE> &first, const Vector<SIZE, TYPE> &second)
+        TYPE dot(const Vector<SIZE, TYPE> &first, const Vector<SIZE, TYPE> &second)
         {
-            float result = 0;
+            TYPE result = 0;
             for (size_t i = 0; i < SIZE; i++)
             {
                 result += first.data[i] * second.data[i];
@@ -33,9 +33,9 @@ namespace pickle
         }
 
         template <size_t SIZE, typename TYPE>
-        float length(const Vector<SIZE, TYPE> &vector)
+        TYPE length(const Vector<SIZE, TYPE> &vector)
         {
-            float lenSq = 0;
+            TYPE lenSq = 0;
             for (size_t i = 0; i < SIZE; i++)
             {
                 TYPE value = vector.data[i];
@@ -48,7 +48,7 @@ namespace pickle
         Vector<SIZE, TYPE> normalize(const Vector<SIZE, TYPE> &vector)
         {
             Vector<SIZE, TYPE> result;
-            float len = length(vector);
+            TYPE len = length(vector);
             for (size_t i = 0; i < SIZE; i++)
             {
                 result.data[i] = vector.data[i] / len;
