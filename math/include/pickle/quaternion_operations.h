@@ -52,6 +52,12 @@ namespace pickle
         }
 
         template <typename TYPE>
+        Quaternion<TYPE> lerp(const Quaternion<TYPE> &first, const Quaternion<TYPE> &second, TYPE a)
+        {
+            return (first * (1 - a)) + (second * a);
+        }
+
+        template <typename TYPE>
         Vector<4, TYPE> toVector(const Quaternion<TYPE> &quaternion)
         {
             return Vector<4, TYPE>({quaternion.x, quaternion.y, quaternion.z, quaternion.w});
