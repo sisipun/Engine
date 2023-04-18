@@ -11,8 +11,8 @@ namespace pickle
         Vector<3, TYPE> cross(const Vector<3, TYPE> &first, const Vector<3, TYPE> &second)
         {
             return Vector<3, TYPE>({first.data[1] * second.data[2] - first.data[2] * second.data[1],
-                                 -first.data[0] * second.data[2] + first.data[2] * second.data[0],
-                                 first.data[0] * second.data[1] - first.data[1] * second.data[0]});
+                                    -first.data[0] * second.data[2] + first.data[2] * second.data[0],
+                                    first.data[0] * second.data[1] - first.data[1] * second.data[0]});
         }
 
         template <size_t SIZE, typename TYPE>
@@ -54,6 +54,12 @@ namespace pickle
                 result.data[i] = vector.data[i] / len;
             }
             return result;
+        }
+
+        template <typename TYPE>
+        Quaternion<TYPE> toQuaternion(const Vector<4, TYPE> &vector)
+        {
+            return Quaternion<TYPE>(vector.data[3], vector.data[0], vector.data[1], vector.data[2]);
         }
     }
 }

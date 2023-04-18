@@ -3,6 +3,8 @@
 
 #include <cmath>
 
+#include "quaternion.h"
+
 namespace pickle
 {
     namespace math

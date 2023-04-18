@@ -7,83 +7,80 @@ namespace pickle
 {
     namespace math
     {
-        namespace quaternion
+        template <typename TYPE>
+        class Quaternion
         {
-            template <typename TYPE>
-            class Quaternion
+        public:
+            Quaternion() : w(0), x(0), y(0), z(0)
             {
-            public:
-                Quaternion() : w(0), x(0), y(0), z(0)
+            }
+
+            Quaternion(TYPE w, TYPE x, TYPE y, TYPE z) : w(w), x(x), y(y), z(z)
+            {
+            }
+
+            ~Quaternion() = default;
+
+            Quaternion<TYPE> &operator=(const Quaternion<TYPE> &quaternion)
+            {
+                if (this == &quaternion)
                 {
-                }
-
-                Quaternion(TYPE w, TYPE x, TYPE y, TYPE z) : w(w), x(x), y(y), z(z)
-                {
-                }
-
-                ~Quaternion() = default;
-
-                Quaternion<TYPE> &operator=(const Quaternion<TYPE> &quaternion)
-                {
-                    if (this == &quaternion)
-                    {
-                        return *this;
-                    }
-
-                    w = quaternion.w;
-                    x = quaternion.x;
-                    y = quaternion.y;
-                    z = quaternion.z;
                     return *this;
                 }
 
-                Quaternion<TYPE> operator+(const Quaternion<TYPE> &quaternion) const
-                {
-                    return Quaternion<TYPE>(w + quaternion.w, x + quaternion.x, y + quaternion.y, z + quaternion.z);
-                }
+                w = quaternion.w;
+                x = quaternion.x;
+                y = quaternion.y;
+                z = quaternion.z;
+                return *this;
+            }
 
-                Quaternion<TYPE> operator-(const Quaternion<TYPE> &quaternion) const
-                {
-                    return Quaternion<TYPE>(w - quaternion.w, x - quaternion.x, y - quaternion.y, z - quaternion.z);
-                }
+            Quaternion<TYPE> operator+(const Quaternion<TYPE> &quaternion) const
+            {
+                return Quaternion<TYPE>(w + quaternion.w, x + quaternion.x, y + quaternion.y, z + quaternion.z);
+            }
 
-                Quaternion<TYPE> operator*(TYPE scalar) const
-                {
-                    return Quaternion<TYPE>(w * scalar, x * scalar, y * scalar, z * scalar);
-                }
+            Quaternion<TYPE> operator-(const Quaternion<TYPE> &quaternion) const
+            {
+                return Quaternion<TYPE>(w - quaternion.w, x - quaternion.x, y - quaternion.y, z - quaternion.z);
+            }
 
-                Quaternion<TYPE> operator/(TYPE divider) const
-                {
-                    return Quaternion<TYPE>(w / divider, x / divider, y / divider, z / divider);
-                }
+            Quaternion<TYPE> operator*(TYPE scalar) const
+            {
+                return Quaternion<TYPE>(w * scalar, x * scalar, y * scalar, z * scalar);
+            }
 
-                bool operator==(const Quaternion<TYPE> &quaternion) const
-                {
-                    return w == quaternion.w && x == quaternion.x && y == quaternion.y && z == quaternion.z;
-                }
+            Quaternion<TYPE> operator/(TYPE divider) const
+            {
+                return Quaternion<TYPE>(w / divider, x / divider, y / divider, z / divider);
+            }
 
-                bool operator!=(Quaternion<TYPE> vector) const
-                {
-                    return !(*this == vector);
-                }
+            bool operator==(const Quaternion<TYPE> &quaternion) const
+            {
+                return w == quaternion.w && x == quaternion.x && y == quaternion.y && z == quaternion.z;
+            }
 
-                TYPE length() const
-                {
-                    return sqrt(squareLength());
-                }
+            bool operator!=(Quaternion<TYPE> vector) const
+            {
+                return !(*this == vector);
+            }
 
-                TYPE squareLength() const
-                {
-                    return w * w + x * x + y * y + z * z;
-                }
+            TYPE length() const
+            {
+                return sqrt(squareLength());
+            }
 
-            public:
-                TYPE w;
-                TYPE x;
-                TYPE y;
-                TYPE z;
-            };
-        }
+            TYPE squareLength() const
+            {
+                return w * w + x * x + y * y + z * z;
+            }
+
+        public:
+            TYPE w;
+            TYPE x;
+            TYPE y;
+            TYPE z;
+        };
     }
 }
 
