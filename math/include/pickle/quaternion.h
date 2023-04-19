@@ -57,6 +57,11 @@ namespace pickle
 
             bool operator==(const Quaternion<TYPE> &quaternion) const
             {
+                if (this == &quaternion)
+                {
+                    return true;
+                }
+
                 return w == quaternion.w && x == quaternion.x && y == quaternion.y && z == quaternion.z;
             }
 

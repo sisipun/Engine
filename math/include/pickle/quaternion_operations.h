@@ -77,7 +77,7 @@ namespace pickle
             Quaternion<TYPE> x = fromAxisAndAngle(Vector({1, 0, 0}, euler.data[0]));
             Quaternion<TYPE> y = fromAxisAndAngle(Vector({0, 1, 0}, euler.data[1]));
             Quaternion<TYPE> z = fromAxisAndAngle(Vector({0, 0, 1}, euler.data[2]));
-            return x * y * z;
+            return cross(cross(x, y), z);
         }
 
         template <typename TYPE>

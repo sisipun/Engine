@@ -50,6 +50,38 @@ TEST_CASE("Vector Scalar Div", "[vector]")
     REQUIRE(result.data[2] == 1.0f);
 }
 
+TEST_CASE("Vector Equal", "[vector]")
+{
+    Vector<3, float> first = Vector<3, float>({5, -3, 2});
+    Vector<3, float> second = Vector<3, float>({5, -3, 2});
+    bool result = first == second;
+    REQUIRE(result);
+}
+
+TEST_CASE("Vector Equal False", "[vector]")
+{
+    Vector<3, float> first = Vector<3, float>({5, -3, 3});
+    Vector<3, float> second = Vector<3, float>({5, -3, 2});
+    bool result = first == second;
+    REQUIRE(!result);
+}
+
+TEST_CASE("Vector Not Equal", "[vector]")
+{
+    Vector<3, float> first = Vector<3, float>({10, -6, 4});
+    Vector<3, float> second = Vector<3, float>({5, -3, 2});
+    bool result = first != second;
+    REQUIRE(result);
+}
+
+TEST_CASE("Vector Not Equal False", "[vector]")
+{
+    Vector<3, float> first = Vector<3, float>({5, -3, 2});
+    Vector<3, float> second = Vector<3, float>({5, -3, 2});
+    bool result = first != second;
+    REQUIRE(!result);
+}
+
 TEST_CASE("Vector Cut Dimention Simple", "[vector]")
 {
     Vector<2, float> result = Vector<3, float>({5, -3, 2}).cutDimension<1>();
@@ -162,6 +194,16 @@ TEST_CASE("Vector Reflect", "[vector]")
     REQUIRE(result.data[2] == -1);
 }
 
+TEST_CASE("Vector To Quaternion", "[vector][quaternion]")
+{
+    Vector<4, float> vector = Vector<4, float>({1, 2, 3, 4});
+    Quaternion<float> result = toQuaternion(vector);
+    REQUIRE(result.w == 4.0f);
+    REQUIRE(result.x == 1.0f);
+    REQUIRE(result.y == 2.0f);
+    REQUIRE(result.z == 3.0f);
+}
+
 TEST_CASE("Matrix Copy", "[matrix]")
 {
     Matrix<2, 3, int> matrix({1, 2, -3, 1, -2, 4});
@@ -231,6 +273,38 @@ TEST_CASE("Matrix Mul", "[matrix]")
     REQUIRE(result.data[6] == 31.0f);
     REQUIRE(result.data[7] == 18.0f);
     REQUIRE(result.data[8] == 22.0f);
+}
+
+TEST_CASE("Matrix Equal", "[matrix]")
+{
+    Matrix<3, 2, float> first = Matrix<3, 2, float>({2, 3, 2, 1, 5, 3});
+    Matrix<3, 2, float> second = Matrix<3, 2, float>({2, 3, 2, 1, 5, 3});
+    bool result = first == second;
+    REQUIRE(result);
+}
+
+TEST_CASE("Matrix Equal False", "[matrix]")
+{
+    Matrix<2, 2, float> first = Matrix<2, 2, float>({2, -2, 4, -2});
+    Matrix<2, 2, float> second = Matrix<2, 2, float>({1, -1, 2, -1});
+    bool result = first == second;
+    REQUIRE(!result);
+}
+
+TEST_CASE("Matrix Not Equal", "[matrix]")
+{
+    Matrix<2, 2, float> first = Matrix<2, 2, float>({1, -1, 2, -1});
+    Matrix<2, 2, float> second = Matrix<2, 2, float>({2, -2, 4, -3});
+    bool result = first != second;
+    REQUIRE(result);
+}
+
+TEST_CASE("Matrix Not Equal False", "[matrix]")
+{
+    Matrix<2, 3, float> first = Matrix<2, 3, float>({2, 3, 2, 1, 5, 3});
+    Matrix<2, 3, float> second = Matrix<2, 3, float>({2, 3, 2, 1, 5, 3});
+    bool result = first != second;
+    REQUIRE(!result);
 }
 
 TEST_CASE("Matrix Cut Row Dimention Simple", "[matrix]")
@@ -738,4 +812,141 @@ TEST_CASE("Look at", "[camera][matrix][vector][transformation]")
     REQUIRE(result.data[13] == 0.0f);
     REQUIRE(result.data[14] == 0.0f);
     REQUIRE(result.data[15] == 1.0f);
+}
+
+TEST_CASE("Quaternion Copy", "[quaternion]")
+{
+    Quaternion<float> quaternion({1, 1, 2, 3});
+    Quaternion<float> result = quaternion;
+    REQUIRE(result.w == 1.0f);
+    REQUIRE(result.x == 1.0f);
+    REQUIRE(result.y == 2.0f);
+    REQUIRE(result.z == 3.0f);
+}
+
+TEST_CASE("Quaternion Sum", "[quaternion]")
+{
+    Quaternion<float> result = Quaternion<float>({1, 1, 3, 2}) + Quaternion<float>({-1, 0, -2, 1});
+    REQUIRE(result.w == 0.0f);
+    REQUIRE(result.x == 1.0f);
+    REQUIRE(result.y == 1.0f);
+    REQUIRE(result.z == 3.0f);
+}
+
+TEST_CASE("Quaternion Sub", "[quaternion]")
+{
+    Quaternion<float> result = Quaternion<float>({1, 2, 4, 0}) - Quaternion<float>({-1, 2, 3, 1});
+    REQUIRE(result.w == 2.0f);
+    REQUIRE(result.x == 0.0f);
+    REQUIRE(result.y == 1.0f);
+    REQUIRE(result.z == -1.0f);
+}
+
+TEST_CASE("Quaternion Scalar Mul", "[quaternion]")
+{
+    Quaternion<int> result = Quaternion<int>({2, 4, 5, -1}) * 3;
+    REQUIRE(result.w == 6);
+    REQUIRE(result.x == 12);
+    REQUIRE(result.y == 15);
+    REQUIRE(result.z == -3);
+}
+
+TEST_CASE("Quaternion Scalar Div", "[quaternion]")
+{
+    Quaternion<float> result = Quaternion<float>({5, -3, 2, -4}) / 2;
+    REQUIRE(result.w == 2.5f);
+    REQUIRE(result.x == -1.5f);
+    REQUIRE(result.y == 1.0f);
+    REQUIRE(result.z == -2.0f);
+}
+
+TEST_CASE("Quaternion Equal", "[quaternion]")
+{
+    Quaternion<float> first = Quaternion<float>({2, 4, 5, -1});
+    Quaternion<float> second = Quaternion<float>({2, 4, 5, -1});
+    bool result = first == second;
+    REQUIRE(result);
+}
+
+TEST_CASE("Quaternion Equal False", "[quaternion]")
+{
+    Quaternion<float> first = Quaternion<float>({2, 4, 5, -1});
+    Quaternion<float> second = Quaternion<float>({4, 8, 10, -2});
+    bool result = first == second;
+    REQUIRE(!result);
+}
+
+TEST_CASE("Quaternion Not Equal", "[quaternion]")
+{
+    Quaternion<float> first = Quaternion<float>({2, 4, 5, -1});
+    Quaternion<float> second = Quaternion<float>({4, 8, 10, -1});
+    bool result = first != second;
+    REQUIRE(result);
+}
+
+TEST_CASE("Quaternion Not Equal False", "[quaternion]")
+{
+    Quaternion<float> first = Quaternion<float>({2, 4, 5, -1});
+    Quaternion<float> second = Quaternion<float>({2, 4, 5, -1});
+    bool result = first != second;
+    REQUIRE(!result);
+}
+
+TEST_CASE("Quaternion Length", "[quaternion]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({4, 0, 3, 0});
+    float result = quaternion.length();
+    REQUIRE(result == 5.0f);
+}
+
+TEST_CASE("Quaternion Square Length", "[quaternion]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({4, 2, 3, 1});
+    float result = quaternion.squareLength();
+    REQUIRE(result == 30.0f);
+}
+
+TEST_CASE("Quaternion Square Length Equal Length Sqare", "[quaternion]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({4, 2, 3, 1});
+    bool result = roundTwoDigets(quaternion.squareLength()) == roundTwoDigets(quaternion.length() * quaternion.length());
+    REQUIRE(result);
+}
+
+TEST_CASE("Quaternion Dot", "[quaternion]")
+{
+    Quaternion<float> first = Quaternion<float>({1, 2, 1, -1});
+    Quaternion<float> second = Quaternion<float>({3, 0, 2, 2});
+    float result = dot(first, second);
+    REQUIRE(result == 3.0f);
+}
+
+TEST_CASE("Quaternion Conjugate", "[quaternion]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({4, 2, 3, 1});
+    Quaternion<float> result = conjugate(quaternion);
+    REQUIRE(result.w == 4.0f);
+    REQUIRE(result.x == -2.0f);
+    REQUIRE(result.y == -3.0f);
+    REQUIRE(result.z == -1.0f);
+}
+
+TEST_CASE("Quaternion Inverse", "[quaternion]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({4, 2, 3, 1});
+    Quaternion<float> result = inverse(quaternion);
+    REQUIRE(roundTwoDigets(result.w) == 0.13f);
+    REQUIRE(roundTwoDigets(result.x) == -0.07f);
+    REQUIRE(roundTwoDigets(result.y) == -0.1f);
+    REQUIRE(roundTwoDigets(result.z) == -0.03f);
+}
+
+TEST_CASE("Quaternion To Vector", "[quaternion][vector]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({4, 2, 3, 1});
+    Vector<4, float> result = toVector(quaternion);
+    REQUIRE(result.data[0] == 2.0f);
+    REQUIRE(result.data[1] == 3.0f);
+    REQUIRE(result.data[2] == 1.0f);
+    REQUIRE(result.data[3] == 4.0f);
 }

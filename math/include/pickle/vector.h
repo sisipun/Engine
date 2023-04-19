@@ -99,8 +99,13 @@ namespace pickle
                 return result;
             }
 
-            bool operator==(Vector<SIZE, TYPE> vector) const
+            bool operator==(const Vector<SIZE, TYPE> &vector) const
             {
+                if (this == &vector)
+                {
+                    return true;
+                }
+
                 for (size_t i = 0; i < SIZE; i++)
                 {
                     if (data[i] != vector.data[i])
@@ -112,7 +117,7 @@ namespace pickle
                 return true;
             }
 
-            bool operator!=(Vector<SIZE, TYPE> vector) const
+            bool operator!=(const Vector<SIZE, TYPE> &vector) const
             {
                 return !(*this == vector);
             }
@@ -160,7 +165,7 @@ namespace pickle
             }
 
             template <size_t POSITION, size_t COUNT>
-            typename std::enable_if<POSITION <= SIZE, Vector<SIZE + COUNT, TYPE>>::type addDimension(Vector<COUNT, TYPE> value) const
+            typename std::enable_if<POSITION <= SIZE, Vector<SIZE + COUNT, TYPE>>::type addDimension(const Vector<COUNT, TYPE> &value) const
             {
                 Vector<SIZE + COUNT, TYPE> result;
                 size_t ri = 0;
@@ -189,7 +194,7 @@ namespace pickle
             }
 
             template <size_t POSITION, size_t COUNT>
-            typename std::enable_if<POSITION + COUNT <= SIZE, Vector<SIZE, TYPE>>::type replace(Vector<COUNT, TYPE> value) const
+            typename std::enable_if<POSITION + COUNT <= SIZE, Vector<SIZE, TYPE>>::type replace(const Vector<COUNT, TYPE> &value) const
             {
                 Vector<SIZE, TYPE> result(data);
                 for (size_t i = 0; i < COUNT; i++)
