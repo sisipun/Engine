@@ -50,6 +50,15 @@ namespace pickle
                 return Quaternion<TYPE>(w * scalar, x * scalar, y * scalar, z * scalar);
             }
 
+            Quaternion<TYPE> operator*(const Quaternion<TYPE> &quaternion) const
+            {
+                return Quaternion<TYPE>(
+                    w * quaternion.w - x * quaternion.x - y * quaternion.y - z * quaternion.z,
+                    w * quaternion.x + x * quaternion.w + y * quaternion.z - z * quaternion.y,
+                    w * quaternion.y + y * quaternion.w + z * quaternion.x - x * quaternion.z,
+                    w * quaternion.z + z * quaternion.w + x * quaternion.y - y * quaternion.x);
+            }
+
             Quaternion<TYPE> operator/(TYPE divider) const
             {
                 return Quaternion<TYPE>(w / divider, x / divider, y / divider, z / divider);

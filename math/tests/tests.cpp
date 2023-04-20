@@ -495,6 +495,29 @@ TEST_CASE("Matrix Add Row Dimension", "[matrix]")
     REQUIRE(result.data[14] == 4.0f);
 }
 
+TEST_CASE("Matrix Add Row Dimension To End", "[matrix]")
+{
+    Matrix<5, 3, float> result = Matrix<3, 3, float>({2, 3, 2,
+                                                      1, 5, 3,
+                                                      -2, 1, 4})
+                                     .addRowDimension<3, 2>(Matrix<2, 3, float>({7, 8, 9, 10, 11, 12}));
+    REQUIRE(result.data[0] == 2.0f);
+    REQUIRE(result.data[1] == 3.0f);
+    REQUIRE(result.data[2] == 2.0f);
+    REQUIRE(result.data[3] == 1.0f);
+    REQUIRE(result.data[4] == 5.0f);
+    REQUIRE(result.data[5] == 3.0f);
+    REQUIRE(result.data[6] == -2.0f);
+    REQUIRE(result.data[7] == 1.0f);
+    REQUIRE(result.data[8] == 4.0f);
+    REQUIRE(result.data[9] == 7.0f);
+    REQUIRE(result.data[10] == 8.0f);
+    REQUIRE(result.data[11] == 9.0f);
+    REQUIRE(result.data[12] == 10.0f);
+    REQUIRE(result.data[13] == 11.0f);
+    REQUIRE(result.data[14] == 12.0f);
+}
+
 TEST_CASE("Matrix Add Column Dimension Simple", "[matrix]")
 {
     Matrix<3, 4, float> result = Matrix<3, 3, float>({2, 3, 2,
@@ -536,6 +559,29 @@ TEST_CASE("Matrix Add Column Dimension", "[matrix]")
     REQUIRE(result.data[12] == 12.0f);
     REQUIRE(result.data[13] == 1.0f);
     REQUIRE(result.data[14] == 4.0f);
+}
+
+TEST_CASE("Matrix Add Column Dimension To End", "[matrix]")
+{
+    Matrix<3, 5, float> result = Matrix<3, 3, float>({2, 3, 2,
+                                                      1, 5, 3,
+                                                      -2, 1, 4})
+                                     .addColumnDimension<3, 2>(Matrix<3, 2, float>({7, 8, 9, 10, 11, 12}));
+    REQUIRE(result.data[0] == 2.0f);
+    REQUIRE(result.data[1] == 3.0f);
+    REQUIRE(result.data[2] == 2.0f);
+    REQUIRE(result.data[3] == 7.0f);
+    REQUIRE(result.data[4] == 8.0f);
+    REQUIRE(result.data[5] == 1.0f);
+    REQUIRE(result.data[6] == 5.0f);
+    REQUIRE(result.data[7] == 3.0f);
+    REQUIRE(result.data[8] == 9.0f);
+    REQUIRE(result.data[9] == 10.0f);
+    REQUIRE(result.data[10] == -2.0f);
+    REQUIRE(result.data[11] == 1.0f);
+    REQUIRE(result.data[12] == 4.0f);
+    REQUIRE(result.data[13] == 11.0f);
+    REQUIRE(result.data[14] == 12.0f);
 }
 
 TEST_CASE("Matrix Identity", "[matrix]")
@@ -619,6 +665,31 @@ TEST_CASE("Matrix Vector Mul", "[matrix][vector]")
     REQUIRE(result.data[0] == 23);
     REQUIRE(result.data[1] == 53);
     REQUIRE(result.data[2] == 83);
+}
+
+TEST_CASE("Matrix 3x3 To Quaternion", "[matrix][quaternion]")
+{
+    Matrix<3, 3, float> matrix = Matrix<3, 3, float>({0.28f, 0.0f, -0.96f,
+                                                      0.0f, 1.0f, 0.0f,
+                                                      0.96f, 0.0f, 0.28f});
+    Quaternion<float> result = toQuaternion(matrix);
+    REQUIRE(roundTwoDigets(result.w) == 0.8f);
+    REQUIRE(roundTwoDigets(result.x) == 0.0f);
+    REQUIRE(roundTwoDigets(result.y) == 0.6f);
+    REQUIRE(roundTwoDigets(result.z) == 0.0f);
+}
+
+TEST_CASE("Matrix 4x4 To Quaternion", "[matrix][quaternion]")
+{
+    Matrix<4, 4, float> matrix = Matrix<4, 4, float>({0.28f, 0.0f, -0.96f, 0.0f,
+                                                      0.0f, 1.0f, 0.0f, 0.0f,
+                                                      0.96f, 0.0f, 0.28f, 0.0f,
+                                                      0.0f, 0.0f, 0.0f, 1.0f});
+    Quaternion<float> result = toQuaternion(matrix);
+    REQUIRE(roundTwoDigets(result.w) == 0.8f);
+    REQUIRE(roundTwoDigets(result.x) == 0.0f);
+    REQUIRE(roundTwoDigets(result.y) == 0.6f);
+    REQUIRE(roundTwoDigets(result.z) == 0.0f);
 }
 
 TEST_CASE("Translation", "[matrix][vector][transformation]")
@@ -851,6 +922,17 @@ TEST_CASE("Quaternion Scalar Mul", "[quaternion]")
     REQUIRE(result.z == -3);
 }
 
+TEST_CASE("Quaternion Mul", "[quaternion]")
+{
+    Quaternion<float> first = Quaternion<float>({1, 2, 1, 4});
+    Quaternion<float> second = Quaternion<float>({1, -1, -3, 1});
+    Quaternion<float> result = first * second;
+    REQUIRE(result.w == 2.0f);
+    REQUIRE(result.x == 14.0f);
+    REQUIRE(result.y == -8.0f);
+    REQUIRE(result.z == 0.0f);
+}
+
 TEST_CASE("Quaternion Scalar Div", "[quaternion]")
 {
     Quaternion<float> result = Quaternion<float>({5, -3, 2, -4}) / 2;
@@ -921,6 +1003,17 @@ TEST_CASE("Quaternion Dot", "[quaternion]")
     REQUIRE(result == 3.0f);
 }
 
+TEST_CASE("Quaternion Cross", "[quaternion]")
+{
+    Quaternion<float> first = Quaternion<float>({1, 2, 1, 4});
+    Quaternion<float> second = Quaternion<float>({2, -1, -3, 1});
+    Quaternion<float> result = cross(first, second);
+    REQUIRE(result.w == 3.0f);
+    REQUIRE(result.x == 16.0f);
+    REQUIRE(result.y == -7.0f);
+    REQUIRE(result.z == 4.0f);
+}
+
 TEST_CASE("Quaternion Conjugate", "[quaternion]")
 {
     Quaternion<float> quaternion = Quaternion<float>({4, 2, 3, 1});
@@ -941,6 +1034,34 @@ TEST_CASE("Quaternion Inverse", "[quaternion]")
     REQUIRE(roundTwoDigets(result.z) == -0.03f);
 }
 
+TEST_CASE("Quaternion Normalize", "[quaternion]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({4, 0, 3, 0});
+    Quaternion<float> result = normalize(quaternion);
+    REQUIRE(result.w == 0.8f);
+    REQUIRE(result.x == 0.0f);
+    REQUIRE(result.y == 0.6f);
+    REQUIRE(result.z == 0.0f);
+}
+
+TEST_CASE("Quaternion Normalize Unit", "[quaternion]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({0.8f, 0, 0.6f, 0});
+    Quaternion<float> result = normalize(quaternion);
+    REQUIRE(quaternion == result);
+}
+
+TEST_CASE("Quaternion Lerp", "[quaternion]")
+{
+    Quaternion<float> first = Quaternion<float>({1, 2, 1, 4});
+    Quaternion<float> second = Quaternion<float>({2, -1, -3, 1});
+    Quaternion<float> result = lerp(first, second, 0.4f);
+    REQUIRE(roundTwoDigets(result.w) == 1.4f);
+    REQUIRE(roundTwoDigets(result.x) == 0.8f);
+    REQUIRE(roundTwoDigets(result.y) == -0.6f);
+    REQUIRE(roundTwoDigets(result.z) == 2.8f);
+}
+
 TEST_CASE("Quaternion To Vector", "[quaternion][vector]")
 {
     Quaternion<float> quaternion = Quaternion<float>({4, 2, 3, 1});
@@ -949,4 +1070,63 @@ TEST_CASE("Quaternion To Vector", "[quaternion][vector]")
     REQUIRE(result.data[1] == 3.0f);
     REQUIRE(result.data[2] == 1.0f);
     REQUIRE(result.data[3] == 4.0f);
+}
+
+TEST_CASE("Quaternion To Matrix 3x3", "[quaternion][matrix]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({4, 0, 3, 0});
+    Matrix<3, 3, float> result = toMatrix3x3(quaternion);
+    REQUIRE(roundTwoDigets(result.data[0]) == 0.28f);
+    REQUIRE(roundTwoDigets(result.data[1]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[2]) == -0.96f);
+    REQUIRE(roundTwoDigets(result.data[3]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[4]) == 1.0f);
+    REQUIRE(roundTwoDigets(result.data[5]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[6]) == 0.96f);
+    REQUIRE(roundTwoDigets(result.data[7]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[8]) == 0.28f);
+}
+
+TEST_CASE("Quaternion To Matrix 4x4", "[quaternion][matrix]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({4, 0, 3, 0});
+    Matrix<4, 4, float> result = toMatrix4x4(quaternion);
+    REQUIRE(roundTwoDigets(result.data[0]) == 0.28f);
+    REQUIRE(roundTwoDigets(result.data[1]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[2]) == -0.96f);
+    REQUIRE(roundTwoDigets(result.data[3]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[4]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[5]) == 1.0f);
+    REQUIRE(roundTwoDigets(result.data[6]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[7]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[8]) == 0.96f);
+    REQUIRE(roundTwoDigets(result.data[9]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[10]) == 0.28f);
+    REQUIRE(roundTwoDigets(result.data[11]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[12]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[13]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[14]) == 0.0f);
+    REQUIRE(roundTwoDigets(result.data[15]) == 1.0f);
+}
+
+TEST_CASE("Quaternion To Matrix 3x3 Equal Matrix 3x3 To Quaternion", "[quaternion][matrix]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({0.8f, 0, 0.6f, 0});
+    Matrix<3, 3, float> matrix = toMatrix3x3(quaternion);
+    Quaternion<float> result = toQuaternion(matrix);
+    REQUIRE(result.w == quaternion.w);
+    REQUIRE(result.x == quaternion.x);
+    REQUIRE(result.y == quaternion.y);
+    REQUIRE(result.z == quaternion.z);
+}
+
+TEST_CASE("Quaternion To Matrix 4x4 Equal Matrix 4x4 To Quaternion", "[quaternion][matrix]")
+{
+    Quaternion<float> quaternion = Quaternion<float>({0.8f, 0, 0.6f, 0});
+    Matrix<4, 4, float> matrix = toMatrix4x4(quaternion);
+    Quaternion<float> result = toQuaternion(matrix);
+    REQUIRE(result.w == quaternion.w);
+    REQUIRE(result.x == quaternion.x);
+    REQUIRE(result.y == quaternion.y);
+    REQUIRE(result.z == quaternion.z);
 }

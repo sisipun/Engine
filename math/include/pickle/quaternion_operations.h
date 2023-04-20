@@ -20,11 +20,7 @@ namespace pickle
         template <typename TYPE>
         Quaternion<TYPE> cross(const Quaternion<TYPE> &first, const Quaternion<TYPE> &second)
         {
-            return Quaternion<TYPE>(
-                first.w * second.w - first.x * second.x - first.y * second.y - first.z * second.z,
-                first.w * second.x + first.x * second.w + first.y * second.z - first.z * second.y,
-                first.w * second.y + first.y * second.w + first.z * second.x - first.x * second.z,
-                first.w * second.z + first.z * second.w + first.x * second.y - first.y * second.x);
+            return first * second;
         }
 
         template <typename TYPE>
@@ -64,23 +60,6 @@ namespace pickle
         }
 
         template <typename TYPE>
-        Quaternion<TYPE> toQuaternionFromAxisAndAngle(const Vector<3, TYPE> &axis, const TYPE angle)
-        {
-            TYPE angleSin = sin(angle);
-            TYPE angleCos = cos(angle);
-            return Quaternion<TYPE>(angleCos, angleSin * axis.data[0], angleSin * axis.data[1], angleSin * axis.data[2]);
-        }
-
-        template <typename TYPE>
-        Quaternion<TYPE> toQuaternionFromEulerAngles(const Vector<3, TYPE> &euler)
-        {
-            Quaternion<TYPE> x = fromAxisAndAngle(Vector({1, 0, 0}, euler.data[0]));
-            Quaternion<TYPE> y = fromAxisAndAngle(Vector({0, 1, 0}, euler.data[1]));
-            Quaternion<TYPE> z = fromAxisAndAngle(Vector({0, 0, 1}, euler.data[2]));
-            return cross(cross(x, y), z);
-        }
-
-        template <typename TYPE>
         Matrix<3, 3, TYPE> toMatrix3x3(const Quaternion<TYPE> &quaternion)
         {
             Quaternion<TYPE> normQuaternion = normalize(quaternion);
@@ -97,13 +76,13 @@ namespace pickle
             TYPE zx2 = normQuaternion.z * x2;
             TYPE zy2 = normQuaternion.z * y2;
             TYPE zz2 = normQuaternion.z * z2;
-            TYPE sx2 = normQuaternion.s * x2;
-            TYPE sy2 = normQuaternion.s * y2;
-            TYPE sz2 = normQuaternion.s * z2;
+            TYPE wx2 = normQuaternion.w * x2;
+            TYPE wy2 = normQuaternion.w * y2;
+            TYPE wz2 = normQuaternion.w * z2;
 
-            return Matrix<3, 3, TYPE>({1 - yy2 - zz2, xy2 - sz2, xz2 + sy2,
-                                       xy2 + sz2, 1 - xx2 - zz2, yz2 - sx2,
-                                       xz2 - sy2, yz2 + sx2, 1 - xx2 - yy2});
+            return Matrix<3, 3, TYPE>({1 - yy2 - zz2, xy2 - wz2, xz2 - wy2,
+                                       xy2 - wz2, 1 - xx2 - zz2, yz2 + wx2,
+                                       xz2 + wy2, yz2 - wx2, 1 - xx2 - yy2});
         }
 
         template <typename TYPE>
@@ -111,7 +90,7 @@ namespace pickle
         {
             return toMatrix3x3(quaternion)
                 .addRowDimension<3>(Matrix<1, 3, TYPE>({0, 0, 0}))
-                .addColumnDimension<3>(Matrix<4, 1>({0, 0, 0, 1}));
+                .addColumnDimension<3>(Matrix<4, 1, TYPE>({0, 0, 0, 1}));
         }
     }
 }

@@ -99,49 +99,49 @@ namespace pickle
         Quaternion<TYPE> toQuaternion(const Matrix<3, 3, TYPE> &matrix)
         {
             TYPE trace = matrix.data[0] + matrix.data[4] + matrix.data[8];
+            TYPE mult;
             if (trace > 0)
             {
-                TYPE s = 0.5f / TYPE(sqrt(trace + 1.0f));
+                mult = 0.5f / TYPE(sqrt(trace + 1.0f));
                 return Quaternion<TYPE>(
-                    0.25f / s,
-                    (matrix.data[7] - matrix.data[5]) * s,
-                    (matrix.data[2] - matrix.data[6]) * s,
-                    (matrix.data[3] - matrix.data[1]) * s);
-            }
-
-            if (matrix.data[0] > matrix.data[4] && matrix.data[0] > matrix.data[8])
+                    0.25f / mult,
+                    (matrix.data[5] - matrix.data[7]) * mult,
+                    (matrix.data[6] - matrix.data[2]) * mult,
+                    (matrix.data[1] - matrix.data[3]) * mult);
+            } 
+            else if (matrix.data[0] > matrix.data[4] && matrix.data[0] > matrix.data[8])
             {
-                float s = 2.0f * TYPE(sqrt(1.0f + matrix.data[0] - matrix.data[4] - matrix.data[8]));
+                mult = 2.0f * TYPE(sqrt(1.0f + matrix.data[0] - matrix.data[4] - matrix.data[8]));
                 return Quaternion<TYPE>(
-                    (matrix.data[7] - matrix.data[5]) / s,
-                    0.25f * s,
-                    (matrix.data[1] + matrix.data[3]) / s,
-                    (matrix.data[2] + matrix.data[6]) / s);
+                    (matrix.data[5] - matrix.data[7]) / mult,
+                    0.25f * mult,
+                    (matrix.data[3] + matrix.data[1]) / mult,
+                    (matrix.data[6] + matrix.data[2]) / mult);
             }
             else if (matrix.data[4] > matrix.data[8])
             {
-                float s = 2.0f * sqrtf(1.0f + matrix.data[4] - matrix.data[0] - matrix.data[8]);
+                mult = 2.0f * sqrtf(1.0f + matrix.data[4] - matrix.data[0] - matrix.data[8]);
                 return Quaternion<TYPE>(
-                    (matrix.data[2] - matrix.data[6]) / s,
-                    (matrix.data[1] + matrix.data[3]) / s,
-                    0.25f * s,
-                    (matrix.data[5] + matrix.data[7]) / s);
+                    (matrix.data[6] - matrix.data[2]) / mult,
+                    (matrix.data[3] + matrix.data[1]) / mult,
+                    0.25f * mult,
+                    (matrix.data[7] + matrix.data[5]) / mult);
             }
             else
             {
-                float s = 2.0f * sqrtf(1.0f + matrix.data[8] - matrix.data[0] - matrix.data[4]);
+                mult = 2.0f * sqrtf(1.0f + matrix.data[8] - matrix.data[0] - matrix.data[4]);
                 return Quaternion<TYPE>(
-                    (matrix.data[3] - matrix.data[1]) / s,
-                    (matrix.data[2] + matrix.data[6]) / s,
-                    (matrix.data[5] + matrix.data[7]) / s,
-                    0.25f * s);
+                    (matrix.data[1] - matrix.data[3]) / mult,
+                    (matrix.data[6] + matrix.data[2]) / mult,
+                    (matrix.data[7] + matrix.data[5]) / mult,
+                    0.25f * mult);
             }
         }
 
         template <typename TYPE>
         Quaternion<TYPE> toQuaternion(const Matrix<4, 4, TYPE> &matrix)
         {
-            return toQuaternion(matrix.cutColumnDimension<3, 3>());
+            return toQuaternion(matrix.cutDimension<3, 3>());
         }
     }
 }

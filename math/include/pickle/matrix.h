@@ -241,13 +241,13 @@ namespace pickle
             }
 
             template <size_t ROW_POSITION>
-            typename std::enable_if<(ROW_POSITION < ROWS), Matrix<ROWS + 1, COLUMNS, TYPE>>::type addRowDimension(Matrix<1, COLUMNS, TYPE> value) const
+            typename std::enable_if<(ROW_POSITION <= ROWS), Matrix<ROWS + 1, COLUMNS, TYPE>>::type addRowDimension(Matrix<1, COLUMNS, TYPE> value) const
             {
                 return addRowDimension<ROW_POSITION, 1>(value);
             }
 
             template <size_t ROW_POSITION, size_t ROWS_COUNT>
-            typename std::enable_if<(ROW_POSITION < ROWS), Matrix<ROWS + ROWS_COUNT, COLUMNS, TYPE>>::type addRowDimension(Matrix<ROWS_COUNT, COLUMNS, TYPE> value) const
+            typename std::enable_if<(ROW_POSITION <= ROWS), Matrix<ROWS + ROWS_COUNT, COLUMNS, TYPE>>::type addRowDimension(Matrix<ROWS_COUNT, COLUMNS, TYPE> value) const
             {
                 Matrix<ROWS + ROWS_COUNT, COLUMNS, TYPE> result;
                 size_t ri = 0;
@@ -278,13 +278,13 @@ namespace pickle
             }
 
             template <size_t COLUMN_POSITION>
-            typename std::enable_if<(COLUMN_POSITION < COLUMNS), Matrix<ROWS, COLUMNS + 1, TYPE>>::type addColumnDimension(Matrix<ROWS, 1, TYPE> value) const
+            typename std::enable_if<(COLUMN_POSITION <= COLUMNS), Matrix<ROWS, COLUMNS + 1, TYPE>>::type addColumnDimension(Matrix<ROWS, 1, TYPE> value) const
             {
                 return addColumnDimension<COLUMN_POSITION, 1>(value);
             }
 
             template <size_t COLUMN_POSITION, size_t COLUMNS_COUNT>
-            typename std::enable_if<(COLUMN_POSITION < COLUMNS), Matrix<ROWS, COLUMNS + COLUMNS_COUNT, TYPE>>::type addColumnDimension(Matrix<ROWS, COLUMNS_COUNT, TYPE> value) const
+            typename std::enable_if<(COLUMN_POSITION <= COLUMNS), Matrix<ROWS, COLUMNS + COLUMNS_COUNT, TYPE>>::type addColumnDimension(Matrix<ROWS, COLUMNS_COUNT, TYPE> value) const
             {
                 Matrix<ROWS, COLUMNS + COLUMNS_COUNT, TYPE> result;
                 for (size_t i = 0; i < ROWS; i++)
