@@ -6,11 +6,13 @@
 #include <pickle/math.h>
 #include <pickle/logger.h>
 
+#include <iostream>
+
 struct ConstantBuffer
 {
-    XMMATRIX world;
-    XMMATRIX view;
-    XMMATRIX projection;
+    pickle::math::Matrix<4, 4, float> world;
+    pickle::math::Matrix<4, 4, float> view;
+    pickle::math::Matrix<4, 4, float> projection;
     pickle::math::Vector<4, float> lightDirection;
     pickle::math::Vector<4, float> cameraPosition;
 };
@@ -200,6 +202,7 @@ pickle::renderer::DirectXRenderer::~DirectXRenderer()
 
 void pickle::renderer::DirectXRenderer::render() const
 {
+    static int m = 0;
     float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     deviceContext->ClearRenderTargetView(backBuffer, color);
     deviceContext->ClearDepthStencilView(depthBuffer, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -207,13 +210,26 @@ void pickle::renderer::DirectXRenderer::render() const
     pickle::math::Vector<4, float> lightDirection = pickle::math::Vector<4, float>({1.0f, -1.0f, -1.0f, 0.0f});
     pickle::math::Vector<4, float> cameraPosition = pickle::math::Vector<4, float>({-1.0f, 1.0f, -1.0f, 0.0f});
 
+    pickle::math::Matrix<4, 4, float> modelMatrix = pickle::math::Matrix<4, 4, float>({1.0f, 0.0f, 0.0f, 0.0f,
+                                                                                       0.0f, 1.0f, 0.0f, 0.0f,
+                                                                                       0.0f, 0.0f, 1.0f, 0.0f,
+                                                                                       0.0f, 0.0f, 0.0f, 1.0f});
+    pickle::math::Matrix<4, 4, float> viewMatix = pickle::math::lookAt(
+        cameraPosition.cutDimension<3>(),
+        pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}),
+        pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
+    pickle::math::Matrix<4, 4, float> projectionMatrix = pickle::math::perspective(
+        pickle::math::radians(90.0f),
+        width / (float)height,
+        0.01f,
+        100.0f);
+
     ConstantBuffer constantBufferData1{
-        XMMatrixTranspose(XMMatrixTranslation(0.0f, 0.0f, 0.0f)),
-        XMMatrixTranspose(XMMatrixLookAtLH(XMVectorSet(cameraPosition.data[0], cameraPosition.data[1], cameraPosition.data[2], 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f))),
-        XMMatrixTranspose(XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f)),
+        modelMatrix,
+        viewMatix,
+        projectionMatrix,
         lightDirection,
-        cameraPosition
-    };
+        cameraPosition};
 
     deviceContext->UpdateSubresource(constantBuffer, 0, NULL, &constantBufferData1, 0, 0);
 

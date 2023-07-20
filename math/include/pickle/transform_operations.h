@@ -62,22 +62,27 @@ namespace pickle
         template <typename TYPE>
         Matrix<4, 4, TYPE> perspective(float fov, float aspect, TYPE nearPlane, TYPE farPlane)
         {
-            return Matrix<4, 4, TYPE>({1.0f / (aspect * tan(fov / 2.0f)), 0.0f, 0.0f, 0.0f,
-                                       0.0f, 1.0f / tan(fov / 2.0f), 0.0f, 0.0f,
-                                       0.0f, 0.0f, -(farPlane + nearPlane) / (farPlane - nearPlane), -2.0f * farPlane * nearPlane / (farPlane - nearPlane),
-                                       0.0f, 0.0f, -1.0f, 0.0f});
+            float f = 1.0f / tan(fov / 2.0f);
+            float depth = nearPlane - farPlane; // LH farPlane - nearPlane
+            float multiplayer = -1.0f; // LH 1.0f
+
+            return Matrix<4, 4, TYPE>({f / aspect, 0.0f, 0.0f, 0.0f,
+                                       0.0f, f, 0.0f, 0.0f,
+                                       0.0f, 0.0f, (farPlane + nearPlane) / depth, -2.0f * multiplayer * farPlane * nearPlane / depth,
+                                       0.0f, 0.0f, multiplayer, 0.0f});
         }
 
         template <typename TYPE>
         Matrix<4, 4, TYPE> lookAt(const Vector<3, TYPE> &position, const Vector<3, TYPE> &target, const Vector<3, TYPE> &up)
         {
-            Vector<3, TYPE> cameraDirection = normalize(position - target);
-            Vector<3, TYPE> cameraRight = normalize(cross(up, cameraDirection));
-            Vector<3, TYPE> cameraUp = cross(cameraDirection, cameraRight);
+            Vector<3, TYPE> cameraDirection = normalize(target - position);
+            Vector<3, TYPE> cameraRight = normalize(cross(cameraDirection, up)); // LH normalize(cross(up, cameraDirection));
+            Vector<3, TYPE> cameraUp = cross(cameraRight, cameraDirection); // LH cross(cameraDirection, cameraRight);
+            float multiplayer = -1.0f; // LH 1.0f
 
             return Matrix<4, 4, TYPE>({cameraRight.data[0], cameraRight.data[1], cameraRight.data[2], -dot(cameraRight, position),
                                        cameraUp.data[0], cameraUp.data[1], cameraUp.data[2], -dot(cameraUp, position),
-                                       cameraDirection.data[0], cameraDirection.data[1], cameraDirection.data[2], -dot(cameraDirection, position),
+                                       multiplayer * cameraDirection.data[0], multiplayer * cameraDirection.data[1], multiplayer * cameraDirection.data[2], multiplayer * -dot(cameraDirection, position),
                                        0.0f, 0.0f, 0.0f, 1.0f});
         }
     }
