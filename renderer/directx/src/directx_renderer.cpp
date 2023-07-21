@@ -214,11 +214,11 @@ void pickle::renderer::DirectXRenderer::render() const
                                                                                        0.0f, 1.0f, 0.0f, 0.0f,
                                                                                        0.0f, 0.0f, 1.0f, 0.0f,
                                                                                        0.0f, 0.0f, 0.0f, 1.0f});
-    pickle::math::Matrix<4, 4, float> viewMatix = pickle::math::lookAt(
+    pickle::math::Matrix<4, 4, float> viewMatix = pickle::math::lookAt<pickle::math::CoordinateSystemType::LEFT_HANDED>(
         cameraPosition.cutDimension<3>(),
         pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}),
         pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
-    pickle::math::Matrix<4, 4, float> projectionMatrix = pickle::math::perspective(
+    pickle::math::Matrix<4, 4, float> projectionMatrix = pickle::math::perspective<pickle::math::CoordinateSystemType::LEFT_HANDED, pickle::math::CoordinateRange::ZERO_TO_POSITIVE>(
         pickle::math::radians(90.0f),
         width / (float)height,
         0.01f,

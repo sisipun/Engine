@@ -177,12 +177,12 @@ void pickle::renderer::OpenGLRenderer::render() const
                                                                                        0.0f, 0.0f, 1.0f, 0.0f,
                                                                                        0.0f, 0.0f, 0.0f, 1.0f});
     int viewUniform = glGetUniformLocation(program, "view");
-    pickle::math::Matrix<4, 4, float> viewMatix = pickle::math::lookAt(
+    pickle::math::Matrix<4, 4, float> viewMatix = pickle::math::lookAt<pickle::math::CoordinateSystemType::RIGHT_HANDED>(
         cameraPosition,
         pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}),
         pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
     int projectionUniform = glGetUniformLocation(program, "projection");
-    pickle::math::Matrix<4, 4, float> projectionMatrix = pickle::math::perspective(
+    pickle::math::Matrix<4, 4, float> projectionMatrix = pickle::math::perspective<pickle::math::CoordinateSystemType::RIGHT_HANDED, pickle::math::CoordinateRange::NEGATIVE_TO_POSITIVE>(
         pickle::math::radians(90.0f),
         width / (float) height,
         0.01f,
