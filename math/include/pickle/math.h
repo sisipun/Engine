@@ -1,6 +1,7 @@
 #ifndef PICKLE_MATH
 #define PICKLE_MATH
 
+#include "enums.h"
 #include "vector.h"
 #include "vector_operations.h"
 #include "matrix.h"

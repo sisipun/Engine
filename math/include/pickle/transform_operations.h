@@ -4,6 +4,7 @@
 #include <cmath>
 #include <numbers>
 
+#include "enums.h"
 #include "vector.h"
 #include "vector_operations.h"
 #include "matrix.h"
@@ -59,30 +60,46 @@ namespace pickle
                                        0.0f, 0.0f, 0.0f, 1.0f});
         }
 
-        template <typename TYPE>
+        template <CoordinateSystemType SYSTEM_TYPE, CoordinateRange Z_RANGE, typename TYPE>
         Matrix<4, 4, TYPE> perspective(float fov, float aspect, TYPE nearPlane, TYPE farPlane)
         {
             float f = 1.0f / tan(fov / 2.0f);
-            float depth = nearPlane - farPlane; // LH farPlane - nearPlane
-            float multiplayer = -1.0f; // LH 1.0f
+            float sum = Z_RANGE == CoordinateRange::ZERO_TO_POSITIVE
+                            ? farPlane
+                            : farPlane + nearPlane;
+            float depth = SYSTEM_TYPE == CoordinateSystemType::LEFT_HANDED
+                              ? farPlane - nearPlane
+                              : nearPlane - farPlane;
+            float multiplier = Z_RANGE == CoordinateRange::ZERO_TO_POSITIVE
+                                   ? 1.0f
+                                   : 2.0f;
+            float sign = SYSTEM_TYPE == CoordinateSystemType::LEFT_HANDED
+                             ? 1.0f
+                             : -1.0f;
 
             return Matrix<4, 4, TYPE>({f / aspect, 0.0f, 0.0f, 0.0f,
                                        0.0f, f, 0.0f, 0.0f,
-                                       0.0f, 0.0f, (farPlane + nearPlane) / depth, -2.0f * multiplayer * farPlane * nearPlane / depth,
-                                       0.0f, 0.0f, multiplayer, 0.0f});
+                                       0.0f, 0.0f, sum / depth, -sign * multiplier * farPlane * nearPlane / depth,
+                                       0.0f, 0.0f, sign, 0.0f});
         }
 
-        template <typename TYPE>
+        template <CoordinateSystemType SYSTEM_TYPE, typename TYPE>
         Matrix<4, 4, TYPE> lookAt(const Vector<3, TYPE> &position, const Vector<3, TYPE> &target, const Vector<3, TYPE> &up)
         {
             Vector<3, TYPE> cameraDirection = normalize(target - position);
-            Vector<3, TYPE> cameraRight = normalize(cross(cameraDirection, up)); // LH normalize(cross(up, cameraDirection));
-            Vector<3, TYPE> cameraUp = cross(cameraRight, cameraDirection); // LH cross(cameraDirection, cameraRight);
-            float multiplayer = -1.0f; // LH 1.0f
+            Vector<3, TYPE> cameraRight = SYSTEM_TYPE == CoordinateSystemType::LEFT_HANDED
+                                              ? normalize(cross(up, cameraDirection))
+                                              : normalize(cross(cameraDirection, up));
+            Vector<3, TYPE> cameraUp = SYSTEM_TYPE == CoordinateSystemType::LEFT_HANDED
+                                           ? cross(cameraDirection, cameraRight)
+                                           : cross(cameraRight, cameraDirection);
+            float sign = SYSTEM_TYPE == CoordinateSystemType::LEFT_HANDED
+                                        ? 1.0f
+                                        : -1.0f;
 
             return Matrix<4, 4, TYPE>({cameraRight.data[0], cameraRight.data[1], cameraRight.data[2], -dot(cameraRight, position),
                                        cameraUp.data[0], cameraUp.data[1], cameraUp.data[2], -dot(cameraUp, position),
-                                       multiplayer * cameraDirection.data[0], multiplayer * cameraDirection.data[1], multiplayer * cameraDirection.data[2], multiplayer * -dot(cameraDirection, position),
+                                       sign * cameraDirection.data[0], sign * cameraDirection.data[1], sign * cameraDirection.data[2], sign * -dot(cameraDirection, position),
                                        0.0f, 0.0f, 0.0f, 1.0f});
         }
     }

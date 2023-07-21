@@ -864,9 +864,9 @@ TEST_CASE("Convert To Radians", "[angle][transformation]")
     REQUIRE(roundTwoDigets(radians(-180.0)) == -3.14);
 }
 
-TEST_CASE("Look at", "[camera][matrix][vector][transformation]")
+TEST_CASE("Look at", "[camera][matrix][vector][transformation][right handed]")
 {
-    Matrix<4, 4, float> result = lookAt(Vector<3, float>({0.0f, 0.0f, -3.0f}), Vector<3, float>({0.0f, 0.0f, 0.0f}), Vector<3, float>({0.0f, 1.0f, 0.0f}));
+    Matrix<4, 4, float> result = lookAt<pickle::math::CoordinateSystemType::RIGHT_HANDED>(Vector<3, float>({0.0f, 0.0f, -3.0f}), Vector<3, float>({0.0f, 0.0f, 0.0f}), Vector<3, float>({0.0f, 1.0f, 0.0f}));
     REQUIRE(result.data[0] == -1.0f);
     REQUIRE(result.data[1] == 0.0f);
     REQUIRE(result.data[2] == 0.0f);
