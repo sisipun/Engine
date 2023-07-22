@@ -51,12 +51,22 @@ namespace pickle
                                               0, 0, 0, 1});
         }
 
-        template <typename TYPE>
+        template <CoordinateSystemType SYSTEM_TYPE, CoordinateRange Z_RANGE, typename TYPE>
         Matrix<4, 4, TYPE> ortho(TYPE xMin, TYPE xMax, TYPE yMin, TYPE yMax, TYPE zMin, TYPE zMax)
         {
+            TYPE sum = Z_RANGE == CoordinateRange::ZERO_TO_POSITIVE
+                           ? zMin
+                           : zMax + zMin;
+            TYPE multiplier = Z_RANGE == CoordinateRange::ZERO_TO_POSITIVE
+                                  ? 1.0f
+                                  : 2.0f;
+            TYPE sign = SYSTEM_TYPE == CoordinateSystemType::LEFT_HANDED
+                            ? 1.0f
+                            : -1.0f;
+
             return Matrix<4, 4, TYPE>({2.0f / (xMax - xMin), 0.0f, 0.0f, -(xMax + xMin) / (xMax - xMin),
                                        0.0f, 2.0f / (yMax - yMin), 0.0f, -(yMax + yMin) / (yMax - yMin),
-                                       0.0f, 0.0f, -2.0f / (zMax - zMin), -(zMax + zMin) / (zMax - zMin),
+                                       0.0f, 0.0f, sign * multiplier / (zMax - zMin), -sum / (zMax - zMin),
                                        0.0f, 0.0f, 0.0f, 1.0f});
         }
 
@@ -94,8 +104,8 @@ namespace pickle
                                            ? cross(cameraDirection, cameraRight)
                                            : cross(cameraRight, cameraDirection);
             float sign = SYSTEM_TYPE == CoordinateSystemType::LEFT_HANDED
-                                        ? 1.0f
-                                        : -1.0f;
+                             ? 1.0f
+                             : -1.0f;
 
             return Matrix<4, 4, TYPE>({cameraRight.data[0], cameraRight.data[1], cameraRight.data[2], -dot(cameraRight, position),
                                        cameraUp.data[0], cameraUp.data[1], cameraUp.data[2], -dot(cameraUp, position),

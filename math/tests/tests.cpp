@@ -885,6 +885,27 @@ TEST_CASE("Look at", "[camera][matrix][vector][transformation][right handed]")
     REQUIRE(result.data[15] == 1.0f);
 }
 
+TEST_CASE("Look at", "[camera][matrix][vector][transformation][left handed]")
+{
+    Matrix<4, 4, float> result = lookAt<pickle::math::CoordinateSystemType::LEFT_HANDED>(Vector<3, float>({0.0f, 0.0f, -3.0f}), Vector<3, float>({0.0f, 0.0f, 0.0f}), Vector<3, float>({0.0f, 1.0f, 0.0f}));
+    REQUIRE(result.data[0] == 1.0f);
+    REQUIRE(result.data[1] == 0.0f);
+    REQUIRE(result.data[2] == 0.0f);
+    REQUIRE(result.data[3] == 0.0f);
+    REQUIRE(result.data[4] == 0.0f);
+    REQUIRE(result.data[5] == 1.0f);
+    REQUIRE(result.data[6] == 0.0f);
+    REQUIRE(result.data[7] == 0.0f);
+    REQUIRE(result.data[8] == 0.0f);
+    REQUIRE(result.data[9] == 0.0f);
+    REQUIRE(result.data[10] == 1.0f);
+    REQUIRE(result.data[11] == 3.0f);
+    REQUIRE(result.data[12] == 0.0f);
+    REQUIRE(result.data[13] == 0.0f);
+    REQUIRE(result.data[14] == 0.0f);
+    REQUIRE(result.data[15] == 1.0f);
+}
+
 TEST_CASE("Quaternion Copy", "[quaternion]")
 {
     Quaternion<float> quaternion({1, 1, 2, 3});
