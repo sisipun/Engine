@@ -114,6 +114,31 @@ pickle::renderer::DirectXRenderer::DirectXRenderer(HWND hWindow, int width, int 
     vertexBlob->Release();
     pixelBlob->Release();
 
+    // Temp solution to flip x axis
+    D3D11_RASTERIZER_DESC rasterizerDesc;
+    ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+
+    rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+    rasterizerDesc.CullMode = D3D11_CULL_BACK;  
+    rasterizerDesc.FrontCounterClockwise = true;
+    rasterizerDesc.DepthBias = 0;
+    rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+    rasterizerDesc.DepthBiasClamp = 0.0f;
+    rasterizerDesc.DepthClipEnable = TRUE;
+    rasterizerDesc.ScissorEnable = FALSE;
+    rasterizerDesc.MultisampleEnable = FALSE;
+    rasterizerDesc.AntialiasedLineEnable = FALSE;
+
+    ID3D11RasterizerState* rasterizerState;
+    if (FAILED(device->CreateRasterizerState(&rasterizerDesc, &rasterizerState)))
+    {
+        LOG_ERROR("Can't create rasterizer state");
+    }
+
+    deviceContext->RSSetState(rasterizerState);
+
+    rasterizerState->Release();
+
     pickle::math::Vector<9, float> vertices[] = {
         pickle::math::Vector<9, float>({-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
         pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
@@ -202,7 +227,6 @@ pickle::renderer::DirectXRenderer::~DirectXRenderer()
 
 void pickle::renderer::DirectXRenderer::render() const
 {
-    static int m = 0;
     float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     deviceContext->ClearRenderTargetView(backBuffer, color);
     deviceContext->ClearDepthStencilView(depthBuffer, D3D11_CLEAR_DEPTH, 1.0f, 0);

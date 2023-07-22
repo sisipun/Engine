@@ -31,5 +31,6 @@ VSOutput main(VSInput input)
     output.normal = mul(input.normal, world);
     output.color = input.color;
 
+    output.position.x = -output.position.x; // Temp solution to flip x axis
     return output;
 }
