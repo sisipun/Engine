@@ -7,6 +7,7 @@
 
 #include <pickle/logger.h>
 #include <pickle/math.h>
+#include <pickle/camera.h>
 
 void checkShaderCompilation(unsigned int shader)
 {
@@ -162,6 +163,8 @@ pickle::renderer::OpenGLRenderer::~OpenGLRenderer()
 
 void pickle::renderer::OpenGLRenderer::render() const
 {
+    pickle::renderer::Camera camera(pickle::math::Vector<3, float>({-1.0f, 1.0f, -1.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}));
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -170,17 +173,13 @@ void pickle::renderer::OpenGLRenderer::render() const
     int lightDirectionUniform = glGetUniformLocation(program, "lightDirection");
     pickle::math::Vector<3, float> lightDirection = pickle::math::Vector<3, float>({1.0f, -1.0f, -1.0f});
     int cameraPositionUniform = glGetUniformLocation(program, "cameraPosition");
-    pickle::math::Vector<3, float> cameraPosition = pickle::math::Vector<3, float>({-1.0f, 1.0f, -1.0f});
     int modelUniform = glGetUniformLocation(program, "model");
     pickle::math::Matrix<4, 4, float> modelMatrix = pickle::math::Matrix<4, 4, float>({1.0f, 0.0f, 0.0f, 0.0f,
                                                                                        0.0f, 1.0f, 0.0f, 0.0f,
                                                                                        0.0f, 0.0f, 1.0f, 0.0f,
                                                                                        0.0f, 0.0f, 0.0f, 1.0f});
     int viewUniform = glGetUniformLocation(program, "view");
-    pickle::math::Matrix<4, 4, float> viewMatix = pickle::math::lookAt<pickle::math::CoordinateSystemType::RIGHT_HANDED>(
-        cameraPosition,
-        pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
+    
     int projectionUniform = glGetUniformLocation(program, "projection");
     pickle::math::Matrix<4, 4, float> projectionMatrix = pickle::math::perspective<pickle::math::CoordinateSystemType::RIGHT_HANDED, pickle::math::CoordinateRange::NEGATIVE_TO_POSITIVE>(
         pickle::math::radians(90.0f),
@@ -189,9 +188,10 @@ void pickle::renderer::OpenGLRenderer::render() const
         100.0f);
 
     glUniform3f(lightDirectionUniform, lightDirection.data[0], lightDirection.data[1], lightDirection.data[2]);
+    pickle::math::Vector<3, float> cameraPosition = camera.getPosition();
     glUniform3f(cameraPositionUniform, cameraPosition.data[0], cameraPosition.data[1], cameraPosition.data[2]);
     glUniformMatrix4fv(modelUniform, 1, GL_FALSE, transpose(modelMatrix).data);
-    glUniformMatrix4fv(viewUniform, 1, GL_FALSE, transpose(viewMatix).data);
+    glUniformMatrix4fv(viewUniform, 1, GL_FALSE, transpose(camera.getView()).data);
     glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, transpose(projectionMatrix).data);
 
     glBindVertexArray(VAO);
