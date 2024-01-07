@@ -8,6 +8,7 @@
 #include <pickle/logger.h>
 #include <pickle/math.h>
 #include <pickle/camera.h>
+#include <pickle/light/direct_light.h>
 
 void checkShaderCompilation(unsigned int shader)
 {
@@ -163,31 +164,47 @@ pickle::renderer::OpenGLRenderer::~OpenGLRenderer()
 
 void pickle::renderer::OpenGLRenderer::render() const
 {
-    pickle::renderer::Camera camera(pickle::math::Vector<3, float>({-1.0f, 1.0f, -1.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}));
+    pickle::renderer::Camera camera(
+        pickle::math::Vector<3, float>({-1.0f, 1.0f, -1.0f}),
+        pickle::math::Vector<3, float>({0.0f, 0.0f, 0.0f}));
+    pickle::renderer::DirectLight light(
+        pickle::math::Vector<3, float>({0.1f, 0.1f, 0.1f}),
+        pickle::math::Vector<3, float>({1.0f, 1.0f, 1.0f}),
+        pickle::math::Vector<3, float>({1.0f, 1.0f, 1.0f}),
+        pickle::math::Vector<3, float>({1.0f, -1.0f, -1.0f}));
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(program);
 
-    int lightDirectionUniform = glGetUniformLocation(program, "lightDirection");
-    pickle::math::Vector<3, float> lightDirection = pickle::math::Vector<3, float>({1.0f, -1.0f, -1.0f});
-    int cameraPositionUniform = glGetUniformLocation(program, "cameraPosition");
+    int lightDirectionUniform = glGetUniformLocation(program, "light.direction");
+    int lightAmbientUniform = glGetUniformLocation(program, "light.ambient");
+    int lightDiffuseUniform = glGetUniformLocation(program, "light.diffuse");
+    int lightSpecularUniform = glGetUniformLocation(program, "light.specular");
+    int cameraPositionUniform = glGetUniformLocation(program, "camera.position");
     int modelUniform = glGetUniformLocation(program, "model");
     pickle::math::Matrix<4, 4, float> modelMatrix = pickle::math::Matrix<4, 4, float>({1.0f, 0.0f, 0.0f, 0.0f,
                                                                                        0.0f, 1.0f, 0.0f, 0.0f,
                                                                                        0.0f, 0.0f, 1.0f, 0.0f,
                                                                                        0.0f, 0.0f, 0.0f, 1.0f});
     int viewUniform = glGetUniformLocation(program, "view");
-    
+
     int projectionUniform = glGetUniformLocation(program, "projection");
     pickle::math::Matrix<4, 4, float> projectionMatrix = pickle::math::perspective<pickle::math::CoordinateSystemType::RIGHT_HANDED, pickle::math::CoordinateRange::NEGATIVE_TO_POSITIVE>(
         pickle::math::radians(90.0f),
-        width / (float) height,
+        width / (float)height,
         0.01f,
         100.0f);
 
+    pickle::math::Vector<3, float> lightDirection = light.getDirection();
     glUniform3f(lightDirectionUniform, lightDirection.data[0], lightDirection.data[1], lightDirection.data[2]);
+    pickle::math::Vector<3, float> lightAmbient = light.getAmbient();
+    glUniform3f(lightAmbientUniform, lightAmbient.data[0], lightAmbient.data[1], lightAmbient.data[2]);
+    pickle::math::Vector<3, float> lightDiffuse = light.getDiffuse();
+    glUniform3f(lightDiffuseUniform, lightDiffuse.data[0], lightDiffuse.data[1], lightDiffuse.data[2]);
+    pickle::math::Vector<3, float> lightSpecular = light.getSpecular();
+    glUniform3f(lightSpecularUniform, lightSpecular.data[0], lightSpecular.data[1], lightSpecular.data[2]);
     pickle::math::Vector<3, float> cameraPosition = camera.getPosition();
     glUniform3f(cameraPositionUniform, cameraPosition.data[0], cameraPosition.data[1], cameraPosition.data[2]);
     glUniformMatrix4fv(modelUniform, 1, GL_FALSE, transpose(modelMatrix).data);

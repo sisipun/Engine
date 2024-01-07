@@ -4,10 +4,6 @@ pickle::renderer::Camera::Camera(pickle::math::Vector<3, float> cameraPosition, 
 {
 }
 
-pickle::renderer::Camera::~Camera()
-{
-}
-
 pickle::math::Matrix<4, 4, float> pickle::renderer::Camera::getView() const
 {
     return pickle::math::lookAt<pickle::math::CoordinateSystemType::RIGHT_HANDED>(
