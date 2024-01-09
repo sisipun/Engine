@@ -9,6 +9,7 @@
 #include <pickle/math.h>
 #include <pickle/camera.h>
 #include <pickle/light/direct_light.h>
+#include <pickle/mesh.h>
 
 void checkShaderCompilation(unsigned int shader)
 {
@@ -91,7 +92,6 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, 
     glDeleteShader(fragmentShader);
 
     checkProgramLinking(program);
-
     pickle::math::Vector<9, float> vertices[] = {
         pickle::math::Vector<9, float>({-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
         pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
@@ -205,7 +205,7 @@ void pickle::renderer::OpenGLRenderer::render() const
     glUniform3f(lightDiffuseUniform, lightDiffuse.data[0], lightDiffuse.data[1], lightDiffuse.data[2]);
     pickle::math::Vector<3, float> lightSpecular = light.getSpecular();
     glUniform3f(lightSpecularUniform, lightSpecular.data[0], lightSpecular.data[1], lightSpecular.data[2]);
-    pickle::math::Vector<3, float> cameraPosition = camera.getPosition();
+    const pickle::math::Vector<3, float> &cameraPosition = camera.getPosition();
     glUniform3f(cameraPositionUniform, cameraPosition.data[0], cameraPosition.data[1], cameraPosition.data[2]);
     glUniformMatrix4fv(modelUniform, 1, GL_FALSE, transpose(modelMatrix).data);
     glUniformMatrix4fv(viewUniform, 1, GL_FALSE, transpose(camera.getView()).data);

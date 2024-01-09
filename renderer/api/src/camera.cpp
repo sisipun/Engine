@@ -12,7 +12,7 @@ pickle::math::Matrix<4, 4, float> pickle::renderer::Camera::getView() const
         pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}));
 }
 
-pickle::math::Vector<3, float> pickle::renderer::Camera::getPosition() const
+const pickle::math::Vector<3, float>& pickle::renderer::Camera::getPosition() const
 {
     return cameraPosition;
 }

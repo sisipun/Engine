@@ -14,7 +14,7 @@ namespace pickle
         public:
             OpenGLRenderer(SDL_Window *window, int width, int height);
             ~OpenGLRenderer() override;
-            
+
             OpenGLRenderer(const OpenGLRenderer &renderer) = delete;
             OpenGLRenderer &operator=(const OpenGLRenderer &renderer) = delete;
 
@@ -23,7 +23,7 @@ namespace pickle
         private:
             SDL_Window *window;
             SDL_GLContext context;
-            
+
             unsigned int VAO;
             unsigned int program;
         };
