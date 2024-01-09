@@ -92,48 +92,45 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, 
     glDeleteShader(fragmentShader);
 
     checkProgramLinking(program);
-    pickle::math::Vector<9, float> vertices[] = {
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, 0.0f}),
-
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f}),
-
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f}),
-
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f}),
-
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-        pickle::math::Vector<9, float>({-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f}),
-
-        pickle::math::Vector<9, float>({0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f}),
-        pickle::math::Vector<9, float>({0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f})};
+    Mesh mesh(std::vector<Vertex>{
+        {pickle::math::Vector<3, float>({-0.5f, -0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, -1.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, -1.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, -1.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, -1.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, -1.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, -1.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, -0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, -1.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, -1.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, -1.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, -1.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, -1.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({0.0f, -1.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 1.0f, 0.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, -0.5f, -0.5f}), pickle::math::Vector<3, float>({-1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({-1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({-1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({-1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({-1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({-0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({-1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, -0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 1.0f})},
+        {pickle::math::Vector<3, float>({0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 1.0f})}
+    });
+    const std::vector<pickle::renderer::Vertex>& vertices = mesh.getVertices();
 
     glGenVertexArrays(1, &VAO);
 
@@ -142,7 +139,7 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, 
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(pickle::renderer::Vertex), &vertices[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);

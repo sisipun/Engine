@@ -3,18 +3,23 @@
 
 #include <vector>
 
+#include <pickle/math.h>
+
 namespace pickle
 {
     namespace renderer
     {
         struct Vertex
         {
+            math::Vector<3, float> position;
+            math::Vector<3, float> normal;
+            math::Vector<3, float> color;
         };
 
         class Mesh
         {
         public:
-            Mesh(std::vector<Vertex> vertices);
+            Mesh(const std::vector<Vertex>& vertices);
 
             const std::vector<Vertex>& getVertices() const;
 
