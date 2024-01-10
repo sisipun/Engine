@@ -10,6 +10,7 @@
 #include <pickle/camera.h>
 #include <pickle/light/direct_light.h>
 #include <pickle/mesh.h>
+#include <pickle/texture.h>
 
 void checkShaderCompilation(unsigned int shader)
 {
@@ -131,6 +132,8 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, 
         {pickle::math::Vector<3, float>({0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), pickle::math::Vector<3, float>({0.0f, 1.0f, 1.0f})}
     });
     const std::vector<pickle::renderer::Vertex>& vertices = mesh.getVertices();
+
+    Texture texture("resource/test.jpg");
 
     glGenVertexArrays(1, &VAO);
 
