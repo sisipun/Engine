@@ -26,6 +26,7 @@ namespace pickle
 
             unsigned int VAO;
             unsigned int program;
+            unsigned int txtr;
         };
     }
 }
