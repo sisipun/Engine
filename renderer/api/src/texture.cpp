@@ -13,8 +13,7 @@ pickle::renderer::Texture::Texture(const std::string &path)
     }
     else
     {
-        LOG_ERROR("Texture failed to load at path: ");
-        LOG_ERROR(path.c_str());
+        LOG_ERROR("Texture failed to load at path: ", path);
     }
 }
 
