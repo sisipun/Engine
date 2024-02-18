@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(../../logger ./loggerBuild)
 add_subdirectory(../../math ./mathBuild)
 add_subdirectory(lib/stbimage/)
+add_subdirectory(lib/assimp/)
 
 add_library(PickleRendererApi STATIC 
     include/pickle/renderer.h src/renderer.cpp
@@ -24,4 +25,4 @@ add_library(PickleRendererApi STATIC
 )
 
 target_include_directories(PickleRendererApi PUBLIC include)
-target_link_libraries(PickleRendererApi PickleLogger PickleMath StbImage)
+target_link_libraries(PickleRendererApi PickleLogger PickleMath StbImage assimp)

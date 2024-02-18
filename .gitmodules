@@ -1,0 +1,4 @@
+[submodule "assimp"]
+	path = renderer/api/lib/assimp
+	url = https://github.com/assimp/assimp.git
+	branch = v5.3.0
