@@ -9,7 +9,8 @@
 #include <pickle/math.h>
 #include <pickle/camera.h>
 #include <pickle/light/direct_light.h>
-#include <pickle/mesh.h>
+#include <pickle/model/mesh.h>
+#include <pickle/model/file_model.h>
 #include <pickle/texture.h>
 
 void checkShaderCompilation(unsigned int shader)
@@ -20,8 +21,7 @@ void checkShaderCompilation(unsigned int shader)
     if (!success)
     {
         glGetShaderInfoLog(shader, 1024, NULL, log);
-        LOG_ERROR("Can't compile shader");
-        LOG_ERROR(log);
+        LOG_ERROR("Can't compile shader", log);
     }
 }
 
@@ -33,13 +33,13 @@ void checkProgramLinking(unsigned int program)
     if (!success)
     {
         glGetProgramInfoLog(program, 1024, NULL, log);
-        LOG_ERROR("Can't link programm");
-        LOG_ERROR(log);
+        LOG_ERROR("Can't link programm", log);
     }
 }
 
 pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, int height) : Renderer(width, height), window(window)
 {
+    pickle::renderer::FileModel("resource/monkey.obj");
     context = SDL_GL_CreateContext(window);
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {

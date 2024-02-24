@@ -17,8 +17,9 @@ add_library(PickleRendererApi STATIC
     include/pickle/light/light.h src/light/light.cpp
     include/pickle/light/direct_light.h src/light/direct_light.cpp
     include/pickle/light/point_light.h src/light/point_light.cpp
-    include/pickle/mesh.h src/mesh.cpp
-    include/pickle/model.h src/model.cpp
+    include/pickle/model/mesh.h src/model/mesh.cpp
+    include/pickle/model/model.h src/model/model.cpp
+    include/pickle/model/file_model.h src/model/file_model.cpp
     include/pickle/scene.h src/scene.cpp
     include/pickle/texture.h src/texture.cpp
     include/pickle/shader.h src/shader.cpp

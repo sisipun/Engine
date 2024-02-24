@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
 project(Glad)
 
-add_library(Glad include/glad/glad.h src/glad.c)
+add_library(Glad STATIC include/glad/glad.h src/glad.c)
 target_include_directories(Glad PUBLIC include/)

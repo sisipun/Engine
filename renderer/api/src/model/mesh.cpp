@@ -1,4 +1,4 @@
-#include <pickle/mesh.h>
+#include <pickle/model/mesh.h>
 
 pickle::renderer::Mesh::Mesh(const std::vector<Vertex> &vertices) : vertices(vertices)
 {
