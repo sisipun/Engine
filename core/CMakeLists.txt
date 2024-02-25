@@ -21,5 +21,4 @@ target_include_directories(PickleCore PUBLIC include)
 target_link_libraries(PickleCore PickleMath PickleLogger PickleRenderer ${SDL2_LIBRARIES})
 target_link_libraries(PickleCoreTest PickleCore)
 
-list(GET SDL2_INCLUDE_DIRS 0 SDL2_DIR)
-file(COPY "${SDL2_DIR}/../bin/SDL2.dll" DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY "${SDL2_BINDIR}/" DESTINATION ${CMAKE_BINARY_DIR} FILES_MATCHING PATTERN "*.dll")

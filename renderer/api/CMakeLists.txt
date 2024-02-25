@@ -6,8 +6,6 @@ endif()
 project(PickleRendererApi)
 set(CMAKE_CXX_STANDARD 20)
 
-add_subdirectory(../../logger ./loggerBuild)
-add_subdirectory(../../math ./mathBuild)
 add_subdirectory(lib/stbimage/)
 add_subdirectory(lib/assimp/)
 
@@ -27,3 +25,8 @@ add_library(PickleRendererApi STATIC
 
 target_include_directories(PickleRendererApi PUBLIC include)
 target_link_libraries(PickleRendererApi PickleLogger PickleMath StbImage assimp)
+
+set_target_properties(
+    assimp PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+) 

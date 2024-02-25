@@ -10,9 +10,6 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 add_subdirectory(lib/glad/)
-add_subdirectory(../api ./apiBuild)
-add_subdirectory(../../logger ./loggerBuild)
-add_subdirectory(../../math ./mathBuild)
 
 add_library(PickleRendererOpenGL STATIC 
     include/pickle/opengl_renderer.h src/opengl_renderer.cpp

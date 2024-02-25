@@ -10,10 +10,6 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
 find_package(DirectX11 REQUIRED)
 
-add_subdirectory(../api ./apiBuild)
-add_subdirectory(../../logger ./loggerBuild)
-add_subdirectory(../../math ./mathBuild)
-
 add_library(PickleRendererDirectX STATIC 
     include/pickle/directx_renderer.h src/directx_renderer.cpp
 )
