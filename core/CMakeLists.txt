@@ -5,9 +5,16 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(SDL2 REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS})
-add_subdirectory(../math ./mathBuild)
-add_subdirectory(../logger ./loggerBuild)
-add_subdirectory(../renderer ./rendererBuild)
+
+# External libs
+add_subdirectory(../lib/stbimage/ modules/lib/stbimage)
+add_subdirectory(../lib/glad/ modules/lib/glad)
+add_subdirectory(../lib/assimp/ modules/lib/assimp)
+
+# Pickle modules
+add_subdirectory(../math modules/math)
+add_subdirectory(../logger modules/logger)
+add_subdirectory(../renderer modules/renderer)
 
 add_library(PickleCore STATIC 
     include/pickle/window.h src/window.cpp

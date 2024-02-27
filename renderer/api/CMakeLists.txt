@@ -6,9 +6,6 @@ endif()
 project(PickleRendererApi)
 set(CMAKE_CXX_STANDARD 20)
 
-add_subdirectory(lib/stbimage/)
-add_subdirectory(lib/assimp/)
-
 add_library(PickleRendererApi STATIC 
     include/pickle/renderer.h src/renderer.cpp
     include/pickle/camera.h src/camera.cpp

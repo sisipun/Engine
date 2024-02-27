@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.14)
 project(PickleRenderer)
 set(CMAKE_CXX_STANDARD 20)
 
-add_subdirectory(api apiBuild)
-add_subdirectory(directx directxBuild)
-add_subdirectory(metal metalBuild)
-add_subdirectory(opengl openglBuild)
+add_subdirectory(api modules/api)
+add_subdirectory(directx modules/directx)
+add_subdirectory(metal modules/metal)
+add_subdirectory(opengl modules/opengl)
 
 add_library(PickleRenderer INTERFACE)
 
