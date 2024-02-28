@@ -22,8 +22,3 @@ add_library(PickleRendererApi STATIC
 
 target_include_directories(PickleRendererApi PUBLIC include)
 target_link_libraries(PickleRendererApi PickleLogger PickleMath StbImage assimp)
-
-set_target_properties(
-    assimp PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
-) 
