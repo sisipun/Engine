@@ -13,7 +13,6 @@ namespace pickle
         {
             math::Vector<3, float> position;
             math::Vector<3, float> normal;
-            math::Vector<3, float> color;
             math::Vector<2, float> textureCoordinates;
         };
 

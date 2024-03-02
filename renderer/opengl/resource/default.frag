@@ -2,7 +2,6 @@
 in VS_OUT {
    vec3 FragPos;
    vec3 Normal;
-   vec3 Color;
    vec2 TextureCoordinates;
 } inFs;
 
@@ -43,5 +42,5 @@ void main()
     float specular = pow(max(dot(normal, halfway), 0.0f), 16.0f);
 
     vec3 result = light.ambient * materialAmbient * ambient + light.diffuse * materialDiffuse * diffuse + light.specular * specular;
-    outFragColor = vec4(result * inFs.Color, 1.0f);
+    outFragColor = vec4(result, 1.0f);
 }
