@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include <assimp/scene.h>
+
 #include <pickle/model/model.h>
 
 namespace pickle
@@ -13,6 +15,9 @@ namespace pickle
         {
         public:
             FileModel(std::string path);
+
+        private:
+            void processNode(const aiNode* node, const aiScene *scene);
         };
     }
 }
