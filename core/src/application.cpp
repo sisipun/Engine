@@ -1,10 +1,14 @@
 #include <pickle/application.h>
 
-#include <pickle/win32_window.h>
+#ifdef _WIN32
+    #include <pickle/win32_window.h>
+#endif
 #include <pickle/sdl_window.h>
-#include <pickle/directx_renderer.h>
 #include <pickle/opengl_renderer.h>
 #include <pickle/metal_renderer.h>
+#ifdef _WIN32
+    #include <pickle/directx_renderer.h>
+#endif
 
 pickle::Application::Application(pickle::renderer::RendererType type)
 {
@@ -13,10 +17,12 @@ pickle::Application::Application(pickle::renderer::RendererType type)
 
     switch (type)
     {
+#ifdef _WIN32
     case pickle::renderer::RendererType::DIRECT_X:
         window = std::make_unique<pickle::Win32Window>(width, height);
         renderer = std::make_unique<pickle::renderer::DirectXRenderer>(static_cast<pickle::Win32Window *>(window.get())->getWindow(), window->getWidth(), window->getHeight());
         break;
+#endif
     case pickle::renderer::RendererType::OPEN_GL:
         window = std::make_unique<pickle::SdlWindow>(width, height);
         renderer = std::make_unique<pickle::renderer::OpenGLRenderer>(static_cast<pickle::SdlWindow *>(window.get())->getWindow(), window->getWidth(), window->getHeight());

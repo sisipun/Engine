@@ -1,6 +1,6 @@
 #include <pickle/application.h>
 
-#include <string> 
+#include <string>
 
 #include <pickle/renderer.h>
 
@@ -13,11 +13,7 @@ int main(int argc, char *argv[])
         if (i + 1 < argc && (strcmp(key, "-r") == 0 || strcmp(key, "--renderer") == 0))
         {
             const char *value = argv[i + 1];
-            if (strcmp(value, "d") == 0 || strcmp(value, "directx") == 0)
-            {
-                rendererType = pickle::renderer::RendererType::DIRECT_X;
-            }
-            else if (strcmp(value, "o") == 0 || strcmp(value, "opengl") == 0)
+            if (strcmp(value, "o") == 0 || strcmp(value, "opengl") == 0)
             {
                 rendererType = pickle::renderer::RendererType::OPEN_GL;
             }
@@ -25,6 +21,12 @@ int main(int argc, char *argv[])
             {
                 rendererType = pickle::renderer::RendererType::METAL;
             }
+#ifdef _WIN32
+            else if (strcmp(value, "d") == 0 || strcmp(value, "directx") == 0)
+            {
+                rendererType = pickle::renderer::RendererType::DIRECT_X;
+            }
+#endif
         }
     }
 

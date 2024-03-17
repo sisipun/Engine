@@ -19,9 +19,11 @@ add_subdirectory(../renderer modules/renderer)
 add_library(PickleCore STATIC 
     include/pickle/window.h src/window.cpp
     include/pickle/sdl_window.h src/sdl_window.cpp
-    include/pickle/win32_window.h src/win32_window.cpp
     include/pickle/application.h src/application.cpp
 )
+if (WIN32)
+    target_sources(PickleCore PRIVATE include/pickle/win32_window.h src/win32_window.cpp)
+endif()
 add_executable(PickleCoreTest main.cpp)
 
 target_include_directories(PickleCore PUBLIC include)
