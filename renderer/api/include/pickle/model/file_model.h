@@ -18,6 +18,7 @@ namespace pickle
 
         private:
             void processNode(const aiNode* node, const aiScene *scene);
+            void processMesh(const aiMesh *mesh, const aiScene *scene);
         };
     }
 }
