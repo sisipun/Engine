@@ -135,12 +135,26 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, 
         {pickle::math::Vector<3, float>({0.5f, -0.5f, 0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), math::Vector<2, float>({0.0f, 1.0f})},
         {pickle::math::Vector<3, float>({0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), math::Vector<2, float>({1.0f, 0.0f})},
         {pickle::math::Vector<3, float>({0.5f, 0.5f, 0.5f}), pickle::math::Vector<3, float>({1.0f, 0.0f, 0.0f}), math::Vector<2, float>({1.0f, 1.0f})}
+    }, std::vector<unsigned int>{
+        0, 1, 2, 3, 4, 5, 
+        6, 7, 8, 9, 10, 11, 
+        12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23,
+        24, 25, 26, 27, 28, 29,
+        30, 31, 32, 33, 34, 35
     });
     const std::vector<pickle::renderer::Vertex>& vertices = mesh.getVertices();
+    const std::vector<unsigned int>& indices = mesh.getIndices();
 
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
+
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
     unsigned int VBO;
     glGenBuffers(1, &VBO);
@@ -223,7 +237,7 @@ void pickle::renderer::OpenGLRenderer::render() const
 
     glBindTexture(GL_TEXTURE_2D, txtr);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     SDL_GL_SwapWindow(window);

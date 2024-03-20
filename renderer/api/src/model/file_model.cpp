@@ -13,14 +13,17 @@ pickle::renderer::FileModel::FileModel(std::string path)
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         LOG_ERROR("Can't load file model with path ", path, ". Cause: ", importer.GetErrorString());
-    } else {
+    }
+    else
+    {
         LOG_INFO("File model with path ", path, " loaded");
     }
 }
 
-void pickle::renderer::FileModel::processNode(const aiNode* node, const aiScene *scene)
+void pickle::renderer::FileModel::processNode(const aiNode *node, const aiScene *scene)
 {
-    for (unsigned int i = 0; i < node->mNumMeshes; i++) {
+    for (unsigned int i = 0; i < node->mNumMeshes; i++)
+    {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         processMesh(mesh, scene);
     }
@@ -34,6 +37,7 @@ void pickle::renderer::FileModel::processNode(const aiNode* node, const aiScene 
 void pickle::renderer::FileModel::processMesh(const aiMesh *mesh, const aiScene *scene)
 {
     std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -60,7 +64,16 @@ void pickle::renderer::FileModel::processMesh(const aiMesh *mesh, const aiScene 
             textureCoordinates.data[1] = textureCoordinatesVector.y;
         }
         vertices.push_back({position, normal, textureCoordinates});
+
+        for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+        {
+            aiFace face = mesh->mFaces[i];
+            for (unsigned int j = 0; j < face.mNumIndices; j++)
+            {
+                indices.push_back(face.mIndices[j]);
+            }
+        }
     }
 
-    meshes.push_back({vertices});
+    meshes.push_back({vertices, indices});
 }

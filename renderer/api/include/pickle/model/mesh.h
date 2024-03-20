@@ -19,12 +19,15 @@ namespace pickle
         class Mesh
         {
         public:
-            Mesh(const std::vector<Vertex>& vertices);
+            Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
 
-            const std::vector<Vertex>& getVertices() const;
+            const std::vector<Vertex> &getVertices() const;
+
+            const std::vector<unsigned int> &getIndices() const;
 
         private:
             std::vector<Vertex> vertices;
+            std::vector<unsigned int> indices;
         };
     }
 }
