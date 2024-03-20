@@ -11,6 +11,9 @@ namespace pickle
     {
         class Model
         {
+        public:
+            const std::vector<Mesh> &getMeshes() const;
+
         protected:
             std::vector<Mesh> meshes;
         };

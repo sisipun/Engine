@@ -39,7 +39,7 @@ void checkProgramLinking(unsigned int program)
 
 pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, int height) : Renderer(width, height), window(window)
 {
-    pickle::renderer::FileModel("resource/monkey.obj");
+    pickle::renderer::FileModel fileModel("resource/monkey.obj");
     context = SDL_GL_CreateContext(window);
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {
@@ -93,6 +93,7 @@ pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, 
     glDeleteShader(fragmentShader);
 
     checkProgramLinking(program);
+    // Mesh mesh = fileModel.getMeshes()[0];
     Mesh mesh(std::vector<Vertex>{
         {pickle::math::Vector<3, float>({-0.5f, -0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, -1.0f}), math::Vector<2, float>({0.0f, 0.0f})},
         {pickle::math::Vector<3, float>({-0.5f, 0.5f, -0.5f}), pickle::math::Vector<3, float>({0.0f, 0.0f, -1.0f}), math::Vector<2, float>({0.0f, 1.0f})},

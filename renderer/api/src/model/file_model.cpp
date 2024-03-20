@@ -16,12 +16,14 @@ pickle::renderer::FileModel::FileModel(std::string path)
     }
     else
     {
+        processNode(scene->mRootNode, scene);
         LOG_INFO("File model with path ", path, " loaded");
     }
 }
 
 void pickle::renderer::FileModel::processNode(const aiNode *node, const aiScene *scene)
 {
+    LOG_ERROR(std::to_string(node->mNumMeshes));
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
@@ -39,8 +41,10 @@ void pickle::renderer::FileModel::processMesh(const aiMesh *mesh, const aiScene 
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
+    LOG_ERROR(std::to_string(mesh->mNumVertices));
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
+        LOG_ERROR(std::to_string(i));
         math::Vector<3, float> position;
         aiVector3D positionVector = mesh->mVertices[i];
         position.data[0] = positionVector.x;
