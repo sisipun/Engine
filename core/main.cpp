@@ -17,10 +17,12 @@ int main(int argc, char *argv[])
             {
                 rendererType = pickle::renderer::RendererType::OPEN_GL;
             }
+#ifdef __APPLE__
             else if (strcmp(value, "m") == 0 || strcmp(value, "metal") == 0)
             {
                 rendererType = pickle::renderer::RendererType::METAL;
             }
+#endif
 #ifdef _WIN32
             else if (strcmp(value, "d") == 0 || strcmp(value, "directx") == 0)
             {

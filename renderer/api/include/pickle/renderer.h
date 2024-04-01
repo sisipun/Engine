@@ -7,8 +7,10 @@ namespace pickle
     {
         enum class RendererType
         {
-            OPEN_GL,
-            METAL
+            OPEN_GL
+            #ifdef __APPLE__
+            ,METAL
+            #endif
             #ifdef _WIN32
             ,DIRECT_X
             #endif

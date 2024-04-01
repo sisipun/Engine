@@ -39,7 +39,7 @@ void checkProgramLinking(unsigned int program)
 
 pickle::renderer::OpenGLRenderer::OpenGLRenderer(SDL_Window *window, int width, int height) : Renderer(width, height), window(window)
 {
-    pickle::renderer::FileModel fileModel("resource/monkey.obj");
+    // pickle::renderer::FileModel fileModel("resource/monkey.obj");
     context = SDL_GL_CreateContext(window);
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {

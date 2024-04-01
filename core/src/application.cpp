@@ -5,7 +5,9 @@
 #endif
 #include <pickle/sdl_window.h>
 #include <pickle/opengl_renderer.h>
+#ifdef __APPLE__
 #include <pickle/metal_renderer.h>
+#endif
 #ifdef _WIN32
     #include <pickle/directx_renderer.h>
 #endif
@@ -27,10 +29,12 @@ pickle::Application::Application(pickle::renderer::RendererType type)
         window = std::make_unique<pickle::SdlWindow>(width, height);
         renderer = std::make_unique<pickle::renderer::OpenGLRenderer>(static_cast<pickle::SdlWindow *>(window.get())->getWindow(), window->getWidth(), window->getHeight());
         break;
+#ifdef __APPLE__        
     case pickle::renderer::RendererType::METAL:
         window = std::make_unique<pickle::SdlWindow>(width, height);
         renderer = std::make_unique<pickle::renderer::MetalRenderer>(window->getWidth(), window->getHeight());
         break;
+#endif        
     }
 }
 
